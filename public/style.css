@@ -199,3 +199,79 @@ html {
     }
 
 }
+
+
+/* ============================= */
+/* BUNDLE OFFER CARDS */
+/* ============================= */
+
+.bundle-card {
+
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+    position: relative;
+    border: 2px solid #b8e6d0;
+
+}
+
+
+.bundle-card h3 {
+
+    color: #159957;
+    font-size: 24px;
+
+}
+
+
+.offer-badge {
+
+    position: absolute;
+    top: 15px;
+    left: 15px;
+
+    background: #ff9800;
+    color: white;
+
+    padding: 7px 12px;
+    border-radius: 20px;
+
+    font-weight: bold;
+
+}
+
+
+.old-price {
+
+    text-decoration: line-through;
+    color: #777;
+    font-size: 16px;
+
+}
+
+
+.new-price {
+
+    color: #159957;
+    font-size: 22px;
+    font-weight: bold;
+
+}
+
+
+.save-money {
+
+    color: #e53935;
+    font-weight: bold;
+
+}
+
+
+.bundle-card button {
+
+    width: 100%;
+    margin-top: 15px;
+
+}
