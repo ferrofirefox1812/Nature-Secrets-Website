@@ -1,3 +1,5 @@
+let searchTimer;
+
 // =====================================
 // UPDATE CART COUNT
 // =====================================
@@ -1254,6 +1256,8 @@ function searchProducts() {
 
     let buttons = document.querySelectorAll(".add-to-cart");
 
+    let firstMatch = null;
+
     buttons.forEach(button => {
 
         let productName = button.dataset.name.toLowerCase();
@@ -1261,11 +1265,38 @@ function searchProducts() {
         let productContainer = button.closest(".product");
 
         if (productName.includes(search) || search === "") {
-            productContainer.style.display = "";
-        } else {
-            productContainer.style.display = "none";
-        }
 
-    });
+    productContainer.style.display = "";
+
+    if (search !== "" && firstMatch === null) {
+
+        firstMatch = productContainer;
+
+    }
+
+} else {
+
+    productContainer.style.display = "none";
+
+}
+
+});
+
+if (firstMatch) {
+
+    clearTimeout(searchTimer);
+
+    searchTimer = setTimeout(() => {
+
+        firstMatch.scrollIntoView({
+
+            behavior: "smooth",
+            block: "center"
+
+        });
+
+    }, 1000);
+
+}
 
 }
