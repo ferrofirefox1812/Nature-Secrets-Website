@@ -1248,3 +1248,24 @@ document.addEventListener("click", function(event){
 });
 
 
+function searchProducts() {
+
+    let search = document.getElementById("productSearch").value.toLowerCase();
+
+    let buttons = document.querySelectorAll(".add-to-cart");
+
+    buttons.forEach(button => {
+
+        let productName = button.dataset.name.toLowerCase();
+
+        let productContainer = button.closest(".product");
+
+        if (productName.includes(search) || search === "") {
+            productContainer.style.display = "";
+        } else {
+            productContainer.style.display = "none";
+        }
+
+    });
+
+}

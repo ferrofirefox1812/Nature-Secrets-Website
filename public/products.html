@@ -28,6 +28,12 @@
             اختر المنتج المناسب لك ثم أضفه إلى سلة التسوق.
         </p>
 
+<input 
+    type="text" 
+    id="productSearch" 
+    placeholder="ابحث عن منتج..."
+    onkeyup="searchProducts()">
+
 
         <!-- HOME BUTTON -->
 
@@ -35,6 +41,8 @@
             العودة إلى الصفحة الرئيسية
         </button>
 
+
+<div class="categories">
 
         <!-- CATEGORY BUTTONS -->
 
@@ -98,1204 +106,1215 @@
     منتجات أخرى
 </button>
 
-        <!-- SHAMPOO PRODUCTS -->
+</div>
 
-        <section id="shampoo">
+       <!-- SHAMPOO PRODUCTS -->
 
-            <h2>الشامبو</h2>
+<section id="shampoo">
 
+<h2>الشامبو</h2>
+
+<div class="product">
 <h3>شامبو العناية للتلف 250 مل</h3>
 <p>السعر: 175 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شامبو العناية للتلف 250 مل"
-data-price="175">
-
-أضف إلى سلة التسوق
-
+    data-price="175">
+    أضف إلى سلة التسوق
 </button>
-
+</div>
+<hr><div class="product">
 <h3>شامبو العناية للتلف 400 مل</h3>
 <p>السعر: 225 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شامبو العناية للتلف 400 مل"
 data-price="225">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
+<hr>
 
+<div class="product">
 <h3>شامبو العناية لتر</h3>
 <p>السعر: 525 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شامبو العناية لتر"
 data-price="525">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
+<hr>
 
+<div class="product">
 <h3>شامبو التساقط 250 ملي</h3>
 <p>السعر: 190 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شامبو التساقط 250 ملي"
 data-price="190">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>شامبو التساقط 400 ملي</h3>
 <p>السعر: 250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شامبو التساقط 400 ملي"
 data-price="250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>شامبو التساقط لتر</h3>
 <p>السعر: 565 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شامبو التساقط لتر"
 data-price="565">
-
 أضف إلى سلة التسوق
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>شامبو القشرة 250 ملي</h3>
 <p>السعر: 190 جنيه</p>
-</button
+<button
 class="add-to-cart"
 data-name="شامبو القشرة 250 ملي"
 data-price="190">
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>شامبو القشرة 400 ملي</h3>
 <p>السعر: 250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شامبو القشرة 400 ملي"
 data-price="250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>شامبو القشرة لتر</h3>
 <p>السعر: 565 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شامبو القشرة لتر"
 data-price="565">
-
 أضف إلى سلة التسوق
-
-</button>      
+</button>
+</div>
 
 </section>
 
 
         <!-- CONDITIONER PRODUCTS -->
 
-        <section id="conditioner">
+<section id="conditioner">
 
-            <h2>البلسم</h2>
+<h2>البلسم</h2>
 
+<div class="product">
 <h3>بلسم 250 ملي</h3>
 <p>السعر: 175 جنيه</p>
 <button
 class="add-to-cart"
 data-name="بلسم 250 ملي"
 data-price="175">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>بلسم 400 ملي</h3>
 <p>السعر: 225 جنيه</p>
 <button
 class="add-to-cart"
 data-name="بلسم 400 ملي"
 data-price="225">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>بلسم لتر</h3>
 <p>السعر: 525 جنيه</p>
 <button
 class="add-to-cart"
 data-name="بلسم لتر"
 data-price="525">
-
 أضف إلى سلة التسوق
-
 </button>
-        </section>
+</div>
 
+</section>
 
-        <!-- STYLING CREAM PRODUCTS -->
+       <!-- STYLING CREAM PRODUCTS -->
 
-        <section id="styling-cream">
+<section id="styling-cream">
 
-            <h2>كريم التصفيف</h2>
+<h2>كريم التصفيف</h2>
 
+<div class="product">
 <h3>كريم تصفيف الشعر 80 جم</h3>
 <p>السعر: 110 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم تصفيف الشعر 80 جم"
 data-price="110">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم تصفيف الشعر 130 جم</h3>
 <p>السعر: 175 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم تصفيف الشعر 130 جم"
 data-price="175">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم تصفيف الشعر 225 جم</h3>
 <p>السعر: 260 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم تصفيف الشعر 225 جم"
 data-price="260">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم تصفيف الشعر 400 جم</h3>
 <p>السعر: 450 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم تصفيف الشعر 400 جم"
 data-price="450">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم تصفيف الشعر نصف كيلو</h3>
 <p>السعر: 500 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم تصفيف الشعر نصف كيلو"
 data-price="500">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم تصفيف الشعر كيلو</h3>
 <p>السعر: 940 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم تصفيف الشعر كيلو"
 data-price="940">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 
-        </section>
+</section>
 
 
         <!-- HAIR MASK PRODUCTS -->
 
-        <section id="hair-mask">
+<section id="hair-mask">
 
-            <h2>حمام الكريم</h2>
+<h2>حمام الكريم</h2>
 
+<div class="product">
 <h3>حمام كريم 80 جم</h3>
 <p>السعر: 110 جنيه</p>
 <button
 class="add-to-cart"
 data-name="حمام كريم 80 جم"
 data-price="110">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>حمام كريم 225 جم</h3>
 <p>السعر: 190 جنيه</p>
 <button
 class="add-to-cart"
 data-name="حمام كريم 225 جم"
 data-price="190">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>حمام كريم 400 جم</h3>
 <p>السعر: 325 جنيه</p>
 <button
 class="add-to-cart"
 data-name="حمام كريم 400 جم"
 data-price="325">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>حمام كريم 500 جم</h3>
 <p>السعر: 375 جنيه</p>
 <button
 class="add-to-cart"
 data-name="حمام كريم 500 جم"
 data-price="375">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>حمام كريم كيلو</h3>
 <p>السعر: 700 جنيه</p>
 <button
 class="add-to-cart"
 data-name="حمام كريم كيلو"
 data-price="700">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 
-        </section>
+</section>
 
 
         <!-- HAIR LOSS PRODUCTS -->
 
-        <section id="hair-loss">
+<section id="hair-loss">
 
-            <h2>لوشن التساقط والإنبات</h2>
+<h2>لوشن التساقط والإنبات</h2>
 
+<div class="product">
 <h3>لوشن لتساقط الشعر 120 ملي</h3>
 <p>السعر: 200 جنيه</p>
 <button
 class="add-to-cart"
 data-name="لوشن لتساقط الشعر 120 ملي"
 data-price="200">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>لوشن لتساقط الشعر 250 ملي</h3>
 <p>السعر: 400 جنيه</p>
 <button
 class="add-to-cart"
 data-name="لوشن لتساقط الشعر 250 ملي"
 data-price="400">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 
-        </section>
+</section>
 
 
         <!-- SERUM PRODUCTS -->
 
-        <section id="serum">
+<section id="serum">
 
-            <h2>السيروم</h2>
+<h2>السيروم</h2>
 
+<div class="product">
 <h3>سيروم 50 ملي ايرليس</h3>
 <p>السعر: 200 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم 50 ملي ايرليس"
 data-price="200">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم 100 ملي</h3>
 <p>السعر: 340 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم 100 ملي"
 data-price="340">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم ربع لتر</h3>
 <p>السعر: 690 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم ربع لتر"
 data-price="690">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم نصف لتر</h3>
 <p>السعر: 1250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم نصف لتر"
 data-price="1250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم لتر</h3>
 <p>السعر: 2375 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم لتر"
 data-price="2375">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 
-        </section>
+</section>
 
 
         <!-- SKIN CARE PRODUCTS -->
 
-        <section id="skin-care">
+<section id="skin-care">
 
-            <h2>العناية بالبشرة</h2>
+<h2>العناية بالبشرة</h2>
 
+<div class="product">
 <h3>كريم كولاجين 40 جم</h3>
 <p>السعر: 140 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم كولاجين 40 جم"
 data-price="140">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم كولاجين 80 جم</h3>
 <p>السعر: 250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم كولاجين 80 جم"
 data-price="250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>غسول البشرة الدهنية 250 ملي</h3>
 <p>السعر: 160 جنيه</p>
 <button
 class="add-to-cart"
 data-name="غسول البشرة الدهنية 250 ملي"
 data-price="160">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>غسول البشرة الدهنية 400 ملي</h3>
 <p>السعر: 240 جنيه</p>
 <button
 class="add-to-cart"
 data-name="غسول البشرة الدهنية 400 ملي"
 data-price="240">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>غسول الهيالورنيك فوم</h3>
 <p>السعر: 225 جنيه</p>
 <button
 class="add-to-cart"
 data-name="غسول الهيالورنيك فوم"
 data-price="225">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>واقي الشمس 15 ملي هيالورنيك</h3>
 <p>السعر: 150 جنيه</p>
 <button
 class="add-to-cart"
 data-name="واقي الشمس 15 ملي هيالورنيك"
 data-price="150">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>واقي الشمس 30 ملي هيالورنيك</h3>
 <p>السعر: 250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="واقي الشمس 30 ملي هيالورنيك"
 data-price="250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>واقي الشمس 50 ملي هيالورنيك</h3>
 <p>السعر: 375 جنيه</p>
 <button
 class="add-to-cart"
 data-name="واقي الشمس 50 ملي هيالورنيك"
 data-price="375">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>مرطب الجسم 100 ملي</h3>
 <p>السعر: 190 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مرطب الجسم 100 ملي"
 data-price="190">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>مرطب بديل ليزر 3×1 100 ملي</h3>
 <p>السعر: 200 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مرطب بديل ليزر 3×1 100 ملي"
 data-price="200">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>شاور جيل طبي 400 ملي</h3>
 <p>السعر: 190 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شاور جيل طبي 400 ملي"
 data-price="190">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>هاند وش بالجلسرين 500 ملي</h3>
 <p>السعر: 100 جنيه</p>
 <button
 class="add-to-cart"
 data-name="هاند وش بالجلسرين 500 ملي"
 data-price="100">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سكراب القهوة 40 جم</h3>
 <p>السعر: 100 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سكراب القهوة 40 جم"
 data-price="100">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سكراب القهوة 80 جم</h3>
 <p>السعر: 190 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سكراب القهوة 80 جم"
 data-price="190">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>ميك أب ريموفر 120 ملي</h3>
 <p>السعر: 160 جنيه</p>
 <button
 class="add-to-cart"
 data-name="ميك أب ريموفر 120 ملي"
 data-price="160">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>ماسكارا الرموش والحواجب</h3>
 <p>السعر: 150 جنيه</p>
 <button
 class="add-to-cart"
 data-name="ماسكارا الرموش والحواجب"
 data-price="150">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>تنت هيالورنيك 15 جم</h3>
 <p>السعر: 90 جنيه</p>
 <button
 class="add-to-cart"
 data-name="تنت هيالورنيك 15 جم"
 data-price="90">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>مس الحبوب 15 جم ايرليس</h3>
 <p>السعر: 90 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مس الحبوب 15 جم ايرليس"
 data-price="90">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>مس الحبوب 30 جم ايرليس</h3>
 <p>السعر: 175 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مس الحبوب 30 جم ايرليس"
 data-price="175">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>تونر 100 ملي</h3>
 <p>السعر: 150 جنيه</p>
 <button
 class="add-to-cart"
 data-name="تونر 100 ملي"
 data-price="150">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>جيل ملطف ومرطب 100 ملي</h3>
 <p>السعر: 160 جنيه</p>
 <button
 class="add-to-cart"
 data-name="جيل ملطف ومرطب 100 ملي"
 data-price="160">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>جيل ملطف ومرطب 200 ملي</h3>
 <p>السعر: 275 جنيه</p>
 <button
 class="add-to-cart"
 data-name="جيل ملطف ومرطب 200 ملي"
 data-price="275">
-
 أضف إلى سلة التسوق
-
 </button>
-        </section>
+</div>
+
+</section>
 
 
-        <!-- LIGHTENING PRODUCTS -->
+       <!-- LIGHTENING PRODUCTS -->
 
-        <section id="lightening">
+<section id="lightening">
 
-            <h2>منتجات التفتيح</h2>
+<h2>منتجات التفتيح</h2>
 
+<div class="product">
 <h3>كريم التصبغات للوجه 40 جم</h3>
 <p>السعر: 140 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم التصبغات للوجه 40 جم"
 data-price="140">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم التصبغات للوجه 80 جم</h3>
 <p>السعر: 250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم التصبغات للوجه 80 جم"
 data-price="250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم تفتيح الأماكن الحساسة 40 جم</h3>
 <p>السعر: 140 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم تفتيح الأماكن الحساسة 40 جم"
 data-price="140">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم تفتيح الأماكن الحساسة 80 جم</h3>
 <p>السعر: 250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم تفتيح الأماكن الحساسة 80 جم"
 data-price="250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>لوشن تفتيح الجسم 100 ملي</h3>
 <p>السعر: 340 جنيه</p>
 <button
 class="add-to-cart"
 data-name="لوشن تفتيح الجسم 100 ملي"
 data-price="340">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>لوشن تفتيح الجسم 250 ملي</h3>
 <p>السعر: 750 جنيه</p>
 <button
 class="add-to-cart"
 data-name="لوشن تفتيح الجسم 250 ملي"
 data-price="750">
-
 أضف إلى سلة التسوق
-
 </button>
-        </section>
+</div>
+
+</section>
 
 
         <!-- LIP CARE PRODUCTS -->
 
-        <section id="lip-care">
+<section id="lip-care">
 
-            <h2>مرطبات الشفاه</h2>
+<h2>مرطبات الشفاه</h2>
 
+<div class="product">
 <h3>ليب بالم</h3>
 <p>السعر: 60 جنيه</p>
 <button
 class="add-to-cart"
 data-name="ليب بالم"
 data-price="60">
-
 أضف إلى سلة التسوق
-
 </button>
-        </section>
+</div>
+
+</section>
 
 
         <!-- SKIN SERUM PRODUCTS -->
 
-        <section id="skin-serums">
+<section id="skin-serums">
 
-            <h2>سيرومات البشرة والعين</h2>
+<h2>سيرومات البشرة والعين</h2>
 
+<div class="product">
 <h3>سيروم العين 15 ملي</h3>
 <p>السعر: 160 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم العين 15 ملي"
 data-price="160">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم العين 30 ملي</h3>
 <p>السعر: 275 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم العين 30 ملي"
 data-price="275">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم الهيالورنيك 15 ملي</h3>
 <p>السعر: 160 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم الهيالورنيك 15 ملي"
 data-price="160">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم الهيالورنيك 30 ملي</h3>
 <p>السعر: 275 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم الهيالورنيك 30 ملي"
 data-price="275">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم البشرة الدهنية 15 ملي</h3>
 <p>السعر: 160 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم البشرة الدهنية 15 ملي"
 data-price="160">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم البشرة الدهنية 30 ملي</h3>
 <p>السعر: 275 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم البشرة الدهنية 30 ملي"
 data-price="275">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم التقشير اللطيف للبشرة الدهنية 30 ملي</h3>
 <p>السعر: 190 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم التقشير اللطيف للبشرة الدهنية 30 ملي"
 data-price="190">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>سيروم Lumière 15 ملي</h3>
 <p>السعر: 600 جنيه</p>
 <button
 class="add-to-cart"
 data-name="سيروم Lumière 15 ملي"
 data-price="600">
-
 أضف إلى سلة التسوق
-
-</button>        
+</button>
+</div>
 
 </section>
 
 
         <!-- HAND & FOOT CARE PRODUCTS -->
 
-        <section id="hand-foot-care">
+<section id="hand-foot-care">
 
-            <h2>العناية باليد والقدم</h2>
+<h2>العناية باليد والقدم</h2>
 
+<div class="product">
 <h3>مرطب يد 40 جم</h3>
 <p>السعر: 125 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مرطب يد 40 جم"
 data-price="125">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>مرطب يد 80 جم</h3>
 <p>السعر: 225 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مرطب يد 80 جم"
 data-price="225">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم القدمين 40 جم</h3>
 <p>السعر: 100 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم القدمين 40 جم"
 data-price="100">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>كريم القدمين 80 جم</h3>
 <p>السعر: 190 جنيه</p>
 <button
 class="add-to-cart"
 data-name="كريم القدمين 80 جم"
 data-price="190">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>قلم الأظافر</h3>
 <p>السعر: 180 جنيه</p>
 <button
 class="add-to-cart"
 data-name="قلم الأظافر"
 data-price="180">
-
 أضف إلى سلة التسوق
-
 </button>
-        </section>
+</div>
+
+</section>
 
 
         <!-- PERSONAL CARE PRODUCTS -->
 
-        <section id="personal-care">
+<section id="personal-care">
 
-            <h2>العناية الشخصية</h2>
+<h2>العناية الشخصية</h2>
 
+<div class="product">
 <h3>مزيل رائحة العرق 40 جم</h3>
 <p>السعر: 125 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مزيل رائحة العرق 40 جم"
 data-price="125">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>مزيل رائحة العرق 80 جم</h3>
 <p>السعر: 225 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مزيل رائحة العرق 80 جم"
 data-price="225">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>مزيل عرق ايرليس وسط</h3>
 <p>السعر: 150 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مزيل عرق ايرليس وسط"
 data-price="150">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>مزيل عرق ايرليس كبيرة</h3>
 <p>السعر: 250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="مزيل عرق ايرليس كبيرة"
 data-price="250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>معطر فم 30 ملي</h3>
 <p>السعر: 75 جنيه</p>
 <button
 class="add-to-cart"
 data-name="معطر فم 30 ملي"
 data-price="75">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>معطر شعر 30 ملي</h3>
 <p>السعر: 75 جنيه</p>
 <button
 class="add-to-cart"
 data-name="معطر شعر 30 ملي"
 data-price="75">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>معطر بيكيني 30 ملي</h3>
 <p>السعر: 75 جنيه</p>
 <button
 class="add-to-cart"
 data-name="معطر بيكيني 30 ملي"
 data-price="75">
-
 أضف إلى سلة التسوق
-
 </button>
-        </section>
+</div>
+
+</section>
 
 
         <!-- SOAP PRODUCTS -->
 
-        <section id="soap">
+<section id="soap">
 
-            <h2>الصابون</h2>
+<h2>الصابون</h2>
 
+<div class="product">
 <h3>صابونة الفحم بالكولاجين والسيراميد للوجه</h3>
 <p>السعر: 90 جنيه</p>
 <button
 class="add-to-cart"
 data-name="صابونة الفحم بالكولاجين والسيراميد للوجه"
 data-price="90">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>صابونة الشوفان بحبيبات المشمش للجسم</h3>
 <p>السعر: 100 جنيه</p>
 <button
 class="add-to-cart"
 data-name="صابونة الشوفان بحبيبات المشمش للجسم"
 data-price="100">
-
 أضف إلى سلة التسوق
-
 </button>
-        </section>
+</div>
+
+</section>
 
 
         <!-- BABY PRODUCTS -->
 
-        <section id="baby-products">
+<section id="baby-products">
 
-            <h2>منتجات الأطفال حديثي الولادة</h2>
+<h2>منتجات الأطفال حديثي الولادة</h2>
 
+<div class="product">
 <h3>شامبو وشاور 2×1 بدون دموع 400 ملي</h3>
 <p>السعر: 240 جنيه</p>
 <button
 class="add-to-cart"
 data-name="شامبو وشاور 2×1 بدون دموع 400 ملي"
 data-price="240">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>بلسم للشعر وفروة الرأس 400 ملي</h3>
 <p>السعر: 240 جنيه</p>
 <button
 class="add-to-cart"
 data-name="بلسم للشعر وفروة الرأس 400 ملي"
 data-price="240">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>لوشن مرطب للجسم 100 ملي</h3>
 <p>السعر: 160 جنيه</p>
 <button
 class="add-to-cart"
 data-name="لوشن مرطب للجسم 100 ملي"
 data-price="160">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>زيت تدليك بديل الجونسون للجسم 100 ملي</h3>
 <p>السعر: 150 جنيه</p>
 <button
 class="add-to-cart"
 data-name="زيت تدليك بديل الجونسون للجسم 100 ملي"
 data-price="150">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>بديل السودو 180 جم</h3>
 <p>السعر: 250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="بديل السودو 180 جم"
 data-price="250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>زيت طبي لعلاج قشرة المهد 30 ملي</h3>
 <p>السعر: 80 جنيه</p>
 <button
 class="add-to-cart"
 data-name="زيت طبي لعلاج قشرة المهد 30 ملي"
 data-price="80">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>معطر شعر وجسم بعطر جونسون 30 ملي</h3>
 <p>السعر: 80 جنيه</p>
 <button
 class="add-to-cart"
 data-name="معطر شعر وجسم بعطر جونسون 30 ملي"
 data-price="80">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>واقي شمس للأطفال 100 ملي</h3>
 <p>السعر: 250 جنيه</p>
 <button
 class="add-to-cart"
 data-name="واقي شمس للأطفال 100 ملي"
 data-price="250">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 
-        </section>
+</section>
 
 
         <!-- OTHER PRODUCTS -->
 
-        <section id="other-products">
+<section id="other-products">
 
-            <h2>منتجات أخرى</h2>
+<h2>منتجات أخرى</h2>
 
+<div class="product">
 <h3>بخاخ الناموس 100 ملي</h3>
 <p>السعر: 140 جنيه</p>
 <button
 class="add-to-cart"
 data-name="بخاخ الناموس 100 ملي"
 data-price="140">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 <hr>
 
+<div class="product">
 <h3>لوشن العضلات 100 ملي</h3>
 <p>السعر: 160 جنيه</p>
 <button
 class="add-to-cart"
 data-name="لوشن العضلات 100 ملي"
 data-price="160">
-
 أضف إلى سلة التسوق
-
 </button>
+</div>
 
-        </section>
+</section>
 
 
         <!-- GO TO CART BUTTON -->
