@@ -1,0 +1,17 @@
+{
+  "name": "nature-secrets-website",
+  "version": "1.0.0",
+  "description": "Nature Secrets Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"No tests specified\""
+  },
+  "keywords": [],
+  "author": "Fares",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-session": "^1.19.0"
+  }
+}

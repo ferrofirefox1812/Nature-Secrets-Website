@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سلة التسوق - Nature Secrets</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- LOGO -->
+
+        <img src="images/logo.jpg"
+             alt="Nature Secrets Logo">
+
+
+        <!-- PAGE TITLE -->
+
+        <h1>سلة التسوق</h1>
+
+
+        <!-- HOME BUTTON -->
+
+        <button id="home-button">
+
+            العودة إلى الصفحة الرئيسية
+
+        </button>
+
+
+        <!-- EMPTY CART MESSAGE -->
+
+        <p id="empty-cart-message">
+
+            سلة التسوق فارغة.
+
+            <br>
+
+            ابدأ بإضافة بعض المنتجات أو العروض.
+
+        </p>
+
+
+        <!-- CART PRODUCTS -->
+
+        <div id="cart-items">
+
+            <!-- Products will appear here automatically -->
+
+        </div>
+
+
+        <!-- TOTAL PRICE -->
+
+        <h2>
+
+            إجمالي الطلب
+
+        </h2>
+
+        <p id="total-price">
+
+            0 جنيه
+
+        </p>
+
+
+        <!-- CUSTOMER INFORMATION -->
+
+        <h2>
+
+            بيانات العميل
+
+        </h2>
+
+
+        <input type="text"
+               id="customer-name"
+               placeholder="الاسم بالكامل"
+               required>
+
+
+        <input type="tel"
+               id="customer-phone"
+               placeholder="رقم الهاتف"
+               required>
+
+
+        <textarea 
+    id="customer-address"
+    placeholder="العنوان بالتفصيل"
+    rows="4"
+    required>
+</textarea>
+
+
+<textarea 
+    id="customer-notes"
+    placeholder="ملاحظات (اختياري)"
+    rows="5">
+</textarea>
+
+        <!-- ACTION BUTTONS -->
+
+        <button id="place-order-button">
+
+            إتمام الطلب
+
+        </button>
+
+
+        <button id="clear-cart-button">
+
+            تفريغ سلة التسوق
+
+        </button>
+
+
+        <button id="continue-shopping-button">
+
+            متابعة التسوق
+
+        </button>
+
+
+        <!-- EMPTY CART BUTTONS -->
+
+        <button id="browse-products-button">
+
+            تصفح المنتجات
+
+        </button>
+
+
+        <button id="browse-offers-button">
+
+            تصفح العروض
+
+        </button>
+
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

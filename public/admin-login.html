@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Login</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<img src="images/logo.jpg">
+
+
+<h1>
+Admin Login
+</h1>
+
+
+<input 
+id="admin-password"
+type="password"
+placeholder="كلمة المرور">
+
+
+<button id="login-button">
+دخول
+</button>
+
+
+<p id="login-message"></p>
+
+
+</div>
+
+
+<script>
+
+const button = document.getElementById("login-button");
+
+
+button.addEventListener("click", async function(){
+
+
+const password =
+document.getElementById("admin-password").value;
+
+
+
+const response = await fetch("/admin-login", {
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+password: password
+})
+
+});
+
+
+const result = await response.json();
+
+
+
+if(result.success){
+
+window.location.href="admin.html";
+
+}
+
+else{
+
+document.getElementById("login-message").textContent =
+"كلمة المرور خاطئة";
+
+}
+
+
+
+});
+
+
+</script>
+
+
+</body>
+
+</html>
