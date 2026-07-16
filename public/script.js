@@ -1295,7 +1295,18 @@ if (firstMatch) {
 
         });
 
-    }, 1000);
+
+        firstMatch.classList.add("highlight-product");
+
+
+        setTimeout(() => {
+
+            firstMatch.classList.remove("highlight-product");
+
+        }, 2000);
+
+
+    }, 2000);
 
 }
 

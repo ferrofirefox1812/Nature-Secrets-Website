@@ -179,3 +179,23 @@ hr {
 html {
     scroll-behavior: smooth;
 }
+
+.highlight-product {
+    animation: highlight 2s ease;
+}
+
+@keyframes highlight {
+
+    0% {
+        background-color: #d9ffd9;
+    }
+
+    50% {
+        background-color: #a8f0a8;
+    }
+
+    100% {
+        background-color: transparent;
+    }
+
+}
