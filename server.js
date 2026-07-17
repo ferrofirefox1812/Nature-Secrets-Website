@@ -1,6 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const fs = require("fs");
+const path = require("path");
 
 const app = express();
 
@@ -347,6 +348,118 @@ app.delete("/orders/:id", function(req,res){
 // ================================
 // START SERVER
 // ================================
+
+app.post("/create-item", (req, res) => {
+
+    const newItem = req.body;
+
+    const filePath = path.join(__dirname, "data", "items.json");
+
+    let items = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+    items.push(newItem);
+
+    fs.writeFileSync(
+        filePath,
+        JSON.stringify(items, null, 2)
+    );
+
+    res.json({
+        message: "Item created successfully"
+    });
+
+});
+
+
+
+// ================================
+// EDIT ITEM
+// ================================
+
+app.put("/edit-item", (req, res) => {
+
+    const filePath = path.join(__dirname, "data", "items.json");
+
+    let items = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+
+    const oldName = req.body.oldName;
+
+
+    const index = items.findIndex(item => item.name === oldName);
+
+
+    if(index !== -1){
+
+        items[index] = req.body.item;
+
+
+        fs.writeFileSync(
+            filePath,
+            JSON.stringify(items, null, 2)
+        );
+
+
+        res.json({
+            success:true,
+            message:"Item updated"
+        });
+
+    }
+
+    else{
+
+        res.json({
+            success:false,
+            message:"Item not found"
+        });
+
+    }
+
+});
+
+
+
+
+// ================================
+// DELETE ITEM
+// ================================
+
+app.delete("/delete-item", (req, res) => {
+
+    const filePath = path.join(__dirname, "data", "items.json");
+
+    let items = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+
+    const name = req.body.name;
+
+
+    items = items.filter(item => item.name !== name);
+
+
+    fs.writeFileSync(
+        filePath,
+        JSON.stringify(items, null, 2)
+    );
+
+
+    res.json({
+        success:true,
+        message:"Item deleted"
+    });
+
+});
+
+app.get("/items", (req, res) => {
+
+    const filePath = path.join(__dirname, "data", "items.json");
+
+    const items = JSON.parse(fs.readFileSync(filePath, "utf8"));
+
+    res.json(items);
+
+});
 
 app.listen(PORT,function(){
 

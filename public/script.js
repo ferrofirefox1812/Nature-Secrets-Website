@@ -1311,3 +1311,45 @@ if (firstMatch) {
 }
 
 }
+
+
+const itemType = document.getElementById("item-type");
+const categorySelect = document.getElementById("category-select");
+
+if (itemType && categorySelect) {
+
+    itemType.addEventListener("change", () => {
+
+        categorySelect.innerHTML = "";
+
+        if (itemType.value === "product") {
+
+            categorySelect.innerHTML = `
+                <option value="">اختر الفئة</option>
+                <option value="shampoo">الشامبو</option>
+                <option value="conditioner">البلسم</option>
+                <option value="hair-serum">السيروم</option>
+                <option value="hair-cream">كريم التصفيف</option>
+                <option value="hair-mask">حمام الكريم</option>
+                <option value="lotion">اللوسيون</option>
+                <option value="skin-care">العناية بالبشرة</option>
+                <option value="baby-products">منتجات الأطفال</option>
+            `;
+        }
+
+        else if (itemType.value === "offer") {
+
+            categorySelect.innerHTML = `
+                <option value="">اختر الفئة</option>
+                <option value="hair-loss-bundles">مجموعات علاج التساقط والقشرة</option>
+                <option value="skin-care-bundles">مجموعات العناية بالبشرة</option>
+                <option value="hair-care-bundles">مجموعات العناية بالشعر</option>
+                <option value="special-offers">العروض الخاصة</option>
+            `;
+        }
+
+    });
+
+}
+
+

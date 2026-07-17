@@ -1,0 +1,730 @@
+[
+  {
+    "type": "product",
+    "category": "shampoo",
+    "name": "شامبو العناية للتلف 250 مل",
+    "price": "175",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "shampoo",
+    "name": "شامبو العناية للتلف 400 مل",
+    "price": "225",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "shampoo",
+    "name": "شامبو العناية لتر",
+    "price": "525",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "shampoo",
+    "name": "شامبو التساقط 250 ملي",
+    "price": "190",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "shampoo",
+    "name": "شامبو التساقط 400 ملي",
+    "price": "250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "shampoo",
+    "name": "شامبو التساقط لتر",
+    "price": "565",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "shampoo",
+    "name": "شامبو القشرة 250 ملي",
+    "price": "190",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "shampoo",
+    "name": "شامبو القشرة 400 ملي",
+    "price": "250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "shampoo",
+    "name": "شامبو القشرة لتر",
+    "price": "565",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "conditioner",
+    "name": "بلسم 250 ملي",
+    "price": "175",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "conditioner",
+    "name": "بلسم 400 ملي",
+    "price": "225",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "conditioner",
+    "name": "بلسم لتر",
+    "price": "525",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "styling-cream",
+    "name": "كريم تصفيف الشعر 80 جم",
+    "price": "110",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "styling-cream",
+    "name": "كريم تصفيف الشعر 130 جم",
+    "price": "175",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "styling-cream",
+    "name": "كريم تصفيف الشعر 225 جم",
+    "price": "260",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "styling-cream",
+    "name": "كريم تصفيف الشعر 400 جم",
+    "price": "450",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "styling-cream",
+    "name": "كريم تصفيف الشعر نصف كيلو",
+    "price": "500",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "styling-cream",
+    "name": "كريم تصفيف الشعر كيلو",
+    "price": "940",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hair-mask",
+    "name": "حمام كريم 80 جم",
+    "price": "110",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hair-mask",
+    "name": "حمام كريم 225 جم",
+    "price": "190",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hair-mask",
+    "name": "حمام كريم 400 جم",
+    "price": "325",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hair-mask",
+    "name": "حمام كريم 500 جم",
+    "price": "375",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hair-mask",
+    "name": "حمام كريم كيلو",
+    "price": "700",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hair-lotion",
+    "name": "لوشن لتساقط الشعر 120 ملي",
+    "price": "200",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hair-lotion",
+    "name": "لوشن لتساقط الشعر 250 ملي",
+    "price": "400",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "serum",
+    "name": "سيروم 50 ملي ايرليس",
+    "price": "200",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "serum",
+    "name": "سيروم 100 ملي",
+    "price": "340",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "serum",
+    "name": "سيروم ربع لتر",
+    "price": "690",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "serum",
+    "name": "سيروم نصف لتر",
+    "price": "1250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "serum",
+    "name": "سيروم لتر",
+    "price": "2375",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "كريم كولاجين 40 جم",
+    "price": "140",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "كريم كولاجين 80 جم",
+    "price": "250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "غسول البشرة الدهنية 250 ملي",
+    "price": "160",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "غسول البشرة الدهنية 400 ملي",
+    "price": "240",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "غسول الهيالورنيك فوم",
+    "price": "225",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "واقي الشمس 15 ملي هيالورنيك",
+    "price": "150",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "واقي الشمس 30 ملي هيالورنيك",
+    "price": "250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "واقي الشمس 50 ملي هيالورنيك",
+    "price": "375",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "مرطب الجسم 100 ملي",
+    "price": "190",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "مرطب بديل ليزر 3×1 100 ملي",
+    "price": "200",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "شاور جيل طبي 400 ملي",
+    "price": "190",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "هاند وش بالجلسرين 500 ملي",
+    "price": "100",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "سكراب القهوة 40 جم",
+    "price": "100",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "سكراب القهوة 80 جم",
+    "price": "190",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "ميك أب ريموفر 120 ملي",
+    "price": "160",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "ماسكارا الرموش والحواجب",
+    "price": "150",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "تنت هيالورنيك 15 جم",
+    "price": "90",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "مس الحبوب 15 جم ايرليس",
+    "price": "90",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "مس الحبوب 30 جم ايرليس",
+    "price": "175",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "تونر 100 ملي",
+    "price": "150",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "جيل ملطف ومرطب 100 ملي",
+    "price": "160",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "skin-care",
+    "name": "جيل ملطف ومرطب 200 ملي",
+    "price": "275",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "brightening",
+    "name": "كريم التصبغات للوجه 40 جم",
+    "price": "140",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "brightening",
+    "name": "كريم التصبغات للوجه 80 جم",
+    "price": "250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "brightening",
+    "name": "كريم تفتيح الأماكن الحساسة 40 جم",
+    "price": "140",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "brightening",
+    "name": "كريم تفتيح الأماكن الحساسة 80 جم",
+    "price": "250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "brightening",
+    "name": "لوشن تفتيح الجسم 100 ملي",
+    "price": "340",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "brightening",
+    "name": "لوشن تفتيح الجسم 250 ملي",
+    "price": "750",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "lip-care",
+    "name": "ليب بالم",
+    "price": "60",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "face-serums",
+    "name": "سيروم العين 15 ملي",
+    "price": "160",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "face-serums",
+    "name": "سيروم العين 30 ملي",
+    "price": "275",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "face-serums",
+    "name": "سيروم الهيالورنيك 15 ملي",
+    "price": "160",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "face-serums",
+    "name": "سيروم الهيالورنيك 30 ملي",
+    "price": "275",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "face-serums",
+    "name": "سيروم البشرة الدهنية 15 ملي",
+    "price": "160",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "face-serums",
+    "name": "سيروم البشرة الدهنية 30 ملي",
+    "price": "275",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "face-serums",
+    "name": "سيروم التقشير اللطيف للبشرة الدهنية 30 ملي",
+    "price": "190",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "face-serums",
+    "name": "سيروم Lumière 15 ملي",
+    "price": "600",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hand-foot-care",
+    "name": "مرطب يد 40 جم",
+    "price": "125",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hand-foot-care",
+    "name": "مرطب يد 80 جم",
+    "price": "225",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hand-foot-care",
+    "name": "كريم القدمين 40 جم",
+    "price": "100",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hand-foot-care",
+    "name": "كريم القدمين 80 جم",
+    "price": "190",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "hand-foot-care",
+    "name": "قلم الأظافر",
+    "price": "180",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "personal-care",
+    "name": "مزيل رائحة العرق 40 جم",
+    "price": "125",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "personal-care",
+    "name": "مزيل رائحة العرق 80 جم",
+    "price": "225",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "personal-care",
+    "name": "مزيل عرق ايرليس وسط",
+    "price": "150",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "personal-care",
+    "name": "مزيل عرق ايرليس كبيرة",
+    "price": "250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "personal-care",
+    "name": "معطر فم 30 ملي",
+    "price": "75",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "personal-care",
+    "name": "معطر شعر 30 ملي",
+    "price": "75",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "personal-care",
+    "name": "معطر بيكيني 30 ملي",
+    "price": "75",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "soap",
+    "name": "صابونة الفحم بالكولاجين والسيراميد للوجه",
+    "price": "90",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "soap",
+    "name": "صابونة الشوفان بحبيبات المشمش للجسم",
+    "price": "100",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "baby-products",
+    "name": "شامبو وشاور 2×1 بدون دموع 400 ملي",
+    "price": "240",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "baby-products",
+    "name": "بلسم للشعر وفروة الرأس 400 ملي",
+    "price": "240",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "baby-products",
+    "name": "لوشن مرطب للجسم 100 ملي",
+    "price": "160",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "baby-products",
+    "name": "زيت تدليك بديل الجونسون للجسم 100 ملي",
+    "price": "150",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "baby-products",
+    "name": "بديل السودو 180 جم",
+    "price": "250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "baby-products",
+    "name": "زيت طبي لعلاج قشرة المهد 30 ملي",
+    "price": "80",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "baby-products",
+    "name": "معطر شعر وجسم بعطر جونسون 30 ملي",
+    "price": "80",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "baby-products",
+    "name": "واقي شمس للأطفال 100 ملي",
+    "price": "250",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "other",
+    "name": "بخاخ الناموس 100 ملي",
+    "price": "140",
+    "image": "",
+    "description": ""
+  },
+  {
+    "type": "product",
+    "category": "other",
+    "name": "لوشن العضلات 100 ملي",
+    "price": "160",
+    "image": "",
+    "description": ""
+  }
+]

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء منتج أو عرض جديد</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <img src="images/logo.jpg" alt="Nature Secrets Logo">
+
+    <h1>إنشاء منتج أو عرض جديد</h1>
+
+    <button onclick="location.href='admin.html'">
+        العودة إلى لوحة التحكم
+    </button>
+
+    <h2>ماذا تريد إنشاء؟</h2>
+
+    <select id="item-type">
+
+        <option value="">اختر نوع العنصر</option>
+        <option value="product">منتج</option>
+        <option value="offer">عرض</option>
+
+    </select>
+
+
+    <div id="category-section">
+
+        
+        <h2 id="category-title">اختر الفئة</h2>
+
+<select id="category-select">
+
+    <option value="">اختر نوع العنصر أولاً</option>
+
+</select>
+
+    </div>
+
+
+    <h2>الاسم</h2>
+
+    <input type="text"
+    id="item-name"
+    placeholder="اسم المنتج أو العرض">
+
+
+    <h2>السعر</h2>
+
+<input type="number"
+id="item-price"
+placeholder="السعر بالجنيه">
+
+
+<h2 id="old-price-title" style="display:none;">
+السعر الأصلي
+</h2>
+
+<input 
+type="number"
+id="item-old-price"
+placeholder="السعر الأصلي"
+style="display:none;">
+
+    <h2 id="bundle-products-title" style="display:none;">
+اختر منتجات العرض
+</h2>
+
+<div id="bundle-products-container"
+style="display:none;">
+</div>
+
+    <h2>رابط الصورة</h2>
+
+    <input type="text"
+    id="item-image"
+    placeholder="ضع رابط الصورة هنا">
+
+
+    <h2>الوصف (اختياري)</h2>
+
+    <textarea
+    id="item-description"
+    placeholder="أدخل وصفاً إذا أردت">
+    </textarea>
+
+
+    <button id="create-item-button">
+
+        إنشاء
+
+    </button>
+
+</div>
+
+
+<script src="create-item.js"></script>
+
+</body>
+
+</html>
