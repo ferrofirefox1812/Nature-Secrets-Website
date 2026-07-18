@@ -345,38 +345,27 @@ if (placeOrderButton) {
         const address = document.getElementById("customer-address").value;
         const notes = document.getElementById("customer-notes").value;
 
-
         const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
 
         if (name === "" || phone === "" || address === "") {
 
             alert("من فضلك املأ الاسم ورقم الهاتف والعنوان");
-
             return;
 
         }
-
 
         if (cart.length === 0) {
 
             alert("سلة التسوق فارغة");
-
             return;
 
         }
 
-
         let total = 0;
 
-
-        cart.forEach(function(product) {
-
+        cart.forEach(function (product) {
             total += product.price * product.quantity;
-
         });
-
-
 
         const order = {
 
@@ -400,62 +389,54 @@ if (placeOrderButton) {
 
         };
 
-
-
         fetch("/orders", {
 
-    method:"POST",
+            method: "POST",
 
-    headers:{
-        "Content-Type":"application/json"
-    },
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-    body:JSON.stringify(order)
+            body: JSON.stringify(order)
 
-})
-.then(function(response){
+        })
 
-    return response.json();
+        .then(function (response) {
+            return response.json();
+        })
 
-})
-.then(function(data){
+        .then(function (data) {
 
+            if (data.success) {
 
-    if(data.success){
+                localStorage.setItem(
+                    "lastOrderID",
+                    order.id
+                );
 
+                alert(
+                    "تم إرسال الطلب بنجاح!\n\nرقم طلبك هو: " + order.id
+                );
 
-        alert("تم إرسال الطلب بنجاح!");
+                localStorage.removeItem("cart");
 
+                window.location.href = "index.html";
 
-        localStorage.removeItem("cart");
+            } else {
 
+                alert("حدث خطأ أثناء إرسال الطلب.");
 
-        window.location.href="index.html";
+            }
 
+        })
 
-    }
+        .catch(function (error) {
 
+            console.error("Order Error:", error);
 
-});
+            alert("حدث خطأ أثناء الاتصال بالخادم.");
 
-        localStorage.setItem(
-    "lastOrderID",
-    order.id
-);
-
-
-        alert(
-    "تم إرسال الطلب بنجاح!\n\nرقم طلبك هو: " + order.id
-);
-
-
-
-        localStorage.removeItem("cart");
-
-
-
-        window.location.href = "index.html";
-
+        });
 
     });
 
@@ -1349,6 +1330,138 @@ if (itemType && categorySelect) {
         }
 
     });
+
+}
+
+
+async function testOrder() {
+    const { data, error } = await supabaseClient
+        .from("orders")
+        .insert([
+            {
+                customer_name: "Test Customer",
+                address: "Alexandria",
+                notes: "Testing order",
+                items: [
+                    {
+                        name: "Test Product",
+                        price: 100,
+                        quantity: 1
+                    }
+                ],
+                total_price: 100,
+                status: "pending"
+            }
+        ]);
+
+    if (error) {
+        console.log("Order error:", error);
+    } else {
+        console.log("Order sent:", data);
+    }
+}
+
+window.addEventListener("supabaseReady", () => {
+
+    const orderButton = document.getElementById("place-order-button");
+
+    if (orderButton) {
+
+        orderButton.addEventListener("click", placeOrder);
+
+    }
+
+});
+
+
+async function placeOrder() {
+
+    const name = document.getElementById("customer-name").value;
+
+    const phone = document.getElementById("customer-phone").value;
+
+    const address = document.getElementById("customer-address").value;
+
+    const notes = document.getElementById("customer-notes").value;
+
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+
+    const total = cart.reduce((sum, item) => {
+
+        return sum + (item.price * item.quantity);
+
+    }, 0);
+
+
+
+    if (cart.length === 0) {
+
+        alert("السلة فارغة");
+
+        return;
+
+    }
+
+
+    if (!name || !phone || !address) {
+
+        alert("من فضلك أكمل بيانات العميل");
+
+        return;
+
+    }
+
+
+
+    const { data, error } = await supabaseClient
+
+        .from("orders")
+
+        .insert([
+
+            {
+
+                customer_name: name,
+
+                address: address,
+
+                notes: notes,
+
+                items: cart,
+
+                total_price: total,
+
+                status: "pending"
+
+            }
+
+        ]);
+
+
+
+    if (error) {
+
+        console.log("Order error:", error);
+
+        alert("حدث خطأ أثناء إرسال الطلب");
+
+    } 
+
+    else {
+
+        console.log("Order sent:", data);
+
+        alert("تم إرسال الطلب بنجاح ❤️");
+
+
+        localStorage.removeItem("cart");
+
+
+        location.reload();
+
+    }
 
 }
 
