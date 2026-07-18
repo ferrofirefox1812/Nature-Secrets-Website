@@ -101,7 +101,6 @@ categorySelect.innerHTML=`
 document.getElementById("create-item-button")
 .addEventListener("click", async ()=>{
 
-
 const selectedProducts = [];
 
 document.querySelectorAll(".bundle-product:checked").forEach(product => {
@@ -121,6 +120,8 @@ const item = {
 
     price: document.getElementById("item-price").value,
 
+    oldPrice: document.getElementById("item-old-price").value,
+
     image: document.getElementById("item-image").value,
 
     description: document.getElementById("item-description").value,
@@ -131,30 +132,25 @@ const item = {
 
 
 
-const response=await fetch("/create-item",{
+const response = await fetch("/create-item",{
 
+    method:"POST",
 
-method:"POST",
+    headers:{
 
-headers:{
+        "Content-Type":"application/json"
 
-"Content-Type":"application/json"
+    },
 
-},
-
-
-body:JSON.stringify(item)
-
+    body:JSON.stringify(item)
 
 });
 
 
 
-const result=await response.json();
-
+const result = await response.json();
 
 alert(result.message);
-
 
 });
 
@@ -168,25 +164,25 @@ async function loadBundleProducts(){
 const response = await fetch("http://localhost:3000/items");
 
 
-const items=await response.json();
+const items = await response.json();
 
 
 
-const products=items.filter(item=>item.type==="product");
+const products = items.filter(item => item.type === "product");
 
 
 
-const container=document.getElementById("bundle-products-container");
+const container = document.getElementById("bundle-products-container");
 
 
-container.innerHTML="";
+container.innerHTML = "";
 
 
 
 products.forEach(product=>{
 
 
-container.innerHTML+=`
+container.innerHTML += `
 
 <div>
 
@@ -195,13 +191,11 @@ type="checkbox"
 class="bundle-product"
 value="${product.name}">
 
-
 <label>
 
 ${product.name} - ${product.price} جنيه
 
 </label>
-
 
 </div>
 
@@ -211,6 +205,5 @@ ${product.name} - ${product.price} جنيه
 
 
 }
-
 
 

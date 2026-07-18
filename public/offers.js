@@ -50,19 +50,32 @@ fetch("/items")
             <h3>${offer.name}</h3>
 
             <p>
-                ${offer.description || ""}
-            </p>
+    ${offer.description || ""}
+</p>
 
-            ${
-                offer.oldPrice
-                    ? `<p class="old-price">السعر الأصلي: ${offer.oldPrice} جنيه</p>`
-                    : ""
-            }
+${
+    offer.productsIncluded &&
+    offer.productsIncluded.length > 0
+        ? `
+        <h4>محتويات العرض:</h4>
+        <ul>
+            ${offer.productsIncluded
+                .map(product => `<li>${product}</li>`)
+                .join("")}
+        </ul>
+        `
+        : ""
+}
 
-            <p class="new-price">
-                سعر العرض: ${offer.price} جنيه
-            </p>
+${
+    offer.oldPrice
+        ? `<p class="old-price">السعر الأصلي: ${offer.oldPrice} جنيه</p>`
+        : ""
+}
 
+<p class="new-price">
+    سعر العرض: ${offer.price} جنيه
+</p>
             <button
                 class="add-to-cart"
                 data-name="${offer.name}"

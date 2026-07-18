@@ -126,7 +126,7 @@ const productPrice = Number(button.dataset.price);
 // =====================================
 
 const placeOrderButton = document.getElementById("place-order-button");
-const clearCartButton = document.getElementById("clear-cart-button");
+const clearCartButton = document.getElementById("");
 const continueShoppingButton = document.getElementById("continue-shopping-button");
 const browseProductsButton = document.getElementById("browse-products-button");
 const browseOffersButton = document.getElementById("browse-offers-button");
