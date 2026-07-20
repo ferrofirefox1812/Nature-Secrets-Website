@@ -161,7 +161,7 @@ alert(result.message);
 async function loadBundleProducts(){
 
 
-const response = await fetch("http://localhost:3000/items");
+const response = await fetch("/items");
 
 
 const items = await response.json();

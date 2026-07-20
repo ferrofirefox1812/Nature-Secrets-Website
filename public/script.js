@@ -24,7 +24,7 @@ const offersButton = document.getElementById("offers-button");
 const productsButton = document.getElementById("products-button");
 const cartButton = document.getElementById("cart-button");
 const trackingButton = document.getElementById("tracking-button");
-
+const productInfoButton = document.getElementById("product-info-button");
 
 
 if (offersButton) {
@@ -47,11 +47,23 @@ if (cartButton) {
     });
 }
 
+
 if (trackingButton) {
 
-    trackingButton.addEventListener("click", function(){
+    trackingButton.addEventListener("click", function () {
 
         window.location.href = "order-tracking.html";
+
+    });
+
+}
+
+
+if (productInfoButton) {
+
+    productInfoButton.addEventListener("click", function () {
+
+        window.location.href = "product-info.html";
 
     });
 

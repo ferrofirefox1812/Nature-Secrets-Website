@@ -20,10 +20,12 @@ body {
 }
 
 img {
-    width: 300px;
-    max-width: 100%;
-    margin-bottom: 20px;
-    border-radius: 15px;
+    width: 90%;
+    max-width: 900px;
+    display: block;
+    margin: 30px auto;
+    border-radius: 25px;
+    cursor: pointer;
 }
 
 h1 {
@@ -149,7 +151,7 @@ hr {
 @media (max-width: 768px) {
 
     img {
-        width: 200px;
+        width: 95%;
     }
 
     h1 {
