@@ -1,3 +1,4 @@
+
 let searchTimer;
 
 // =====================================
@@ -101,7 +102,7 @@ addToCartButtons.forEach(function (button) {
 
         const productName = button.dataset.name;
 
-const productPrice = Number(button.dataset.price);
+        const productPrice = Number(button.dataset.price);
 
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -226,14 +227,14 @@ if (cartItems) {
         const plusButtons = document.querySelectorAll(".plus-button");
 
 
-        plusButtons.forEach(function(button) {
+        plusButtons.forEach(function (button) {
 
-            button.addEventListener("click", function() {
+            button.addEventListener("click", function () {
 
                 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 
-                let product = cart.find(function(item) {
+                let product = cart.find(function (item) {
 
                     return item.name === button.dataset.name;
 
@@ -259,14 +260,14 @@ if (cartItems) {
         const minusButtons = document.querySelectorAll(".minus-button");
 
 
-        minusButtons.forEach(function(button) {
+        minusButtons.forEach(function (button) {
 
-            button.addEventListener("click", function() {
+            button.addEventListener("click", function () {
 
                 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 
-                let product = cart.find(function(item) {
+                let product = cart.find(function (item) {
 
                     return item.name === button.dataset.name;
 
@@ -299,13 +300,13 @@ if (cartItems) {
 
 const removeButtons = document.querySelectorAll(".remove-button");
 
-removeButtons.forEach(function(button) {
+removeButtons.forEach(function (button) {
 
-    button.addEventListener("click", function() {
+    button.addEventListener("click", function () {
 
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        cart = cart.filter(function(item) {
+        cart = cart.filter(function (item) {
 
             return item.name !== button.dataset.name;
 
@@ -332,7 +333,7 @@ if (totalPriceElement) {
     let total = 0;
 
 
-    cart.forEach(function(product) {
+    cart.forEach(function (product) {
 
         total += product.price * product.quantity;
 
@@ -348,7 +349,7 @@ if (totalPriceElement) {
 // CHECKOUT SYSTEM
 // =====================================
 
-if (placeOrderButton) {
+/*if (placeOrderButton) {
 
     placeOrderButton.addEventListener("click", function () {
 
@@ -413,48 +414,48 @@ if (placeOrderButton) {
 
         })
 
-        .then(function (response) {
-            return response.json();
-        })
+            .then(function (response) {
+                return response.json();
+            })
 
-        .then(function (data) {
+            .then(function (data) {
 
-            if (data.success) {
+                if (data.success) {
 
-                localStorage.setItem(
-                    "lastOrderID",
-                    order.id
-                );
+                    localStorage.setItem(
+                        "lastOrderID",
+                        order.id
+                    );
 
-                alert(
-                    "تم إرسال الطلب بنجاح!\n\nرقم طلبك هو: " + order.id
-                );
+                    alert(
+                        "تم إرسال الطلب بنجاح!\n\nرقم طلبك هو: " + order.id
+                    );
 
-                localStorage.removeItem("cart");
+                    localStorage.removeItem("cart");
 
-                window.location.href = "index.html";
+                    window.location.href = "index.html";
 
-            } else {
+                } else {
 
-                alert("حدث خطأ أثناء إرسال الطلب.");
+                    alert("حدث خطأ أثناء إرسال الطلب.");
 
-            }
+                }
 
-        })
+            })
 
-        .catch(function (error) {
+            .catch(function (error) {
 
-            console.error("Order Error:", error);
+                console.error("Order Error:", error);
 
-            alert("حدث خطأ أثناء الاتصال بالخادم.");
+                alert("حدث خطأ أثناء الاتصال بالخادم.");
 
-        });
+            });
 
     });
 
 }
 
-
+*/
 
 
 // =====================================
@@ -471,82 +472,83 @@ console.log(newOrdersSection);
 if (newOrdersSection) {
 
 
-fetch("/orders")
+    window.addEventListener("supabaseReady", async () => {
 
-.then(function(response){
+const { data: orders, error } = await supabaseClient
+    .from("orders")
+    .select("*");
 
-    return response.json();
+if (error) {
+    console.log(error);
+    return;
+}
 
-})
+            const newOrdersCount = document.getElementById("new-orders-count");
+            const preparingOrdersCount = document.getElementById("preparing-orders-count");
+            const shippedOrdersCount = document.getElementById("shipped-orders-count");
+            const deliveredOrdersCount = document.getElementById("delivered-orders-count");
+            const totalOrdersCount = document.getElementById("total-orders-count");
+            const totalProfit = document.getElementById("total-profit");
 
-.then(function(orders){
+            console.log(orders[0]);
 
-const newOrdersCount = document.getElementById("new-orders-count");
-const preparingOrdersCount = document.getElementById("preparing-orders-count");
-const shippedOrdersCount = document.getElementById("shipped-orders-count");
-const deliveredOrdersCount = document.getElementById("delivered-orders-count");
-const totalOrdersCount = document.getElementById("total-orders-count");
-const totalProfit = document.getElementById("total-profit");
+           newOrdersCount.textContent =
+                orders.filter(order => order.status === "new").length;
 
-console.log(orders);
+            preparingOrdersCount.textContent =
+                orders.filter(order => order.status === "preparing").length;
 
-newOrdersCount.textContent =
-    orders.filter(order => order.status === "new").length;
+            shippedOrdersCount.textContent =
+                orders.filter(order => order.status === "shipped").length;
 
-preparingOrdersCount.textContent =
-    orders.filter(order => order.status === "preparing").length;
+            deliveredOrdersCount.textContent =
+                orders.filter(order => order.status === "delivered").length;
 
-shippedOrdersCount.textContent =
-    orders.filter(order => order.status === "shipped").length;
-
-deliveredOrdersCount.textContent =
-    orders.filter(order => order.status === "delivered").length;
-
-totalOrdersCount.textContent = orders.length;
-
-
-let profit = 0;
-
-orders.forEach(function(order) {
-
-    profit += order.total;
-
-});
-
-totalProfit.textContent = profit;
+            totalOrdersCount.textContent = orders.length;
 
 
-    orders.forEach(function(order) {
+            let profit = 0;
+
+            orders.forEach(function (order) {
+
+                profit += order.total_price;
+
+            });
+
+            totalProfit.textContent = profit;
 
 
-        if (order.status === "new") {
+            orders.forEach(function (order) {
 
-    console.log("ORDER FOUND!");
- 
 
-            let itemsHTML = "";
+                if (order.status === "new") {
 
-order.items.forEach(function(item) {
+                    console.log("ORDER FOUND!");
 
-    itemsHTML += `
+
+                    let itemsHTML = "";
+
+                    order.items.forEach(function (item) {
+
+                        itemsHTML += `
     <li>
         ${item.name} - ${item.quantity} × ${item.price} جنيه
     </li>
     `;
 
-});
+                    });
 
 
-newOrdersSection.innerHTML += `
+                    newOrdersSection.innerHTML += `
 
 <div class="order-card">
 
     <h3>
-        رقم الطلب: ${order.id}
+       رقم الطلب: ${order.tracking_code}
     </h3>
 
     <p>
-        الاسم: ${order.name}
+        الاسم: ${order.customer_name}
     </p>
 
     <p>
@@ -570,14 +572,14 @@ newOrdersSection.innerHTML += `
     </ul>
 
     <p>
-        الإجمالي: ${order.total} جنيه
+        الإجمالي: ${order.total_price} جنيه
     </p>
 
     <p>
-        التاريخ: ${order.date}
+        التاريخ: ${order.created_at || "لا يوجد"}
     </p>
 
-    <button class="prepare-order" data-id="${order.id}">
+    <button class="prepare-order" data-id="${order.tracking_code}">
         قيد التجهيز
     </button>
 
@@ -594,43 +596,43 @@ newOrdersSection.innerHTML += `
 <hr>
 
 `;
-        }
+                }
 
-        });
-
-
-
-orders.forEach(function(order) {
+            });
 
 
-        if (order.status === "preparing") {
 
-    console.log("ORDER FOUND!");
- 
+            orders.forEach(function (order) {
 
-            let itemsHTML = "";
 
-order.items.forEach(function(item) {
+                if (order.status === "preparing") {
 
-    itemsHTML += `
+                    console.log("ORDER FOUND!");
+
+
+                    let itemsHTML = "";
+
+                    order.items.forEach(function (item) {
+
+                        itemsHTML += `
     <li>
         ${item.name} - ${item.quantity} × ${item.price} جنيه
     </li>
     `;
 
-});
+                    });
 
 
-preparingOrdersSection.innerHTML += `
+                    preparingOrdersSection.innerHTML += `
 
 <div class="order-card">
 
     <h3>
-        رقم الطلب: ${order.id}
+       رقم الطلب: ${order.tracking_code}
     </h3>
 
     <p>
-        الاسم: ${order.name}
+        الاسم: ${order.customer_name}
     </p>
 
     <p>
@@ -654,16 +656,16 @@ preparingOrdersSection.innerHTML += `
     </ul>
 
     <p>
-        الإجمالي: ${order.total} جنيه
+        الإجمالي: ${order.total_price} جنيه
     </p>
 
     <p>
-        التاريخ: ${order.date}
+        التاريخ: ${order.created_at || "لا يوجد"}
     </p>
 
-    <button class="ship-order" data-id="${order.id}">
+    <button class="ship-order" data-id="${order.tracking_code}">
     تم الشحن
-    </button>
+</button>
 
     <button class="copy-phone" data-phone="${order.phone}">
         نسخ رقم الهاتف
@@ -678,42 +680,42 @@ preparingOrdersSection.innerHTML += `
 <hr>
 
 `;
-        }
+                }
 
-        });
-
-           
-
-    orders.forEach(function(order) {
+            });
 
 
-    if (order.status === "shipped") {
 
-        console.log("SHIPPED ORDER FOUND!");
+            orders.forEach(function (order) {
 
-        let itemsHTML = "";
 
-        order.items.forEach(function(item) {
+                if (order.status === "shipped") {
 
-            itemsHTML += `
+                    console.log("SHIPPED ORDER FOUND!");
+
+                    let itemsHTML = "";
+
+                    order.items.forEach(function (item) {
+
+                        itemsHTML += `
             <li>
                 ${item.name} - ${item.quantity} × ${item.price} جنيه
             </li>
             `;
 
-        });
+                    });
 
 
-        shippedOrdersSection.innerHTML += `
+                    shippedOrdersSection.innerHTML += `
 
         <div class="order-card">
 
             <h3>
-                رقم الطلب: ${order.id}
+               رقم الطلب: ${order.tracking_code}
             </h3>
 
             <p>
-                الاسم: ${order.name}
+                الاسم: ${order.customer_name}
             </p>
 
             <p>
@@ -737,17 +739,17 @@ preparingOrdersSection.innerHTML += `
             </ul>
 
             <p>
-                الإجمالي: ${order.total} جنيه
+                الإجمالي: ${order.total_price} جنيه
             </p>
 
             <p>
-                التاريخ: ${order.date}
+                التاريخ: ${order.created_at || "لا يوجد"}
             </p>
 
 
-            <button class="deliver-order" data-id="${order.id}">
-                تم التسليم
-            </button>
+            <button class="deliver-order" data-id="${order.tracking_code}">
+    تم التسليم
+</button>
 
 
             <button class="copy-phone" data-phone="${order.phone}">
@@ -764,45 +766,45 @@ preparingOrdersSection.innerHTML += `
 
         `;
 
-    }
+                }
 
 
-});
-
- 
+            });
 
 
 
- orders.forEach(function(order) {
 
 
-     if (order.status === "delivered") {
+            orders.forEach(function (order) {
 
-        console.log("DELIVERED ORDER FOUND!");
 
-        let itemsHTML = "";
+                if (order.status === "delivered") {
 
-        order.items.forEach(function(item) {
+                    console.log("DELIVERED ORDER FOUND!");
 
-            itemsHTML += `
+                    let itemsHTML = "";
+
+                    order.items.forEach(function (item) {
+
+                        itemsHTML += `
             <li>
                 ${item.name} - ${item.quantity} × ${item.price} جنيه
             </li>
             `;
 
-        });
+                    });
 
 
-        deliveredOrdersSection.innerHTML += `
+                    deliveredOrdersSection.innerHTML += `
 
         <div class="order-card">
 
             <h3>
-                رقم الطلب: ${order.id}
+               رقم الطلب: ${order.tracking_code}
             </h3>
 
             <p>
-                الاسم: ${order.name}
+                الاسم: ${order.customer_name}
             </p>
 
             <p>
@@ -826,11 +828,11 @@ preparingOrdersSection.innerHTML += `
             </ul>
 
             <p>
-                الإجمالي: ${order.total} جنيه
+                الإجمالي: ${order.total_price} جنيه
             </p>
 
             <p>
-                التاريخ: ${order.date}
+                التاريخ: ${order.created_at || "لا يوجد"}
             </p>
 
 
@@ -853,13 +855,13 @@ preparingOrdersSection.innerHTML += `
 
         `;
 
-    }
+                }
 
 
-});
+          });
 
-});
- 
+    });
+
 }
 
 
@@ -871,71 +873,64 @@ preparingOrdersSection.innerHTML += `
 // ORDER MANAGEMENT
 // =====================================
 
-function updateOrderStatus(orderID, newStatus){
+async function updateOrderStatus(orderID, newStatus) {
 
-    fetch("/orders/" + orderID, {
+    console.log("ID:", orderID);
+    console.log("TYPE:", typeof orderID);
+    console.log("STATUS:", newStatus);
 
-        method: "PUT",
-
-        headers: {
-            "Content-Type": "application/json"
-        },
-
-        body: JSON.stringify({
+    const { data, error } = await supabaseClient
+        .from("orders")
+        .update({
             status: newStatus
         })
+        .eq("tracking_code", orderID)
+        .select();
 
-    })
+    if (error) {
 
-    .then(function(response){
+        console.log("UPDATE ERROR:", error);
 
-        return response.json();
+    } else {
 
-    })
+        console.log("ORDER UPDATED:", data);
 
-    .then(function(data){
+        location.reload();
 
-        if(data.success){
-
-            location.reload();
-
-        }
-
-    });
+    }
 
 }
 
 
-function deleteOrder(orderID){
+async function deleteOrder(orderID) {
 
-    fetch("/orders/" + orderID, {
+    console.log("DELETE FROM SUPABASE:", orderID);
 
-        method: "DELETE"
+    const { data, error } = await supabaseClient
+        .from("orders")
+        .delete()
+        .eq("id", orderID);
 
-    })
 
-    .then(function(response){
+    if (error) {
 
-        return response.json();
+        console.log("DELETE ERROR:", error);
 
-    })
+        alert("حدث خطأ أثناء حذف الطلب");
 
-    .then(function(data){
+    } else {
 
-        if(data.success){
+        console.log("ORDER DELETED:", data);
 
-            location.reload();
+        location.reload();
 
-        }
+    }
 
-    });
 
 }
+// PREPARING / SHIPPING / DELIVERED / DELETE / COPY
 
-
-document.addEventListener("click", function(event) {
-
-    // PREPARING
+document.addEventListener("click", function (event) {
 
     if (event.target.classList.contains("prepare-order")) {
 
@@ -1029,82 +1024,82 @@ const trackButton = document.getElementById("track-button");
 if (trackButton) {
 
 
-trackButton.addEventListener("click", function(){
+    trackButton.addEventListener("click", function () {
 
 
-const phone =
-document.getElementById("tracking-phone").value;
+        const phone =
+            document.getElementById("tracking-phone").value;
 
 
-const id =
-document.getElementById("tracking-id").value;
-
-
-
-fetch("/orders")
-
-.then(function(response){
-
-    return response.json();
-
-})
-
-.then(function(orders){
+        const id =
+            document.getElementById("tracking-id").value;
 
 
 
-const order = orders.find(function(order){
+        fetch("/orders")
 
+            .then(function (response) {
 
-return order.phone === phone && order.id === id;
+                return response.json();
 
+            })
 
-});
-
-
-
-const result =
-document.getElementById("tracking-result");
+            .then(function (orders) {
 
 
 
-if(order){
+                const order = orders.find(function (order) {
 
 
-let statusText = "";
+                    return order.phone === phone && order.id === id;
 
 
-
-if(order.status === "new"){
-
-statusText = "🟢 تم استلام الطلب";
-
-}
-
-
-else if(order.status === "preparing"){
-
-statusText = "🔧 قيد التجهيز";
-
-}
-
-
-else if(order.status === "shipped"){
-
-statusText = "🚚 تم الشحن";
-
-}
-
-
-else if(order.status === "delivered"){
-
-statusText = "✅ تم التسليم";
-
-}
+                });
 
 
 
-result.innerHTML = `
+                const result =
+                    document.getElementById("tracking-result");
+
+
+
+                if (order) {
+
+
+                    let statusText = "";
+
+
+
+                    if (order.status === "new") {
+
+                        statusText = "🟢 تم استلام الطلب";
+
+                    }
+
+
+                    else if (order.status === "preparing") {
+
+                        statusText = "🔧 قيد التجهيز";
+
+                    }
+
+
+                    else if (order.status === "shipped") {
+
+                        statusText = "🚚 تم الشحن";
+
+                    }
+
+
+                    else if (order.status === "delivered") {
+
+                        statusText = "✅ تم التسليم";
+
+                    }
+
+
+
+                    result.innerHTML = `
 
 
 <h2>
@@ -1121,12 +1116,12 @@ ${statusText}
 
 
 
-}
+                }
 
-else{
+                else {
 
 
-result.innerHTML = `
+                    result.innerHTML = `
 
 <p>
 لم يتم العثور على الطلب
@@ -1134,13 +1129,13 @@ result.innerHTML = `
 
 `;
 
-}
+                }
 
 
-});
+            });
 
 
-});
+    });
 
 }
 
@@ -1155,10 +1150,10 @@ result.innerHTML = `
 const copyButtons = document.querySelectorAll(".copy-phone");
 
 
-copyButtons.forEach(function(button){
+copyButtons.forEach(function (button) {
 
 
-    button.addEventListener("click", function(){
+    button.addEventListener("click", function () {
 
 
         const phone = button.dataset.phone;
@@ -1184,9 +1179,9 @@ copyButtons.forEach(function(button){
 const logoutButton = document.getElementById("logout-button");
 
 
-if(logoutButton){
+if (logoutButton) {
 
-    logoutButton.addEventListener("click", function(){
+    logoutButton.addEventListener("click", function () {
 
         window.location.href = "/admin-logout";
 
@@ -1197,23 +1192,23 @@ if(logoutButton){
 
 
 
-document.addEventListener("click", function(event){
+document.addEventListener("click", function (event) {
 
     if (event.target.classList.contains("delete-order")) {
 
-    const confirmDelete = confirm("هل أنت متأكد من حذف الطلب؟");
+        const confirmDelete = confirm("هل أنت متأكد من حذف الطلب؟");
 
-    if (confirmDelete) {
+        if (confirmDelete) {
 
-        deleteOrder(
-            event.target.dataset.id
-        );
+            deleteOrder(
+                event.target.dataset.id
+            );
+
+        }
 
     }
 
-}
-
-    if(event.target.classList.contains("prepare-order")){
+    if (event.target.classList.contains("prepare-order")) {
 
         updateOrderStatus(
             event.target.dataset.id,
@@ -1222,7 +1217,7 @@ document.addEventListener("click", function(event){
 
     }
 
-    if(event.target.classList.contains("ship-order")){
+    if (event.target.classList.contains("ship-order")) {
 
         updateOrderStatus(
             event.target.dataset.id,
@@ -1231,7 +1226,7 @@ document.addEventListener("click", function(event){
 
     }
 
-    if(event.target.classList.contains("deliver-order")){
+    if (event.target.classList.contains("deliver-order")) {
 
         updateOrderStatus(
             event.target.dataset.id,
@@ -1257,67 +1252,65 @@ function searchProducts() {
 
         let productContainer = button.closest(".product");
 
-        if (productName.includes(search) || search === "") {
+        if (productName.includes(search) && search !== "") {
 
-    productContainer.style.display = "";
+            if (firstMatch === null) {
 
-    if (search !== "" && firstMatch === null) {
+                firstMatch = productContainer;
 
-        firstMatch = productContainer;
+            }
+
+        }
+
+
+    });
+
+    if (firstMatch) {
+
+        clearTimeout(searchTimer);
+
+        searchTimer = setTimeout(() => {
+
+            firstMatch.scrollIntoView({
+
+                behavior: "smooth",
+                block: "center"
+
+            });
+
+            // Wait until scrolling is finished
+            setTimeout(() => {
+
+                firstMatch.classList.add("highlight-product");
+
+                // Keep the highlight for 5 seconds
+                setTimeout(() => {
+
+                    firstMatch.classList.remove("highlight-product");
+
+                }, 5000);
+
+            }, 1000);
+
+        }, 100);
 
     }
 
-} else {
-
-    productContainer.style.display = "none";
-
-}
-
-});
-
-if (firstMatch) {
-
-    clearTimeout(searchTimer);
-
-    searchTimer = setTimeout(() => {
-
-        firstMatch.scrollIntoView({
-
-            behavior: "smooth",
-            block: "center"
-
-        });
-
-
-        firstMatch.classList.add("highlight-product");
-
-
-        setTimeout(() => {
-
-            firstMatch.classList.remove("highlight-product");
-
-        }, 2000);
-
-
-    }, 2000);
-
-}
-
 }
 
 
-const itemType = document.getElementById("item-type");
-const categorySelect = document.getElementById("category-select");
+    const itemType = document.getElementById("item-type");
+    const categorySelect = document.getElementById("category-select");
 
-if (itemType && categorySelect) {
+    if (itemType && categorySelect) {
 
-    itemType.addEventListener("change", () => {
+        itemType.addEventListener("change", () => {
 
-        categorySelect.innerHTML = "";
+            categorySelect.innerHTML = "";
 
-        if (itemType.value === "product") {
+            if (itemType.value === "product") {
 
-            categorySelect.innerHTML = `
+                categorySelect.innerHTML = `
                 <option value="">اختر الفئة</option>
                 <option value="shampoo">الشامبو</option>
                 <option value="conditioner">البلسم</option>
@@ -1328,153 +1321,263 @@ if (itemType && categorySelect) {
                 <option value="skin-care">العناية بالبشرة</option>
                 <option value="baby-products">منتجات الأطفال</option>
             `;
-        }
+            }
 
-        else if (itemType.value === "offer") {
+            else if (itemType.value === "offer") {
 
-            categorySelect.innerHTML = `
+                categorySelect.innerHTML = `
                 <option value="">اختر الفئة</option>
                 <option value="hair-loss-bundles">مجموعات علاج التساقط والقشرة</option>
                 <option value="skin-care-bundles">مجموعات العناية بالبشرة</option>
                 <option value="hair-care-bundles">مجموعات العناية بالشعر</option>
                 <option value="special-offers">العروض الخاصة</option>
             `;
+            }
+
+        });
+
+    }
+
+
+    async function testOrder() {
+        const { data, error } = await supabaseClient
+            .from("orders")
+            .insert([
+                {
+                    customer_name: "Test Customer",
+                    address: "Alexandria",
+                    notes: "Testing order",
+                    items: [
+                        {
+                            name: "Test Product",
+                            price: 100,
+                            quantity: 1
+                        }
+                    ],
+                    total_price: 100,
+                    status: "pending"
+                }
+            ]);
+
+        if (error) {
+            console.log("Order error:", error);
+        } else {
+            console.log("Order sent:", data);
+        }
+    }
+
+    window.addEventListener("supabaseReady", () => {
+
+        const orderButton = document.getElementById("place-order-button");
+
+        if (orderButton) {
+
+            orderButton.addEventListener("click", window.placeOrder);
+
         }
 
     });
 
-}
+
+    window.placeOrder = async function() {
+
+        const name = document.getElementById("customer-name").value;
+
+        const phone = document.getElementById("customer-phone").value;
+
+        const address = document.getElementById("customer-address").value;
+
+        const notes = document.getElementById("customer-notes").value;
 
 
-async function testOrder() {
-    const { data, error } = await supabaseClient
-        .from("orders")
-        .insert([
-            {
-                customer_name: "Test Customer",
-                address: "Alexandria",
-                notes: "Testing order",
-                items: [
-                    {
-                        name: "Test Product",
-                        price: 100,
-                        quantity: 1
-                    }
-                ],
-                total_price: 100,
-                status: "pending"
-            }
-        ]);
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    if (error) {
-        console.log("Order error:", error);
-    } else {
-        console.log("Order sent:", data);
-    }
-}
 
-window.addEventListener("supabaseReady", () => {
+        const total = cart.reduce((sum, item) => {
 
-    const orderButton = document.getElementById("place-order-button");
+            return sum + (item.price * item.quantity);
 
-    if (orderButton) {
+        }, 0);
 
-        orderButton.addEventListener("click", placeOrder);
 
-    }
 
+        if (cart.length === 0) {
+
+            alert("السلة فارغة");
+
+            return;
+
+        }
+
+
+        if (!name || !phone || !address) {
+
+            alert("من فضلك أكمل بيانات العميل");
+
+            return;
+
+        }
+
+        const orderNumber = Math.floor(Math.random() * 90000) + 10000;
+
+
+        const { data, error } = await supabaseClient
+
+            .from("orders")
+
+            .insert([
+
+                {
+
+                    customer_name: name,
+
+                    phone: phone,
+
+                    address: address,
+
+                    notes: notes,
+
+                    items: cart,
+
+                    total_price: total,
+
+                    status: "new",
+
+                     tracking_code: orderNumber, 
+
+                }
+
+            ]);
+
+
+
+        if (error) {
+
+            console.log("Order error:", error);
+
+            alert("حدث خطأ أثناء إرسال الطلب");
+
+        }
+
+        else {
+
+            console.log("Order sent:", data);
+
+            const orderNumber = Math.floor(Math.random() * 90000) + 10000;
+
+                console.log("ORDER CODE:", orderNumber);
+
+document.getElementById("popup-order-id").textContent =
+"رقم طلبك: #" + orderNumber;
+
+            
+document.getElementById("order-success-popup").style.display = "flex";
+
+confetti({
+    particleCount: 200,
+    spread: 180,
+    origin: { y: 0.6 }
 });
 
+localStorage.removeItem("cart");
 
-async function placeOrder() {
+setTimeout(() => {
 
-    const name = document.getElementById("customer-name").value;
+    window.location.href = "index.html";
 
-    const phone = document.getElementById("customer-phone").value;
+}, 3000);
 
-    const address = document.getElementById("customer-address").value;
+}
 
-    const notes = document.getElementById("customer-notes").value;
-
-
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+};
 
 
-    const total = cart.reduce((sum, item) => {
-
-        return sum + (item.price * item.quantity);
-
-    }, 0);
+console.log("PLACE ORDER FUNCTION:", typeof window.placeOrder);
 
 
 
-    if (cart.length === 0) {
+const phrases = [
 
-        alert("السلة فارغة");
+"محتاج مساعدة؟",
 
-        return;
+"نحن هنا لمساعدتك",
 
-    }
+"يسعدنا خدمتك",
 
+"هل تحتاج إلى استشارة؟",
 
-    if (!name || !phone || !address) {
+"تواصل معنا الآن"
 
-        alert("من فضلك أكمل بيانات العميل");
-
-        return;
-
-    }
+];
 
 
+let currentPhrase = 0;
 
-    const { data, error } = await supabaseClient
-
-        .from("orders")
-
-        .insert([
-
-            {
-
-                customer_name: name,
-
-                address: address,
-
-                notes: notes,
-
-                items: cart,
-
-                total_price: total,
-
-                status: "pending"
-
-            }
-
-        ]);
+const whatsappMessage =
+document.getElementById("whatsapp-message");
 
 
 
-    if (error) {
+function showNextPhrase() {
 
-        console.log("Order error:", error);
-
-        alert("حدث خطأ أثناء إرسال الطلب");
-
-    } 
-
-    else {
-
-        console.log("Order sent:", data);
-
-        alert("تم إرسال الطلب بنجاح ❤️");
+    whatsappMessage.style.opacity = "0";
 
 
-        localStorage.removeItem("cart");
+    setTimeout(function () {
+
+        whatsappMessage.textContent =
+        phrases[currentPhrase];
+
+        whatsappMessage.style.opacity = "1";
+
+    },1000);
 
 
-        location.reload();
 
-    }
+    setTimeout(function () {
+
+        whatsappMessage.style.opacity = "0";
+
+    },16000);
+
+
+
+    setTimeout(function () {
+
+        currentPhrase++;
+
+        if (currentPhrase >= phrases.length) {
+
+            currentPhrase = 0;
+
+        }
+
+        showNextPhrase();
+
+    },17000);
 
 }
 
 
+
+whatsappMessage.textContent =
+phrases[currentPhrase];
+
+whatsappMessage.style.opacity = "1";
+
+
+setTimeout(function () {
+
+    whatsappMessage.style.opacity = "0";
+
+},15000);
+
+
+
+setTimeout(function () {
+
+    currentPhrase++;
+
+    showNextPhrase();
+
+},16000);
