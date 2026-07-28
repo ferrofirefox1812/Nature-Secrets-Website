@@ -58,15 +58,49 @@
 
         <h2>
 
-            إجمالي الطلب
+إجمالي الطلب
 
-        </h2>
+</h2>
 
-        <p id="total-price">
+<p id="total-price">
 
-            0 جنيه
+    0 جنيه
 
-        </p>
+</p>
+
+
+<h3>
+
+كود الخصم
+
+</h3>
+
+
+<input type="text"
+       id="coupon-code"
+       placeholder="أدخل كود الخصم">
+
+
+
+<button id="apply-coupon-button">
+
+    تطبيق الكود
+
+</button>
+
+
+
+<p id="coupon-message">
+
+</p>
+
+
+
+<p id="discount-amount">
+
+    الخصم: 0 جنيه
+
+</p>
 
 
         <!-- CUSTOMER INFORMATION -->
@@ -78,10 +112,12 @@
         </h2>
 
 
-        <input type="text"
-               id="customer-name"
-               placeholder="الاسم بالكامل"
-               required>
+        <p id="customer-name-display">
+    جاري تحميل الاسم...
+</p>
+
+
+
 
 
         <input type="tel"
@@ -174,6 +210,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module" src="supabase.js"></script>
 <script src="script.js"></script>
+
+<script>
+updateCartKey().then(() => {
+    loadCart();
+});
+</script>
 
 </body>
 </html>

@@ -12,11 +12,17 @@
 
     <div class="container">
 
-        <img src="images/logo.jpg" alt="Nature Secrets Logo">
+    <img src="images/logo.jpg" alt="Nature Secrets Logo">
 
-        <h1>Nature Secrets</h1>
+<h1>Nature Secrets</h1>
 
-        <p>الخامات التي تثقي بها, العنايه التي تحتاجيها.</p>
+<h3 id="welcome-message"></h3>
+
+<button id="logout-button">
+    Logout
+</button>
+
+<p>الخامات التي تثقي بها, العنايه التي تحتاجيها.</p>
 
         <button id="offers-button">
             Offers & Bundles
@@ -112,7 +118,49 @@ stroke-linecap="round"
 </div>
 
 
+
+<div id="auth-popup" class="auth-popup">
+
+    <div class="auth-box">
+
+        <h2>مرحباً بك في Nature Secrets</h2>
+
+         <input
+        type="text"
+        id="auth-name"
+        placeholder="الاسم">
+
+        <input
+        type="email"
+        id="auth-email"
+        placeholder="البريد الإلكتروني">
+
+        <input
+        type="password"
+        id="auth-password"
+        placeholder="كلمة المرور">
+
+        <button id="signin-button">
+
+            تسجيل الدخول
+
+        </button>
+
+        <button id="signup-button">
+
+            إنشاء حساب
+
+        </button>
+
+    </div>
+
+</div>
+
+
 <script src="script.js"></script>
+<script type="module" src="supabase.js"></script>
+<script src="auth.js"></script>
+
 
 </body>
 

@@ -108,6 +108,92 @@
 
         <!-- PRODUCT MANAGEMENT -->
 
+<!-- COUPON MANAGEMENT -->
+
+<section id="coupon-management">
+
+<h2>إدارة أكواد الخصم</h2>
+
+
+<input
+type="text"
+id="coupon-name"
+placeholder="اسم كود الخصم">
+
+
+<select id="coupon-type">
+
+<option value="percentage">
+
+خصم بالنسبة المئوية
+
+</option>
+
+
+<option value="fixed">
+
+خصم ثابت بالجنيه
+
+</option>
+
+</select>
+
+
+
+<input
+type="number"
+id="coupon-value"
+placeholder="قيمة الخصم">
+
+
+<input
+type="number"
+id="minimum-purchase"
+placeholder="الحد الأدنى للطلب">
+
+
+<input
+type="number"
+id="maximum-uses"
+placeholder="الحد الأقصى لعدد مرات الاستخدام">
+
+
+<input
+type="date"
+id="coupon-expiration">
+
+<select id="coupon-active">
+
+<option value="true">
+
+مفعل
+
+</option>
+
+
+<option value="false">
+
+غير مفعل
+
+</option>
+
+</select>
+
+
+
+<button id="create-coupon-button">
+
+إنشاء كود الخصم
+
+</button>
+
+
+<p id="coupon-message"></p>
+
+
+</section>
+
+
 <section id="product-management">
 
     <h2>إدارة المنتجات والعروض</h2>

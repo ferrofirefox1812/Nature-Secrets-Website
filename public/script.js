@@ -1,5 +1,90 @@
 
+console.log("SCRIPT VERSION TEST");
+
+let cartKey = "cart_guest";
+
 let searchTimer;
+
+async function updateCartKey() {
+
+    console.log("UPDATE CART STARTED");
+
+    console.log(
+"SUPABASE =",
+window.supabaseClient
+);
+
+    if (!window.supabaseClient) {
+
+    console.log(
+    "WAITING FOR SUPABASE"
+    );
+
+    await new Promise(resolve => {
+
+        window.addEventListener(
+            "supabaseReady",
+            resolve,
+            { once:true }
+        );
+
+    });
+
+}
+
+    const { data: sessionData } =
+    await window.supabaseClient.auth.getSession();
+
+    console.log(
+        "SESSION DATA =",
+        sessionData
+    );
+
+   if (sessionData.session) {
+
+    console.log("USER FOUND");
+
+    cartKey =
+    `cart_${sessionData.session.user.id}`;
+
+    // move guest cart to user cart
+    const guestCart = JSON.parse(localStorage.getItem("cart_guest")) || [];
+
+    if (guestCart.length > 0) {
+
+        const userCart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+        const mergedCart = [
+            ...userCart,
+            ...guestCart
+        ];
+
+        localStorage.setItem(
+            cartKey,
+            JSON.stringify(mergedCart)
+        );
+
+        localStorage.removeItem("cart_guest");
+
+        console.log("GUEST CART MOVED TO USER CART");
+    }
+
+}
+
+    else {
+
+        console.log("NO SESSION FOUND");
+
+        cartKey = "cart_guest";
+
+    }
+
+    console.log(
+        "FINAL CART KEY =",
+        cartKey
+    );
+
+}
 
 // =====================================
 // UPDATE CART COUNT
@@ -7,11 +92,30 @@ let searchTimer;
 
 const cartCount = document.getElementById("cart-count");
 
+console.log("COUNTER =",cartKey);
+
+console.log(
+JSON.parse(
+localStorage.getItem(cartKey)
+));
+
 if (cartCount) {
 
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    updateCartKey().then(() => {
 
-    cartCount.textContent = cart.length;
+        const cart =
+        JSON.parse(
+        localStorage.getItem(cartKey)
+        ) || [];
+
+        cartCount.textContent = cart.length;
+
+        console.log(
+        "CART COUNT =",
+        cart.length
+        );
+
+    });
 
 }
 
@@ -98,13 +202,32 @@ const addToCartButtons = document.querySelectorAll(".add-to-cart");
 
 addToCartButtons.forEach(function (button) {
 
-    button.addEventListener("click", function () {
+    button.addEventListener(
 
-        const productName = button.dataset.name;
+"click",
 
-        const productPrice = Number(button.dataset.price);
+async function () {
 
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+await updateCartKey();
+
+console.log(
+"ADDING TO:",
+cartKey
+);
+
+const productName = button.dataset.name;
+
+const productPrice = Number(button.dataset.price);
+
+let cart =
+JSON.parse(localStorage.getItem(cartKey))
+|| [];
+
+
+console.log(
+"BEFORE PUSH =",
+cart
+);
 
 
         cart.push({
@@ -116,16 +239,30 @@ addToCartButtons.forEach(function (button) {
         });
 
 
-        localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(
+cartKey,
+JSON.stringify(cart)
+);
 
+
+console.log(
+"CART AFTER ADD =",
+cart
+);
+
+
+console.log(
+"AFTER SAVE =",
+JSON.parse(
+localStorage.getItem(cartKey)
+)
+);
 
         alert("تمت إضافة المنتج إلى سلة التسوق!");
 
-    });
+    })
 
 });
-
-
 
 // =====================================
 // OFFERS PAGE
@@ -143,7 +280,303 @@ const clearCartButton = document.getElementById("");
 const continueShoppingButton = document.getElementById("continue-shopping-button");
 const browseProductsButton = document.getElementById("browse-products-button");
 const browseOffersButton = document.getElementById("browse-offers-button");
+const couponCodeInput =
+document.getElementById("coupon-code");
 
+
+const applyCouponButton =
+document.getElementById("apply-coupon-button");
+
+
+const couponMessage =
+document.getElementById("coupon-message");
+
+
+const discountAmount =
+document.getElementById("discount-amount");
+
+
+let appliedDiscount = 0;
+
+let appliedCoupon = null;
+
+
+async function applyCoupon() {
+
+    const couponCode =
+    couponCodeInput.value.trim().toUpperCase();
+
+
+    if (!couponCode) {
+
+        couponMessage.textContent =
+        "يرجى إدخال كود الخصم.";
+
+        return;
+
+    }
+
+
+    const { data: coupon, error } =
+await window.supabaseClient
+.from("coupons")
+.select("*")
+.eq("code", couponCode)
+.limit(1)
+.maybeSingle();
+
+console.log("ALL COUPON RESULT:", coupon);
+
+console.log("SEARCHING COUPON:", couponCode);
+console.log("COUPON DATA:", coupon);
+console.log("COUPON ERROR:", error);
+
+
+    if (error || !coupon) {
+
+    console.log("COUPON SEARCH ERROR:", error);
+    console.log("COUPON RESULT:", coupon);
+
+    couponMessage.textContent =
+    "كود الخصم غير صحيح.";
+
+    return;
+
+}
+
+
+
+
+const today = new Date();
+
+
+const expirationDate =
+
+new Date(
+coupon.expires_at
+);
+
+
+
+if(
+
+today > expirationDate
+
+){
+
+couponMessage.textContent =
+
+"انتهت صلاحية كود الخصم.";
+
+return;
+
+}
+
+
+
+if(
+
+coupon.current_uses >=
+coupon.maximum_uses
+
+){
+
+couponMessage.textContent =
+
+"لقد وصل هذا الكود إلى الحد الأقصى للاستخدام.";
+
+return;
+
+}
+
+
+const {
+
+data: userData
+
+} = await window.supabaseClient
+.auth.getUser();
+
+
+if (!userData.user) {
+
+    couponMessage.textContent =
+    "يرجى تسجيل الدخول أولاً.";
+
+    return;
+
+}
+
+
+const userId = userData.user.id;
+
+
+const userEmail = userData.user.email;
+
+
+const {
+
+data: usedCoupon
+
+} = await window.supabaseClient
+
+.from("coupon_usage")
+
+.select("*")
+
+.eq(
+"user_id",
+userId
+)
+
+.eq(
+"coupon_code",
+coupon.code
+)
+
+.maybeSingle();
+
+
+
+if(
+
+usedCoupon
+
+){
+
+couponMessage.textContent =
+
+"لقد قمت باستخدام هذا الكود مسبقاً.";
+
+return;
+
+}
+
+
+    const cart =
+    JSON.parse(
+    localStorage.getItem(cartKey)
+    ) || [];
+
+
+console.log(
+"CART CONTENT =",
+cart
+);
+
+
+    const total =
+    cart.reduce((sum, item) => {
+
+        return sum +
+        (item.price * item.quantity);
+
+    }, 0);
+
+
+    if (total < coupon.minimum_purchase) {
+
+        couponMessage.textContent =
+        "هذا الكود يحتاج إلى حد أدنى للطلب.";
+
+        return;
+
+    }
+
+
+    if (coupon.type === "percentage") {
+
+        appliedDiscount =
+        (total * coupon.value) / 100;
+
+    }
+
+    else if (coupon.type === "fixed") {
+
+        appliedDiscount =
+        coupon.value;
+
+    }
+
+
+    appliedCoupon =
+    coupon.code;
+
+
+   const finalTotal =
+total - appliedDiscount;
+
+
+discountAmount.textContent =
+"الخصم: "
++ appliedDiscount +
+" جنيه";
+
+
+document.getElementById(
+"total-price"
+).textContent =
+finalTotal + " جنيه";
+
+
+await window.supabaseClient
+
+.from("coupon_usage")
+
+.insert([
+
+{
+
+user_id:
+userId,
+
+coupon_code:
+coupon.code,
+
+discount_amount:
+appliedDiscount
+
+}
+
+]);
+
+
+
+await window.supabaseClient
+
+.from("coupons")
+
+.update({
+
+current_uses:
+
+coupon.current_uses + 1
+
+})
+
+.eq(
+
+"code",
+
+coupon.code
+
+);
+
+
+couponMessage.textContent =
+"تم تطبيق كود الخصم بنجاح!";
+
+}
+
+
+if (applyCouponButton) {
+
+    applyCouponButton.addEventListener(
+        "click",
+        applyCoupon
+    );
+
+}
 
 // Continue Shopping
 
@@ -172,15 +605,61 @@ if (browseOffersButton) {
 }
 
 
+async function loadCart(){
+
+    await updateCartKey();
+
+console.log(
+"CURRENT PAGE =",
+window.location.pathname
+);
+
+console.log(
+"CART ITEMS =",
+document.getElementById("cart-items")
+);
+
 // DISPLAY PRODUCTS IN CART
+
+console.log(
+"DISPLAY PRODUCTS STARTED"
+);
 
 const cartItems = document.getElementById("cart-items");
 const emptyCartMessage = document.getElementById("empty-cart-message");
 
+if(cartItems){
+
+    cartItems.innerHTML = "";
+
+}
+
+console.log(
+"CART KEY BEFORE DISPLAY =",
+cartKey
+);
+
+console.log("CART ITEMS =", cartItems);
+console.log("EMPTY MESSAGE =", emptyCartMessage);
+console.log(
+"EMPTY MESSAGE =",
+emptyCartMessage
+);
+
+
 if (cartItems) {
 
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+console.log(
+"CART DISPLAY WORKING"
+);
+
+const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+console.log(
+"CART COUNT KEY =",
+cartKey
+);
 
     if (cart.length === 0) {
 
@@ -221,7 +700,7 @@ if (cartItems) {
 
         });
 
-
+    }
         // PLUS BUTTONS
 
         const plusButtons = document.querySelectorAll(".plus-button");
@@ -231,7 +710,7 @@ if (cartItems) {
 
             button.addEventListener("click", function () {
 
-                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
 
                 let product = cart.find(function (item) {
@@ -244,7 +723,7 @@ if (cartItems) {
                 product.quantity++;
 
 
-                localStorage.setItem("cart", JSON.stringify(cart));
+                localStorage.setItem(cartKey, JSON.stringify(cart));
 
 
                 location.reload();
@@ -264,7 +743,7 @@ if (cartItems) {
 
             button.addEventListener("click", function () {
 
-                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
 
                 let product = cart.find(function (item) {
@@ -281,7 +760,7 @@ if (cartItems) {
                 }
 
 
-                localStorage.setItem("cart", JSON.stringify(cart));
+                localStorage.setItem(cartKey, JSON.stringify(cart));
 
 
                 location.reload();
@@ -292,7 +771,6 @@ if (cartItems) {
 
     }
 
-}
 
 
 
@@ -304,7 +782,7 @@ removeButtons.forEach(function (button) {
 
     button.addEventListener("click", function () {
 
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
         cart = cart.filter(function (item) {
 
@@ -312,7 +790,7 @@ removeButtons.forEach(function (button) {
 
         });
 
-        localStorage.setItem("cart", JSON.stringify(cart));
+        localStorage.setItem(cartKey, JSON.stringify(cart));
 
         location.reload();
 
@@ -328,7 +806,7 @@ const totalPriceElement = document.getElementById("total-price");
 
 if (totalPriceElement) {
 
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
     let total = 0;
 
@@ -341,6 +819,8 @@ if (totalPriceElement) {
 
 
     totalPriceElement.textContent = total + " جنيه";
+
+}
 
 }
 
@@ -358,7 +838,7 @@ if (totalPriceElement) {
         const address = document.getElementById("customer-address").value;
         const notes = document.getElementById("customer-notes").value;
 
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
         if (name === "" || phone === "" || address === "") {
 
@@ -431,7 +911,7 @@ if (totalPriceElement) {
                         "تم إرسال الطلب بنجاح!\n\nرقم طلبك هو: " + order.id
                     );
 
-                    localStorage.removeItem("cart");
+                    localStorage.removeItem(cartKey);
 
                     window.location.href = "index.html";
 
@@ -474,9 +954,10 @@ if (newOrdersSection) {
 
     window.addEventListener("supabaseReady", async () => {
 
-const { data: orders, error } = await supabaseClient
+const { data: orders, error } = await window.supabaseClient
     .from("orders")
     .select("*");
+console.log("ADMIN ORDERS:", orders);
 
 if (error) {
     console.log(error);
@@ -509,11 +990,11 @@ if (error) {
 
             let profit = 0;
 
-            orders.forEach(function (order) {
+orders.forEach(function (order) {
 
-                profit += order.total_price;
+    profit += (order.final_total || order.total_price);
 
-            });
+});
 
             totalProfit.textContent = profit;
 
@@ -572,12 +1053,29 @@ if (error) {
     </ul>
 
     <p>
-        الإجمالي: ${order.total_price} جنيه
-    </p>
+    الإجمالي الأصلي:
+    ${order.total_price} جنيه
+</p>
 
-    <p>
-        التاريخ: ${order.created_at || "لا يوجد"}
-    </p>
+<p>
+    كود الخصم:
+    ${order.coupon_used || "لا يوجد"}
+</p>
+
+<p>
+    قيمة الخصم:
+    ${order.discount_amount || 0} جنيه
+</p>
+
+<p>
+    الإجمالي النهائي:
+    ${order.final_total || order.total_price} جنيه
+</p>
+
+<p>
+    التاريخ:
+    ${order.created_at || "لا يوجد"}
+</p>
 
     <button class="prepare-order" data-id="${order.tracking_code}">
         قيد التجهيز
@@ -656,12 +1154,29 @@ if (error) {
     </ul>
 
     <p>
-        الإجمالي: ${order.total_price} جنيه
-    </p>
+    الإجمالي الأصلي:
+    ${order.total_price} جنيه
+</p>
 
-    <p>
-        التاريخ: ${order.created_at || "لا يوجد"}
-    </p>
+<p>
+    كود الخصم:
+    ${order.coupon_used || "لا يوجد"}
+</p>
+
+<p>
+    قيمة الخصم:
+    ${order.discount_amount || 0} جنيه
+</p>
+
+<p>
+    الإجمالي النهائي:
+    ${order.final_total || order.total_price} جنيه
+</p>
+
+<p>
+    التاريخ:
+    ${order.created_at || "لا يوجد"}
+</p>
 
     <button class="ship-order" data-id="${order.tracking_code}">
     تم الشحن
@@ -739,12 +1254,29 @@ if (error) {
             </ul>
 
             <p>
-                الإجمالي: ${order.total_price} جنيه
-            </p>
+    الإجمالي الأصلي:
+    ${order.total_price} جنيه
+</p>
 
-            <p>
-                التاريخ: ${order.created_at || "لا يوجد"}
-            </p>
+<p>
+    كود الخصم:
+    ${order.coupon_used || "لا يوجد"}
+</p>
+
+<p>
+    قيمة الخصم:
+    ${order.discount_amount || 0} جنيه
+</p>
+
+<p>
+    الإجمالي النهائي:
+    ${order.final_total || order.total_price} جنيه
+</p>
+
+<p>
+    التاريخ:
+    ${order.created_at || "لا يوجد"}
+</p>
 
 
             <button class="deliver-order" data-id="${order.tracking_code}">
@@ -827,13 +1359,30 @@ if (error) {
                 ${itemsHTML}
             </ul>
 
-            <p>
-                الإجمالي: ${order.total_price} جنيه
-            </p>
+           <p>
+    الإجمالي الأصلي:
+    ${order.total_price} جنيه
+</p>
 
-            <p>
-                التاريخ: ${order.created_at || "لا يوجد"}
-            </p>
+<p>
+    كود الخصم:
+    ${order.coupon_used || "لا يوجد"}
+</p>
+
+<p>
+    قيمة الخصم:
+    ${order.discount_amount || 0} جنيه
+</p>
+
+<p>
+    الإجمالي النهائي:
+    ${order.final_total || order.total_price} جنيه
+</p>
+
+<p>
+    التاريخ:
+    ${order.created_at || "لا يوجد"}
+</p>
 
 
             <p>
@@ -875,12 +1424,13 @@ if (error) {
 
 async function updateOrderStatus(orderID, newStatus) {
 
+
+    console.log("SUPABASE:", window.supabaseClient);
     console.log("ID:", orderID);
     console.log("TYPE:", typeof orderID);
     console.log("STATUS:", newStatus);
 
-    const { data, error } = await supabaseClient
-        .from("orders")
+const { data, error } = await window.supabaseClient        .from("orders")
         .update({
             status: newStatus
         })
@@ -906,7 +1456,7 @@ async function deleteOrder(orderID) {
 
     console.log("DELETE FROM SUPABASE:", orderID);
 
-    const { data, error } = await supabaseClient
+    const { data, error } = await window.supabaseClient
         .from("orders")
         .delete()
         .eq("id", orderID);
@@ -981,7 +1531,6 @@ document.addEventListener("click", function (event) {
             );
 
         }
-
     }
 
 
@@ -1176,18 +1725,7 @@ copyButtons.forEach(function (button) {
 // ADMIN LOGOUT
 // =====================================
 
-const logoutButton = document.getElementById("logout-button");
 
-
-if (logoutButton) {
-
-    logoutButton.addEventListener("click", function () {
-
-        window.location.href = "/admin-logout";
-
-    });
-
-}
 
 
 
@@ -1366,6 +1904,107 @@ function searchProducts() {
         }
     }
 
+console.log("ABOUT TO CREATE CUSTOMER FUNCTION");
+
+window.loadCustomerName = async function() {
+
+    console.log("FUNCTION STARTED");
+
+    console.log("LOAD CUSTOMER NAME WORKING");
+
+    const { data: sessionData } =
+    await window.supabaseClient.auth.getSession();
+
+
+  if (!sessionData.session) {
+
+    console.log("NO SESSION FOUND");
+
+    cartKey = "cart_guest";
+
+    return;
+
+}
+
+
+   const userId = sessionData.session.user.id;
+
+
+
+console.log(
+"LOAD CUSTOMER NAME FINISHED"
+);
+
+console.log("CURRENT CART:", cartKey);
+
+
+    console.log("USER ID:", userId);
+
+
+    const { data: profile, error } =
+    await window.supabaseClient
+        .from("profiles")
+        .select("name")
+        .eq("id", userId)
+        .single();
+
+
+    console.log("PROFILE:", profile);
+
+console.log("PROFILE ERROR:", error);
+
+
+if (profile) {
+
+    console.log(
+    "CUSTOMER NAME:",
+    profile.name);
+
+
+    
+const customerNameDisplay =
+    document.getElementById(
+    "customer-name-display"
+    );
+
+
+
+
+    if (customerNameDisplay) {
+
+        customerNameDisplay.textContent =
+
+        profile.name;
+
+    }
+
+
+
+}
+
+updateCartKey().then(() => {
+    loadCart();
+});
+
+}
+
+
+console.log("BEFORE SUPABASE LISTENER");
+
+window.addEventListener(
+"supabaseReady",
+
+async function(){
+
+await window.loadCustomerName();
+
+await updateCartKey();
+
+}
+
+);
+
+
     window.addEventListener("supabaseReady", () => {
 
         const orderButton = document.getElementById("place-order-button");
@@ -1381,7 +2020,8 @@ function searchProducts() {
 
     window.placeOrder = async function() {
 
-        const name = document.getElementById("customer-name").value;
+         const name =
+document.getElementById("customer-name-display").textContent;
 
         const phone = document.getElementById("customer-phone").value;
 
@@ -1390,7 +2030,28 @@ function searchProducts() {
         const notes = document.getElementById("customer-notes").value;
 
 
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const { data: sessionData } =
+await window.supabaseClient.auth.getSession();
+
+
+const user = sessionData.session.user;
+
+if (!user) {
+
+    alert("يرجى تسجيل الدخول أولاً");
+
+    return;
+
+}
+
+
+const userId = user.id;
+
+const userEmail = user.email;
+
+
+
+        const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
 
         const total = cart.reduce((sum, item) => {
@@ -1431,6 +2092,10 @@ function searchProducts() {
 
                     customer_name: name,
 
+                    customer_email: userEmail,
+
+                    user_id: userId,
+
                     phone: phone,
 
                     address: address,
@@ -1440,6 +2105,12 @@ function searchProducts() {
                     items: cart,
 
                     total_price: total,
+
+                    coupon_used: appliedCoupon,
+
+                    discount_amount: appliedDiscount,
+
+                    final_total: total - appliedDiscount,
 
                     status: "new",
 
@@ -1463,8 +2134,6 @@ function searchProducts() {
 
             console.log("Order sent:", data);
 
-            const orderNumber = Math.floor(Math.random() * 90000) + 10000;
-
                 console.log("ORDER CODE:", orderNumber);
 
 document.getElementById("popup-order-id").textContent =
@@ -1479,7 +2148,7 @@ confetti({
     origin: { y: 0.6 }
 });
 
-localStorage.removeItem("cart");
+localStorage.removeItem(cartKey);
 
 setTimeout(() => {
 
@@ -1495,16 +2164,40 @@ setTimeout(() => {
 console.log("PLACE ORDER FUNCTION:", typeof window.placeOrder);
 
 
+window.addEventListener("supabaseReady", async () => {
+
+    const { data, error } =
+    await window.supabaseClient
+    .from("coupons")
+    .select("*");
+
+
+    console.log(
+        "ALL COUPONS FROM WEBSITE:",
+        data
+    );
+
+
+    console.log(
+        "COUPONS ERROR:",
+        error
+    );
+
+});
+
+
+
+
 
 const phrases = [
 
-"محتاج مساعدة؟",
+"محتاجة مساعدة؟",
 
 "نحن هنا لمساعدتك",
 
 "يسعدنا خدمتك",
 
-"هل تحتاج إلى استشارة؟",
+"هل تحتاجي إلى استشارة؟",
 
 "تواصل معنا الآن"
 
@@ -1518,7 +2211,12 @@ document.getElementById("whatsapp-message");
 
 
 
+
 function showNextPhrase() {
+
+    if (!whatsappMessage) {
+        return;
+    }
 
     whatsappMessage.style.opacity = "0";
 
@@ -1532,14 +2230,17 @@ function showNextPhrase() {
 
     },1000);
 
-
+}
 
     setTimeout(function () {
 
+    if (whatsappMessage) {
+
         whatsappMessage.style.opacity = "0";
 
-    },16000);
+    }
 
+},16000);
 
 
     setTimeout(function () {
@@ -1556,28 +2257,224 @@ function showNextPhrase() {
 
     },17000);
 
-}
 
 
+if(whatsappMessage){
 
 whatsappMessage.textContent =
+
 phrases[currentPhrase];
 
+
 whatsappMessage.style.opacity = "1";
+
+}
 
 
 setTimeout(function () {
 
+    if(whatsappMessage){
+
     whatsappMessage.style.opacity = "0";
+
+    }
 
 },15000);
 
 
 
-setTimeout(function () {
+window.addEventListener("supabaseReady", () => {
 
-    currentPhrase++;
+const createCouponButton =
+document.getElementById(
+"create-coupon-button"
+);
 
-    showNextPhrase();
 
-},16000);
+if (!createCouponButton) {
+
+return;
+
+}
+
+
+createCouponButton.addEventListener(
+
+"click",
+
+async () => {
+
+
+const couponName =
+document.getElementById(
+"coupon-name"
+).value.toUpperCase();
+
+
+const couponType =
+document.getElementById(
+"coupon-type"
+).value;
+
+
+const couponValue =
+Number(
+
+document.getElementById(
+"coupon-value"
+).value
+
+);
+
+
+const minimumPurchase =
+
+Number(
+
+document.getElementById(
+"minimum-purchase"
+).value
+
+);
+
+
+const maximumUses =
+
+Number(
+
+document.getElementById(
+"maximum-uses"
+).value
+
+);
+
+
+const couponExpiration =
+
+document.getElementById(
+"coupon-expiration"
+).value;
+
+const couponActive =
+
+
+document.getElementById(
+"coupon-active"
+).value === "true";
+
+
+
+const couponMessage =
+
+document.getElementById(
+"coupon-message"
+);
+
+
+const {
+
+data: existingCoupon,
+
+error: existingCouponError
+
+} =
+
+await window.supabaseClient
+.from("coupons")
+.select("*")
+.eq("code", couponName)
+.maybeSingle();
+
+
+
+if(existingCoupon){
+
+couponMessage.textContent =
+
+"هذا الكود موجود بالفعل.";
+
+return;
+
+}
+
+
+const { error } =
+
+await window.supabaseClient
+.from("coupons")
+.insert([
+
+{
+
+code: couponName,
+
+type: couponType,
+
+value: couponValue,
+
+active: couponActive,
+
+minimum_purchase:
+minimumPurchase,
+
+maximum_uses:
+maximumUses,
+
+expires_at:
+couponExpiration
+
+}
+
+]);
+
+
+if(error){
+
+couponMessage.textContent =
+
+"حدث خطأ أثناء إنشاء الكود.";
+
+
+console.log(error);
+
+return;
+
+}
+
+
+couponMessage.textContent =
+
+"تم إنشاء كود الخصم بنجاح!";
+
+
+
+document.getElementById(
+"coupon-name"
+).value = "";
+
+
+document.getElementById(
+"coupon-value"
+).value = "";
+
+
+document.getElementById(
+"minimum-purchase"
+).value = "";
+
+
+document.getElementById(
+"coupon-type"
+).value = "percentage";
+
+
+document.getElementById(
+"coupon-active"
+).value = "true";
+
+});
+
+});
+
+
+
