@@ -416,7 +416,8 @@ const userEmail = userData.user.email;
 
 const {
 
-data: usedCoupon
+data: usedCoupon,
+error: usedCouponError
 
 } = await window.supabaseClient
 
@@ -424,17 +425,22 @@ data: usedCoupon
 
 .select("*")
 
-.eq(
-"user_id",
-userId
-)
+.eq("user_id",userId)
 
-.eq(
-"coupon_code",
-coupon.code
-)
+.eq("coupon_code",coupon.code)
 
 .maybeSingle();
+
+
+console.log(
+"USED COUPON =",
+usedCoupon
+);
+
+console.log(
+"USED COUPON ERROR =",
+usedCouponError
+);
 
 
 
@@ -464,14 +470,23 @@ console.log(
 cart
 );
 
+console.log(
+"MINIMUM PURCHASE =",
+coupon.minimum_purchase
+);
 
-    const total =
-    cart.reduce((sum, item) => {
+const total =
+cart.reduce((sum, item) => {
 
-        return sum +
-        (item.price * item.quantity);
+    return sum +
+    (item.price * item.quantity);
 
-    }, 0);
+}, 0);
+
+console.log(
+"TOTAL =",
+total
+);
 
 
     if (total < coupon.minimum_purchase) {
@@ -539,6 +554,21 @@ appliedDiscount
 }
 
 ]);
+
+
+console.log(
+"COUPON INSERTED SUCCESSFULLY"
+);
+
+console.log(
+"DISCOUNT =",
+appliedDiscount
+);
+
+console.log(
+"FINAL TOTAL =",
+finalTotal
+);
 
 
 
