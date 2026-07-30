@@ -172,11 +172,9 @@ name
 
     console.log("USER CREATED:", user);
 
-    const user = data.user;
+    pendingUser = user;
 
-pendingUser = user;
-
-console.log("USER CREATED:", user);
+console.log("USER SAVED:", user);
 
     document.getElementById("auth-name").style.display = "none";
 
