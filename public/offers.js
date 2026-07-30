@@ -86,6 +86,89 @@ ${
 
         container.appendChild(card);
 
+const button =
+
+card.querySelector(".add-to-cart");
+
+
+button.addEventListener(
+
+"click",
+
+async function(){
+
+await updateCartKey();
+
+
+const productName =
+
+button.dataset.name;
+
+
+const productPrice =
+
+Number(
+
+button.dataset.price
+
+);
+
+
+let cart =
+
+JSON.parse(
+
+localStorage.getItem(cartKey)
+
+)
+
+|| [];
+
+
+cart.push({
+
+name:productName,
+
+price:productPrice,
+
+quantity:1
+
+});
+
+
+localStorage.setItem(
+
+cartKey,
+
+JSON.stringify(cart)
+
+);
+
+
+alert(
+
+"تمت إضافة المنتج إلى سلة التسوق!"
+
+);
+
+
+}
+
+);
+
+card.querySelector(".add-to-cart")
+.addEventListener("click", function(){
+
+addToCart(
+
+offer.name,
+
+offer.price
+
+);
+
+});
+
     });
 
 })

@@ -10,16 +10,83 @@ console.log("START AUTH WORKING");
 
     if(data.session){
 
-        document.getElementById("auth-popup").style.display = "none";
+document.getElementById("auth-popup").style.display = "none";
 
-        const userId = data.session.user.id;
+const userId = data.session.user.id;
+
+const userEmail = data.session.user.email;
+
+const pendingName =
+localStorage.getItem(
+"pending_name"
+);
 
 
-        const { data: profile } = await window.supabaseClient
-        .from("profiles")
-        .select("name")
-        .eq("id", userId)
-        .single();
+       const { data: profile } = await window.supabaseClient
+.from("profiles")
+.select("*")
+.eq("id", userId)
+.maybeSingle();
+
+
+if(!profile){
+
+document.getElementById(
+"missing-name-popup"
+).style.display = "flex";
+
+
+document.getElementById(
+"save-missing-name"
+).onclick = async function(){
+
+
+const enteredName =
+
+document.getElementById(
+"missing-name-input"
+).value.trim();
+
+
+if(!enteredName){
+
+alert(
+"Please enter your name."
+);
+
+return;
+
+}
+
+
+await window.supabaseClient
+
+.from("profiles")
+
+.insert([
+
+{
+
+id:userId,
+
+name:enteredName,
+
+email:userEmail
+
+}
+
+]);
+
+
+location.reload();
+
+
+};
+
+
+return;
+
+}
 
 
 
@@ -62,7 +129,10 @@ console.log("START AUTH WORKING");
 
             const name = document.getElementById("auth-name").value;
 
-
+localStorage.setItem(
+"pending_name",
+name
+);
 
             const { data, error } = await window.supabaseClient.auth.signUp({
 
@@ -87,33 +157,6 @@ console.log("START AUTH WORKING");
 
 
                 console.log("USER CREATED:", user);
-
-
-                const { error: profileError } = await window.supabaseClient
-                .from("profiles")
-                .insert([
-
-                    {
-                        id: user.id,
-                        name: name,
-                        email: email
-                    }
-
-                ]);
-
-
-
-                if(profileError){
-
-                    console.log("PROFILE ERROR:", profileError);
-
-                }
-
-                else{
-
-                    console.log("PROFILE SAVED SUCCESSFULLY");
-
-                }
 
 
 

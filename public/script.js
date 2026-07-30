@@ -1615,25 +1615,19 @@ if (trackButton) {
 
 
 
-        fetch("/orders")
+       window.supabaseClient
 
-            .then(function (response) {
+.from("orders")
 
-                return response.json();
+.select("*")
 
-            })
+.eq("phone", phone)
 
-            .then(function (orders) {
+.eq("tracking_code", Number(id))
 
+.single()
 
-
-                const order = orders.find(function (order) {
-
-
-                    return order.phone === phone && order.id === id;
-
-
-                });
+.then(function ({ data: order, error }) {
 
 
 
@@ -1642,7 +1636,7 @@ if (trackButton) {
 
 
 
-                if (order) {
+                if (!error && order) {
 
 
                     let statusText = "";
@@ -1682,7 +1676,7 @@ if (trackButton) {
 
 
 <h2>
-طلبك رقم: ${order.id}
+طلبك رقم: ${order.tracking_code}
 </h2>
 
 
@@ -1711,8 +1705,7 @@ ${statusText}
                 }
 
 
-            });
-
+        });
 
     });
 
@@ -1908,9 +1901,9 @@ function searchProducts() {
 
 
     async function testOrder() {
-        const { data, error } = await supabaseClient
-            .from("orders")
-            .insert([
+        const { data, error } = await window.supabaseClient
+.from("orders")
+.insert([
                 {
                     customer_name: "Test Customer",
                     address: "Alexandria",
@@ -2152,13 +2145,13 @@ const userEmail = user.email;
 
 
 
-        if (error) {
+       if (error) {
 
-            console.log("Order error:", error);
+    console.log("ORDER ERROR:", error);
 
-            alert("حدث خطأ أثناء إرسال الطلب");
+    alert(error.message);
 
-        }
+}
 
         else {
 
@@ -2505,6 +2498,4 @@ document.getElementById(
 });
 
 });
-
-
 
