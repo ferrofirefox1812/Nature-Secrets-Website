@@ -1,3 +1,13 @@
+let pendingEmail = "";
+
+let pendingPassword = "";
+
+let pendingName = "";
+
+let pendingUser = null;
+
+let waitingForVerification = false;
+
 async function startAuth() {
 console.log("START AUTH WORKING");
 
@@ -129,6 +139,12 @@ return;
 
             const name = document.getElementById("auth-name").value;
 
+pendingEmail = email;
+
+pendingPassword = password;
+
+pendingName = name;
+
 localStorage.setItem(
 "pending_name",
 name
@@ -152,27 +168,34 @@ name
 
             else{
 
+    const user = data.user;
 
-                const user = data.user;
+    console.log("USER CREATED:", user);
 
+    const user = data.user;
 
-                console.log("USER CREATED:", user);
+pendingUser = user;
 
+console.log("USER CREATED:", user);
 
+    document.getElementById("auth-name").style.display = "none";
 
-                alert("Account created successfully!");
+    document.getElementById("auth-email").style.display = "none";
 
+    document.getElementById("auth-password").style.display = "none";
 
+    document.getElementById("signin-button").style.display = "none";
 
-                document.getElementById("auth-popup").style.display = "none";
+    document.getElementById("signup-button").style.display = "none";
 
+    document.getElementById("otp-container").style.display = "block";
 
+    document.getElementById("otp-email").textContent =
+    "تم إرسال رمز التحقق إلى " + email;
 
-                document.getElementById("welcome-message").textContent =
-                "Hi, " + name;
+waitingForVerification = true;
 
-
-            }
+}
 
 
         });
@@ -260,5 +283,133 @@ window.addEventListener("supabaseReady", startAuth);
 if(window.supabaseClient){
 
     startAuth();
+
+}
+
+const verifyOTPButton =
+document.getElementById("verify-otp-button");
+
+
+if(verifyOTPButton){
+
+    verifyOTPButton.addEventListener("click", async () => {
+
+
+        const code =
+        document.getElementById("otp-code").value;
+
+
+        const message =
+document.getElementById("otp-message");
+
+
+message.textContent =
+"جاري التحقق...";
+
+
+const { data, error } =
+await window.supabaseClient.auth.verifyOtp({
+
+    email: pendingEmail,
+
+    token: code,
+
+    type: "signup"
+
+});
+
+
+if(error){
+
+    message.textContent =
+    "رمز التحقق غير صحيح.";
+
+}
+
+
+else{
+
+    message.textContent =
+    "تم التحقق بنجاح!";
+
+
+    const loginResult =
+    await window.supabaseClient.auth.signInWithPassword({
+
+        email: pendingEmail,
+
+        password: pendingPassword
+
+    });
+
+
+    if(loginResult.error){
+
+        message.textContent =
+        "تم التحقق ولكن فشل تسجيل الدخول.";
+
+    }
+
+
+    else{
+
+        location.reload();
+
+    }
+
+}
+
+
+    });
+
+
+}
+
+
+const resendOTPButton =
+document.getElementById("resend-otp-button");
+
+
+if(resendOTPButton){
+
+    resendOTPButton.addEventListener("click", async () => {
+
+
+        const message =
+        document.getElementById("otp-message");
+
+
+        message.textContent =
+        "جاري إرسال الرمز...";
+
+
+        const { error } =
+        await window.supabaseClient.auth.resend({
+
+            type: "signup",
+
+            email: pendingEmail
+
+        });
+
+
+        if(error){
+
+            message.textContent =
+            error.message;
+
+        }
+
+
+        else{
+
+            message.textContent =
+            "تم إرسال رمز جديد بنجاح!";
+
+        }
+
+
+    });
+
 
 }
