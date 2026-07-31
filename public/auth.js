@@ -1,12 +1,27 @@
+(function(){
+
+emailjs.init({
+
+    publicKey:"NLIyJt75X1hkgoPCy"
+
+});
+
+})();
+
+
 let pendingEmail = "";
 
 let pendingPassword = "";
 
 let pendingName = "";
 
+let pendingOTP = "";
+
 let pendingUser = null;
 
 let waitingForVerification = false;
+
+let otpSeconds = 600;
 
 async function startAuth() {
 console.log("START AUTH WORKING");
@@ -139,6 +154,12 @@ return;
 
             const name = document.getElementById("auth-name").value;
 
+            pendingOTP = Math.floor(
+100000 + Math.random() * 900000
+).toString();
+
+console.log("OTP =", pendingOTP);
+
 pendingEmail = email;
 
 pendingPassword = password;
@@ -174,7 +195,9 @@ name
 
     pendingUser = user;
 
-console.log("USER SAVED:", user);
+    console.log("EMAILJS =", emailjs);
+
+    console.log("USER SAVED:", user);
 
     document.getElementById("auth-name").style.display = "none";
 
@@ -190,6 +213,22 @@ console.log("USER SAVED:", user);
 
     document.getElementById("otp-email").textContent =
     "تم إرسال رمز التحقق إلى " + email;
+
+await emailjs.send(
+
+"service_lwbyrzb",
+
+"template_dpcop5k",
+
+{
+
+email: pendingEmail,
+
+otp: pendingOTP
+
+}
+
+);
 
 waitingForVerification = true;
 
@@ -293,8 +332,18 @@ if(verifyOTPButton){
     verifyOTPButton.addEventListener("click", async () => {
 
 
-        const code =
-        document.getElementById("otp-code").value;
+        const otpInputs =
+document.querySelectorAll(".otp-input");
+
+
+let code = "";
+
+
+otpInputs.forEach((input) => {
+
+    code += input.value;
+
+});
 
 
         const message =
@@ -305,31 +354,25 @@ message.textContent =
 "جاري التحقق...";
 
 
-const { data, error } =
-await window.supabaseClient.auth.verifyOtp({
-
-    email: pendingEmail,
-
-    token: code,
-
-    type: "signup"
-
-});
 
 
-if(error){
+
+if(code !== pendingOTP){
 
     message.textContent =
     "رمز التحقق غير صحيح.";
 
+    return;
+
 }
 
 
-else{
+message.textContent =
+"تم التحقق بنجاح!";
 
-    message.textContent =
-    "تم التحقق بنجاح!";
 
+console.log("EMAIL =", pendingEmail);
+console.log("PASSWORD =", pendingPassword);
 
     const loginResult =
     await window.supabaseClient.auth.signInWithPassword({
@@ -341,12 +384,16 @@ else{
     });
 
 
-    if(loginResult.error){
+   if(loginResult.error){
 
-        message.textContent =
-        "تم التحقق ولكن فشل تسجيل الدخول.";
+    console.log("LOGIN ERROR =", loginResult.error);
 
-    }
+    alert(loginResult.error.message);
+
+    message.textContent =
+    loginResult.error.message;
+
+}
 
 
     else{
@@ -355,7 +402,6 @@ else{
 
     }
 
-}
 
 
     });
@@ -409,5 +455,111 @@ if(resendOTPButton){
 
     });
 
+
+}
+
+
+const otpInputs = document.querySelectorAll(".otp-input");
+
+otpInputs.forEach((input, index) => {
+
+    input.addEventListener("input", function () {
+
+        if (this.value.length === 1 && index < otpInputs.length - 1) {
+
+            otpInputs[index + 1].focus();
+
+        }
+
+    });
+
+
+    input.addEventListener("keydown", function (event) {
+
+        if (
+
+            event.key === "Backspace" &&
+
+            this.value === "" &&
+
+            index > 0
+
+        ) {
+
+            otpInputs[index - 1].focus();
+
+        }
+
+    });
+
+});
+
+otpInputs[0].addEventListener("paste", function (event) {
+
+    event.preventDefault();
+
+    const pastedCode = event.clipboardData
+        .getData("text")
+        .trim();
+
+    if (pastedCode.length === 6) {
+
+        for (let i = 0; i < 6; i++) {
+
+            otpInputs[i].value = pastedCode[i];
+
+        }
+
+        otpInputs[5].focus();
+
+    }
+
+});
+
+function startOTPTimer() {
+
+    otpSeconds = 600;
+
+    const timerElement =
+    document.getElementById("otp-timer");
+
+
+    const timer = setInterval(function () {
+
+        const minutes =
+        Math.floor(otpSeconds / 60);
+
+        const seconds =
+        otpSeconds % 60;
+
+
+        timerElement.textContent =
+
+        String(minutes).padStart(2, "0")
+
+        +
+
+        ":"
+
+        +
+
+        String(seconds).padStart(2, "0");
+
+
+        otpSeconds--;
+
+
+        if (otpSeconds < 0) {
+
+            clearInterval(timer);
+
+            timerElement.textContent =
+
+            "انتهت صلاحية الرمز";
+
+        }
+
+
+    },1000);
 
 }

@@ -156,26 +156,40 @@ stroke-linecap="round"
 
     <h3>أدخل رمز التحقق</h3>
 
-    <p id="otp-email"></p>
+<p>
+لقد أرسلنا رمز التحقق إلى:
+</p>
 
-    <input
-    type="text"
-    id="otp-code"
-    placeholder="رمز التحقق">
+<p id="otp-email"></p>
 
-    <button id="verify-otp-button">
+<div class="otp-inputs">
 
-        تحقق
+<input type="text" maxlength="1" class="otp-input">
+<input type="text" maxlength="1" class="otp-input">
+<input type="text" maxlength="1" class="otp-input">
+<input type="text" maxlength="1" class="otp-input">
+<input type="text" maxlength="1" class="otp-input">
+<input type="text" maxlength="1" class="otp-input">
 
-    </button>
+</div>
+
+<p id="otp-timer">
+10:00
+</p>
 
 <p id="otp-message"></p>
 
-    <button id="resend-otp-button">
+<button id="verify-otp-button">
 
-        إعادة إرسال الرمز
+تحقق
 
-    </button>
+</button>
+
+<button id="resend-otp-button">
+
+إعادة إرسال الرمز
+
+</button>
 
 </div>
 
@@ -208,6 +222,7 @@ id="save-missing-name">
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="script.js"></script>
 <script type="module" src="supabase.js"></script>
 <script src="auth.js"></script>
