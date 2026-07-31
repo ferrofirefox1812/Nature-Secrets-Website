@@ -214,23 +214,47 @@ name
     document.getElementById("otp-email").textContent =
     "تم إرسال رمز التحقق إلى " + email;
 
-await emailjs.send(
+console.log("OTP =", pendingOTP);
 
-"service_lwbyrzb",
+console.log("EMAIL =", pendingEmail);
 
-"template_dpcop5k",
 
-{
+try{
 
-email: pendingEmail,
+    console.log("SENDING EMAIL...");
 
-otp: pendingOTP
+    await emailjs.send(
+
+        "service_lwbyrzb",
+
+        "template_dpcop5k",
+
+        {
+
+            email: pendingEmail,
+
+            otp: pendingOTP
+
+        },
+
+        "NLIyJt75X1hkgoPCy"
+
+    );
+
+
+    console.log("EMAIL SENT SUCCESSFULLY");
+
+
+    waitingForVerification = true;
 
 }
 
-);
 
-waitingForVerification = true;
+catch(error){
+
+    console.log("EMAIL ERROR =", error);
+
+}
 
 }
 
