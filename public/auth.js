@@ -1,27 +1,4 @@
-(function(){
 
-emailjs.init({
-
-    publicKey:"NLIyJt75X1hkgoPCy"
-
-});
-
-})();
-
-
-let pendingEmail = "";
-
-let pendingPassword = "";
-
-let pendingName = "";
-
-let pendingOTP = "";
-
-let pendingUser = null;
-
-let waitingForVerification = false;
-
-let otpSeconds = 600;
 
 async function startAuth() {
 console.log("START AUTH WORKING");
@@ -154,109 +131,46 @@ return;
 
             const name = document.getElementById("auth-name").value;
 
-            pendingOTP = Math.floor(
-100000 + Math.random() * 900000
-).toString();
-
-console.log("OTP =", pendingOTP);
-
-pendingEmail = email;
-
-pendingPassword = password;
-
-pendingName = name;
-
 localStorage.setItem(
 "pending_name",
 name
 );
 
-            const { data, error } = await window.supabaseClient.auth.signUp({
+           const { data, error } =
+await window.supabaseClient.auth.signUp({
 
-                email: email,
+    email: email,
 
-                password: password
+    password: password,
 
-            });
+    options: {
 
+        emailRedirectTo: window.location.origin
 
+    }
 
-            if(error){
-
-                alert(error.message);
-
-            }
-
-            else{
-
-    const user = data.user;
-
-    console.log("USER CREATED:", user);
-
-    pendingUser = user;
-
-    console.log("EMAILJS =", emailjs);
-
-    console.log("USER SAVED:", user);
-
-    document.getElementById("auth-name").style.display = "none";
-
-    document.getElementById("auth-email").style.display = "none";
-
-    document.getElementById("auth-password").style.display = "none";
-
-    document.getElementById("signin-button").style.display = "none";
-
-    document.getElementById("signup-button").style.display = "none";
-
-    document.getElementById("otp-container").style.display = "block";
-
-    document.getElementById("otp-email").textContent =
-    "تم إرسال رمز التحقق إلى " + email;
-
-console.log("OTP =", pendingOTP);
-
-console.log("EMAIL =", pendingEmail);
+});
 
 
-try{
 
-    console.log("SENDING EMAIL...");
+           if(error){
 
-    await emailjs.send(
+    console.log("SIGN UP ERROR =", error);
 
-        "service_lwbyrzb",
+    alert(error.message);
 
-        "template_dpcop5k",
-
-        {
-
-            email: pendingEmail,
-
-            otp: pendingOTP
-
-        },
-
-        "NLIyJt75X1hkgoPCy"
-
-    );
-
-
-    console.log("EMAIL SENT SUCCESSFULLY");
-
-
-    waitingForVerification = true;
+    return;
 
 }
 
+        else {
 
-catch(error){
+    alert("تم إنشاء الحساب بنجاح!\n\nيرجى التحقق من بريدك الإلكتروني ثم اضغط على رابط التفعيل قبل تسجيل الدخول.");
 
-    console.log("EMAIL ERROR =", error);
+    document.getElementById("auth-popup").style.display = "none";
 
 }
 
-}
 
 
         });
@@ -346,7 +260,7 @@ if(window.supabaseClient){
     startAuth();
 
 }
-
+/*
 const verifyOTPButton =
 document.getElementById("verify-otp-button");
 
@@ -482,7 +396,8 @@ if(resendOTPButton){
 
 }
 
-
+*/
+/*
 const otpInputs = document.querySelectorAll(".otp-input");
 
 otpInputs.forEach((input, index) => {
@@ -587,3 +502,4 @@ function startOTPTimer() {
     },1000);
 
 }
+    */
