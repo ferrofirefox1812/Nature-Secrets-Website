@@ -300,17 +300,19 @@ let appliedDiscount = 0;
 
 let appliedCoupon = null;
 
+let wheelDiscountReward = null;
+
 
 async function applyCoupon() {
 
     const couponCode =
-    couponCodeInput.value.trim().toUpperCase();
+        couponCodeInput.value.trim().toUpperCase();
 
 
     if (!couponCode) {
 
         couponMessage.textContent =
-        "يرجى إدخال كود الخصم.";
+            "يرجى إدخال كود الخصم.";
 
         return;
 
@@ -318,283 +320,574 @@ async function applyCoupon() {
 
 
     const { data: coupon, error } =
-await window.supabaseClient
-.from("coupons")
-.select("*")
-.eq("code", couponCode)
-.limit(1)
-.maybeSingle();
+        await window.supabaseClient
+            .from("coupons")
+            .select("*")
+            .eq("code", couponCode)
+            .limit(1)
+            .maybeSingle();
 
-console.log("ALL COUPON RESULT:", coupon);
 
-console.log("SEARCHING COUPON:", couponCode);
-console.log("COUPON DATA:", coupon);
-console.log("COUPON ERROR:", error);
+    console.log("SEARCHING COUPON:", couponCode);
+    console.log("COUPON DATA:", coupon);
+    console.log("COUPON ERROR:", error);
 
 
     if (error || !coupon) {
 
-    console.log("COUPON SEARCH ERROR:", error);
-    console.log("COUPON RESULT:", coupon);
-
-    couponMessage.textContent =
-    "كود الخصم غير صحيح.";
-
-    return;
-
-}
-
-
-
-
-const today = new Date();
-
-
-const expirationDate =
-
-new Date(
-coupon.expires_at
-);
-
-
-
-if(
-
-today > expirationDate
-
-){
-
-couponMessage.textContent =
-
-"انتهت صلاحية كود الخصم.";
-
-return;
-
-}
-
-
-
-if(
-
-coupon.current_uses >=
-coupon.maximum_uses
-
-){
-
-couponMessage.textContent =
-
-"لقد وصل هذا الكود إلى الحد الأقصى للاستخدام.";
-
-return;
-
-}
-
-
-const {
-
-data: userData
-
-} = await window.supabaseClient
-.auth.getUser();
-
-
-if (!userData.user) {
-
-    couponMessage.textContent =
-    "يرجى تسجيل الدخول أولاً.";
-
-    return;
-
-}
-
-
-const userId = userData.user.id;
-
-
-const userEmail = userData.user.email;
-
-
-const {
-
-data: usedCoupon,
-error: usedCouponError
-
-} = await window.supabaseClient
-
-.from("coupon_usage")
-
-.select("*")
-
-.eq("user_id",userId)
-
-.eq("coupon_code",coupon.code)
-
-.maybeSingle();
-
-
-console.log(
-"USED COUPON =",
-usedCoupon
-);
-
-console.log(
-"USED COUPON ERROR =",
-usedCouponError
-);
-
-
-
-if(
-
-usedCoupon
-
-){
-
-couponMessage.textContent =
-
-"لقد قمت باستخدام هذا الكود مسبقاً.";
-
-return;
-
-}
-
-
-    const cart =
-    JSON.parse(
-    localStorage.getItem(cartKey)
-    ) || [];
-
-
-console.log(
-"CART CONTENT =",
-cart
-);
-
-console.log(
-"MINIMUM PURCHASE =",
-coupon.minimum_purchase
-);
-
-const total =
-cart.reduce((sum, item) => {
-
-    return sum +
-    (item.price * item.quantity);
-
-}, 0);
-
-console.log(
-"TOTAL =",
-total
-);
-
-
-    if (total < coupon.minimum_purchase) {
-
         couponMessage.textContent =
-        "هذا الكود يحتاج إلى حد أدنى للطلب.";
+            "كود الخصم غير صحيح.";
 
         return;
 
     }
 
 
-    if (coupon.type === "percentage") {
+    const today = new Date();
 
-        appliedDiscount =
-        (total * coupon.value) / 100;
+    const expirationDate =
+        new Date(coupon.expires_at);
+
+
+    if (today > expirationDate) {
+
+        couponMessage.textContent =
+            "انتهت صلاحية كود الخصم.";
+
+        return;
 
     }
 
-    else if (coupon.type === "fixed") {
+
+    if (
+        coupon.current_uses >=
+        coupon.maximum_uses
+    ) {
+
+        couponMessage.textContent =
+            "لقد وصل هذا الكود إلى الحد الأقصى للاستخدام.";
+
+        return;
+
+    }
+
+
+    const {
+        data: userData
+    } =
+        await window.supabaseClient
+            .auth.getUser();
+
+
+    if (!userData.user) {
+
+        couponMessage.textContent =
+            "يرجى تسجيل الدخول أولاً.";
+
+        return;
+
+    }
+
+
+    const userId =
+        userData.user.id;
+
+
+    const {
+        data: usedCoupon,
+        error: usedCouponError
+    } =
+        await window.supabaseClient
+
+            .from("coupon_usage")
+
+            .select("*")
+
+            .eq("user_id", userId)
+
+            .eq("coupon_code", coupon.code)
+
+            .maybeSingle();
+
+
+    if (usedCoupon) {
+
+        couponMessage.textContent =
+            "لقد قمت باستخدام هذا الكود مسبقاً.";
+
+        return;
+
+    }
+
+
+    let cart =
+        JSON.parse(
+            localStorage.getItem(cartKey)
+        ) || [];
+
+
+    const total =
+        cart.reduce(
+            (sum, item) => {
+
+                return sum +
+                    (item.price * item.quantity);
+
+            },
+            0
+        );
+
+
+    if (
+    total <
+    coupon.minimum_purchase
+) {
+
+    couponMessage.textContent =
+        "هذا الكود يحتاج إلى طلب بقيمة " +
+        coupon.minimum_purchase +
+        " جنيه على الأقل.";
+
+    return;
+
+}
+
+
+    /*
+    ==========================================
+    FREE PRODUCT COUPON
+    ==========================================
+    */
+
+    if (coupon.type === "product") {
+
+        if (!coupon.product_reference) {
+
+            couponMessage.textContent =
+                "هذا الكود لا يحتوي على منتج مجاني.";
+
+            return;
+
+        }
+
+
+        const {
+            data: product,
+            error: productError
+        } =
+            await window.supabaseClient
+
+                .from("products")
+
+                .select("*")
+
+                .eq(
+                    "id",
+                    coupon.product_reference
+                )
+
+                .single();
+
+
+        if (productError || !product) {
+
+            console.log(
+                "FREE PRODUCT ERROR:",
+                productError
+            );
+
+            couponMessage.textContent =
+                "تعذر العثور على المنتج المجاني.";
+
+            return;
+
+        }
+
+
+        const alreadyAdded =
+            cart.some(item =>
+                item.freeReward === true &&
+                item.couponReward === coupon.code
+            );
+
+            if (alreadyAdded) {
+
+    couponMessage.textContent =
+        "تمت إضافة المنتج المجاني بالفعل.";
+
+    return;
+
+}
+
+
+cart.push({
+
+    id:
+        "coupon_reward_" +
+        coupon.code,
+
+    name:
+        product.name,
+
+    price: 0,
+
+    quantity: 1,
+
+    freeReward: true,
+
+    couponReward:
+        coupon.code,
+
+    product_reference:
+        product.id
+
+});
+
+
+localStorage.setItem(
+    cartKey,
+    JSON.stringify(cart)
+);
+
+
+appliedCoupon =
+    coupon.code;
+
+appliedDiscount = 0;
+
+
+couponMessage.textContent =
+    "🎁 تمت إضافة " +
+    product.name +
+    " مجاناً إلى السلة!";
+
+
+await window.supabaseClient
+
+    .from("coupons")
+
+    .update({
+
+        current_uses:
+            coupon.current_uses + 1
+
+    })
+
+    .eq(
+        "code",
+        coupon.code
+    );
+
+
+await window.supabaseClient
+
+    .from("coupon_usage")
+
+    .insert([
+
+        {
+
+            user_id:
+                userId,
+
+            coupon_code:
+                coupon.code,
+
+            discount_amount:
+                0
+
+        }
+
+    ]);
+
+
+loadCart();
+
+return;
+
+if (coupon.type === "percentage") {
+
+    appliedDiscount =
+        (total * coupon.value) / 100;
+
+}
+
+else if (coupon.type === "fixed") {
+
+    appliedDiscount =
+        coupon.value;
+
+}
+
+
+appliedCoupon =
+    coupon.code;
+
+
+const finalTotal =
+    Math.max(
+        0,
+        total - appliedDiscount
+    );
+
+
+discountAmount.textContent =
+    "الخصم: -" +
+    appliedDiscount +
+    " جنيه";
+
+
+document.getElementById(
+    "total-price"
+).textContent =
+    finalTotal +
+    " جنيه";
+
+
+await window.supabaseClient
+
+    .from("coupon_usage")
+
+    .insert([
+
+        {
+
+            user_id:
+                userId,
+
+            coupon_code:
+                coupon.code,
+
+            discount_amount:
+                appliedDiscount
+
+        }
+
+    ]);
+
+
+await window.supabaseClient
+
+    .from("coupons")
+
+    .update({
+
+        current_uses:
+            coupon.current_uses + 1
+
+    })
+
+    .eq(
+        "code",
+        coupon.code
+    );
+
+
+couponMessage.textContent =
+    "تم تطبيق كود الخصم بنجاح!";
+
+        if (!alreadyAdded) {
+
+            cart.push({
+
+                id:
+                    "coupon_" +
+                    coupon.code,
+
+                name:
+                    product.name,
+
+                price: 0,
+
+                quantity: 1,
+
+                freeReward: true,
+
+                couponReward:
+                    coupon.code,
+
+                product_reference:
+                    coupon.product_reference
+
+            });
+
+
+            localStorage.setItem(
+                cartKey,
+                JSON.stringify(cart)
+            );
+
+        }
+
+
+        appliedCoupon =
+            coupon.code;
+
+
+        appliedDiscount = 0;
+
+
+        discountAmount.textContent =
+            "قيمة الخصم: 0 جنيه";
+
+
+        document.getElementById(
+            "total-price"
+        ).textContent =
+            total + " جنيه";
+
+
+        await window.supabaseClient
+
+            .from("coupon_usage")
+
+            .insert([
+
+                {
+
+                    user_id:
+                        userId,
+
+                    coupon_code:
+                        coupon.code,
+
+                    discount_amount:
+                        0
+
+                }
+
+            ]);
+
+
+        await window.supabaseClient
+
+            .from("coupons")
+
+            .update({
+
+                current_uses:
+                    coupon.current_uses + 1
+
+            })
+
+            .eq(
+                "code",
+                coupon.code
+            );
+
+
+        couponMessage.textContent =
+            "🎁 تمت إضافة " +
+            product.name +
+            " مجاناً إلى السلة!";
+
+
+        console.log(
+            "🎁 FREE PRODUCT ADDED:",
+            product.name
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+    ==========================================
+    PERCENTAGE / FIXED DISCOUNT
+    ==========================================
+    */
+
+    if (
+        coupon.type === "percentage"
+    ) {
 
         appliedDiscount =
-        coupon.value;
+            (total * coupon.value) / 100;
+
+    }
+
+    else if (
+        coupon.type === "fixed"
+    ) {
+
+        appliedDiscount =
+            coupon.value;
 
     }
 
 
     appliedCoupon =
-    coupon.code;
+        coupon.code;
 
 
-   const finalTotal =
-total - appliedDiscount;
+    const finalTotal =
+        Math.max(
+            0,
+            total - appliedDiscount
+        );
 
 
-discountAmount.textContent =
-"الخصم: "
-+ appliedDiscount +
-" جنيه";
+    discountAmount.textContent =
+        "الخصم: -" +
+        appliedDiscount +
+        " جنيه";
 
 
-document.getElementById(
-"total-price"
-).textContent =
-finalTotal + " جنيه";
+    document.getElementById(
+        "total-price"
+    ).textContent =
+        finalTotal +
+        " جنيه";
 
 
-await window.supabaseClient
+    await window.supabaseClient
 
-.from("coupon_usage")
+        .from("coupon_usage")
 
-.insert([
+        .insert([
 
-{
+            {
 
-user_id:
-userId,
+                user_id:
+                    userId,
 
-coupon_code:
-coupon.code,
+                coupon_code:
+                    coupon.code,
 
-discount_amount:
-appliedDiscount
+                discount_amount:
+                    appliedDiscount
 
-}
+            }
 
-]);
-
-
-console.log(
-"COUPON INSERTED SUCCESSFULLY"
-);
-
-console.log(
-"DISCOUNT =",
-appliedDiscount
-);
-
-console.log(
-"FINAL TOTAL =",
-finalTotal
-);
+        ]);
 
 
+    await window.supabaseClient
 
-await window.supabaseClient
+        .from("coupons")
 
-.from("coupons")
+        .update({
 
-.update({
+            current_uses:
+                coupon.current_uses + 1
 
-current_uses:
+        })
 
-coupon.current_uses + 1
-
-})
-
-.eq(
-
-"code",
-
-coupon.code
-
-);
+        .eq(
+            "code",
+            coupon.code
+        );
 
 
-couponMessage.textContent =
-"تم تطبيق كود الخصم بنجاح!";
+    couponMessage.textContent =
+        "تم تطبيق كود الخصم بنجاح!";
+
+
+    console.log(
+        "COUPON INSERTED SUCCESSFULLY"
+    );
 
 }
 
@@ -664,6 +957,160 @@ if(cartItems){
 
 }
 
+const {
+    data: { user }
+} = await window.supabaseClient.auth.getUser();
+
+let activeReward = null;
+let pendingReward = null;
+
+if(user){
+
+    // ACTIVE REWARD — already activated
+    const { data: activeData, error: activeError } =
+        await window.supabaseClient
+
+        .from("user_rewards")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("claimed", true)
+        .eq("activated", true)
+        .eq("used", false)
+        .gt("expires_at", new Date().toISOString())
+        .order("id", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    if(!activeError){
+
+        activeReward = activeData;
+
+        console.log("🎁 ACTIVE REWARD =", activeReward);
+
+    }
+
+
+    // PENDING REWARD — waiting to be activated
+    const { data: latestReward, error: latestRewardError } =
+await window.supabaseClient
+
+    .from("user_rewards")
+
+    .select("*")
+
+    .eq("user_id", user.id)
+
+    .eq("claimed", true)
+
+    .eq("used", false)
+
+    .gt("expires_at", new Date().toISOString())
+
+    .order("id", { ascending: false })
+
+    .limit(1)
+
+    .maybeSingle();
+
+
+if (!latestRewardError) {
+
+    if (latestReward && !latestReward.activated) {
+
+        pendingReward = latestReward;
+
+    } else {
+
+        pendingReward = null;
+
+    }
+
+    console.log(
+        "🎁 LATEST REWARD =",
+        latestReward
+    );
+
+    console.log(
+        "🎁 PENDING REWARD =",
+        pendingReward
+    );
+
+}
+
+   
+
+}
+
+if(
+    activeReward &&
+    activeReward.reward_type === "coupon"
+){
+
+    console.log(
+        "🔥 WHEEL COUPON FOUND =",
+        activeReward
+    );
+
+    const cart =
+        JSON.parse(
+            localStorage.getItem(cartKey)
+        ) || [];
+
+    const total =
+        cart.reduce(
+            (sum, item) =>
+                sum +
+                (item.price * item.quantity),
+            0
+        );
+
+    appliedCoupon = "Wheel Reward";
+
+    appliedDiscount =
+        (total * Number(activeReward.reward_value)) / 100;
+
+}
+
+
+if(
+    activeReward &&
+    activeReward.reward_type === "voucher"
+){
+
+    console.log(
+        "💰 WHEEL VOUCHER FOUND =",
+        activeReward
+    );
+
+    appliedCoupon = "Wheel Voucher";
+
+    appliedDiscount =
+        Number(activeReward.reward_value);
+
+}
+
+if(
+    activeReward &&
+    activeReward.reward_type === "voucher"
+){
+
+    console.log(
+        "💰 WHEEL VOUCHER FOUND =",
+        activeReward
+    );
+
+    console.log(
+        "💰 VOUCHER AMOUNT =",
+        activeReward.reward_value
+    );
+
+    appliedCoupon = "Wheel Voucher";
+
+    appliedDiscount =
+        Number(activeReward.reward_value);
+
+}
+
 console.log(
 "CART KEY BEFORE DISPLAY =",
 cartKey
@@ -702,35 +1149,156 @@ cartKey
 
         cart.forEach(function (product) {
 
-            cartItems.innerHTML += `
-                <section>
+    if(product.freeReward){
 
-                    <h3>${product.name}</h3>
+        cartItems.innerHTML += `
 
-                    <p>السعر: ${product.price} جنيه</p>
+        <section class="reward-product-card">
 
-                    <button class="minus-button" data-name="${product.name}">
-                        -
-                    </button>
+            <h3>🎁 ${product.name}</h3>
 
-                    <span>
-                        ${product.quantity}
-                    </span>
+            <p><strong>مجاني</strong></p>
 
-                    <button class="plus-button" data-name="${product.name}">
-    +
-</button>
+            <span>الكمية: 1</span>
 
-<button class="remove-button" data-name="${product.name}">
-    حذف
-</button>
+        </section>
 
-                </section>
-            `;
+        `;
 
-        });
+    }else{
+
+        cartItems.innerHTML += `
+
+        <section>
+
+            <h3>${product.name}</h3>
+
+            <p>السعر: ${product.price} جنيه</p>
+
+            <button class="minus-button" data-name="${product.name}">
+                -
+            </button>
+
+            <span>
+                ${product.quantity}
+            </span>
+
+            <button class="plus-button" data-name="${product.name}">
+                +
+            </button>
+
+            <button class="remove-button" data-name="${product.name}">
+                حذف
+            </button>
+
+        </section>
+
+        `;
 
     }
+
+});
+        
+
+    }
+
+    const oldRewardCard = document.querySelector(".active-reward-card");
+
+if(oldRewardCard){
+
+    oldRewardCard.remove();
+
+}
+
+if (pendingReward && !pendingReward.activated) {
+
+    cartItems.innerHTML += `
+
+    <div class="active-reward-card">
+
+        <h3>🎁 مكافأتك</h3>
+
+        <p>${pendingReward.reward_name}</p>
+
+        <p id="reward-expiration-countdown"></p>
+
+        <button id="use-wheel-reward">
+            استخدام المكافأة
+        </button>
+
+    </div>
+
+    `;
+}
+
+const expirationText =
+    document.getElementById(
+        "reward-expiration-countdown"
+    );
+
+if(
+    expirationText &&
+    pendingReward &&
+    pendingReward.expires_at
+){
+
+    const expiresAt =
+        new Date(
+            pendingReward.expires_at
+        );
+
+    function updateRewardCountdown(){
+
+        const remaining =
+            expiresAt.getTime() -
+            Date.now();
+
+        if(remaining <= 0){
+
+            expirationText.textContent =
+                "⏳ انتهت صلاحية المكافأة.";
+
+            return;
+
+        }
+
+        const totalSeconds =
+            Math.floor(
+                remaining / 1000
+            );
+
+        const days =
+            Math.floor(
+                totalSeconds / 86400
+            );
+
+        const hours =
+            Math.floor(
+                (totalSeconds % 86400) / 3600
+            );
+
+        const minutes =
+            Math.floor(
+                (totalSeconds % 3600) / 60
+            );
+
+        const seconds =
+            totalSeconds % 60;
+
+        expirationText.textContent =
+            `⏳ تنتهي المكافأة خلال ${days} يوم، ${hours} ساعة، ${minutes} دقيقة، ${seconds} ثانية`;
+
+    }
+
+    updateRewardCountdown();
+
+    setInterval(
+        updateRewardCountdown,
+        1000
+    );
+
+}
+
         // PLUS BUTTONS
 
         const plusButtons = document.querySelectorAll(".plus-button");
@@ -814,11 +1382,11 @@ removeButtons.forEach(function (button) {
 
         let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
 
-        cart = cart.filter(function (item) {
+       cart = cart.filter(function (item) {
 
-            return item.name !== button.dataset.name;
+    return item.id !== button.dataset.id;
 
-        });
+});
 
         localStorage.setItem(cartKey, JSON.stringify(cart));
 
@@ -848,11 +1416,280 @@ if (totalPriceElement) {
     });
 
 
-    totalPriceElement.textContent = total + " جنيه";
+    if(
+    typeof activeReward !== "undefined" &&
+    activeReward &&
+    activeReward.reward_type === "coupon"
+){
+
+    appliedDiscount =
+        (total * Number(activeReward.reward_value)) / 100;
+
+    appliedCoupon = "Wheel Reward";
+
+}
+
+if(appliedDiscount > 0){
+
+    totalPriceElement.textContent =
+        (total - appliedDiscount) + " جنيه";
+
+}else{
+
+    totalPriceElement.textContent =
+        total + " جنيه";
 
 }
 
 }
+
+}
+
+document.addEventListener("click", async function(e){
+
+    if(e.target.id !== "use-wheel-reward") return;
+
+    const {
+        data: { user }
+    } = await window.supabaseClient.auth.getUser();
+
+    if(!user) return;
+
+    const { data: reward, error } =
+    await window.supabaseClient
+
+    .from("user_rewards")
+
+    .select("*")
+
+    .eq("user_id", user.id)
+
+    .eq("claimed", true)
+
+    .eq("used", false)
+
+    .order("id", { ascending:false })
+
+    .limit(1)
+
+    .maybeSingle();
+
+    if(error || !reward){
+
+        console.log("No reward found");
+
+        return;
+
+    }
+
+if (
+    reward.reward_type === "coupon" ||
+    reward.reward_type === "voucher"
+) {
+
+    const cart =
+        JSON.parse(localStorage.getItem(cartKey)) || [];
+
+    const total = cart.reduce((sum, item) => {
+        return sum + (item.price * item.quantity);
+    }, 0);
+
+    wheelDiscountReward = reward;
+
+    if (reward.reward_type === "voucher") {
+
+        appliedCoupon = "Wheel Voucher";
+
+        appliedDiscount =
+            Number(reward.reward_value);
+
+        discountAmount.textContent =
+            "قيمة خصم: -" +
+            appliedDiscount +
+            " جنيه";
+
+    } else {
+
+        appliedCoupon = "Wheel Reward";
+
+        appliedDiscount =
+            (total * Number(reward.reward_value)) / 100;
+
+        discountAmount.textContent =
+            "الخصم: -" +
+            appliedDiscount +
+            " جنيه";
+    }
+
+    const displayedFinalTotal =
+        Math.max(0, total - appliedDiscount);
+
+    document.getElementById("total-price").textContent =
+        displayedFinalTotal + " جنيه";
+
+    const { error: activateError } =
+        await window.supabaseClient
+
+            .from("user_rewards")
+
+            .update({
+                activated: true
+            })
+
+            .eq("id", reward.id);
+
+    console.log(
+        "🔥 REWARD ACTIVATION ERROR =",
+        activateError
+    );
+
+    if (activateError) {
+
+        console.error(activateError);
+
+        alert("حدث خطأ أثناء تفعيل المكافأة.");
+
+        return;
+    }
+
+    const rewardCard =
+        document.querySelector(".active-reward-card");
+
+    if (rewardCard) {
+
+        if (reward.reward_type === "voucher") {
+
+            rewardCard.innerHTML = `
+                <h3>
+                    ✅ تم تفعيل قسيمة خصم ${reward.reward_value} جنيه
+                </h3>
+            `;
+
+        } else {
+
+            rewardCard.innerHTML = `
+                <h3>
+                    ✅ تم تفعيل خصم ${reward.reward_value}%
+                </h3>
+            `;
+
+        }
+
+        setTimeout(() => {
+            rewardCard.remove();
+        }, 2000);
+
+    }
+
+    return;
+}
+
+
+if (reward.reward_type !== "product") {
+    return;
+}
+
+
+const { data: product, error: productError } =
+    await window.supabaseClient
+
+        .from("products")
+
+        .select("*")
+
+        .eq("id", reward.product_reference)
+
+        .single();
+
+if (productError) {
+
+    console.error(
+        "PRODUCT REWARD ERROR =",
+        productError
+    );
+
+    return;
+}
+
+if (!product) {
+    return;
+}
+
+
+let cart =
+    JSON.parse(localStorage.getItem(cartKey)) || [];
+
+
+const alreadyAdded = cart.some(item =>
+    item.freeReward === true &&
+    item.product_reference === reward.product_reference
+);
+
+
+if (!alreadyAdded) {
+
+    cart.push({
+
+        id: "reward_" + reward.id,
+
+        name: product.name,
+
+        price: 0,
+
+        quantity: 1,
+
+        freeReward: true,
+
+        product_reference: reward.product_reference
+
+    });
+
+    localStorage.setItem(
+        cartKey,
+        JSON.stringify(cart)
+    );
+
+}
+
+
+const { error: updateError } =
+    await window.supabaseClient
+
+        .from("user_rewards")
+
+        .update({
+            used: true
+        })
+
+        .eq("id", reward.id);
+
+
+console.log(
+    "UPDATE ERROR =",
+    updateError
+);
+
+
+if (updateError) {
+
+    alert(
+        "حدث خطأ أثناء تحديث المكافأة."
+    );
+
+    return;
+
+}
+
+
+alert(
+    "🎁 تمت إضافة المنتج المجاني إلى السلة!"
+);
+
+location.reload();
+
+});
+
+
 
 
 // =====================================
@@ -2133,7 +2970,7 @@ const userEmail = user.email;
 
                     discount_amount: appliedDiscount,
 
-                    final_total: total - appliedDiscount,
+                    final_total: Math.max(0, total - appliedDiscount),
 
                     status: "new",
 
@@ -2170,6 +3007,59 @@ confetti({
     spread: 180,
     origin: { y: 0.6 }
 });
+
+const rewardCart = cart.find(item => item.freeReward === true);
+
+if(rewardCart){
+
+    await window.supabaseClient
+
+    .from("user_rewards")
+
+    .delete()
+
+    .eq("user_id", userId)
+
+    .eq("product_reference", rewardCart.product_reference);
+
+}
+
+// REMOVE ACTIVE WHEEL REWARD AFTER ORDER
+
+const { data: activeWheelReward } =
+    await window.supabaseClient
+
+    .from("user_rewards")
+
+    .select("id")
+
+    .eq("user_id", userId)
+
+    .eq("claimed", true)
+
+    .eq("activated", true)
+
+    .eq("used", false)
+
+    .maybeSingle();
+
+if(activeWheelReward){
+
+    await window.supabaseClient
+
+    .from("user_rewards")
+
+    .update({
+
+        activated: false,
+
+        used: true
+
+    })
+
+    .eq("id", activeWheelReward.id);
+
+}
 
 localStorage.removeItem(cartKey);
 
@@ -2304,9 +3194,105 @@ setTimeout(function () {
 
 },15000);
 
+const couponType =
+    document.getElementById("coupon-type");
 
+function updateCouponFields() {
+
+    const couponProductField =
+        document.getElementById("coupon-product-field");
+
+    const couponValueField =
+        document.getElementById("coupon-value-field");
+
+    if (
+        !couponProductField ||
+        !couponValueField ||
+        !couponType
+    ) {
+        return;
+    }
+
+    if (
+        couponType.value === "product"
+    ) {
+
+        couponProductField.style.display =
+            "block";
+
+        couponValueField.style.display =
+            "none";
+
+    }
+
+    else {
+
+        couponProductField.style.display =
+            "none";
+
+        couponValueField.style.display =
+            "block";
+
+    }
+
+}
+
+if (couponType) {
+
+    couponType.addEventListener(
+        "change",
+        updateCouponFields
+    );
+
+    updateCouponFields();
+
+}
+
+async function loadCouponProducts() {
+
+    const select =
+        document.getElementById("coupon-product");
+
+    if (!select) return;
+
+    const { data, error } =
+        await window.supabaseClient
+            .from("products")
+            .select("id,name")
+            .order("name");
+
+    if (error) {
+
+        console.error(
+            "COUPON PRODUCTS ERROR:",
+            error
+        );
+
+        return;
+
+    }
+
+    select.innerHTML = `
+        <option value="">
+            اختر منتج
+        </option>
+    `;
+
+    data.forEach(product => {
+
+        select.innerHTML += `
+            <option value="${product.id}">
+                ${product.name}
+            </option>
+        `;
+
+    });
+
+}
 
 window.addEventListener("supabaseReady", () => {
+
+loadCouponProducts();
 
 const createCouponButton =
 document.getElementById(
@@ -2349,6 +3335,10 @@ document.getElementById(
 
 );
 
+const couponProduct =
+    document.getElementById(
+        "coupon-product"
+    ).value || null;
 
 const minimumPurchase =
 
@@ -2428,24 +3418,30 @@ await window.supabaseClient
 .insert([
 
 {
+    code: couponName,
 
-code: couponName,
+    type: couponType,
 
-type: couponType,
+    value:
+        couponType === "product"
+            ? 0
+            : couponValue,
 
-value: couponValue,
+    product_reference:
+        couponType === "product"
+            ? couponProduct
+            : null,
 
-active: couponActive,
+    active: couponActive,
 
-minimum_purchase:
-minimumPurchase,
+    minimum_purchase:
+        minimumPurchase,
 
-maximum_uses:
-maximumUses,
+    maximum_uses:
+        maximumUses,
 
-expires_at:
-couponExpiration
-
+    expires_at:
+        couponExpiration
 }
 
 ]);
@@ -2480,6 +3476,9 @@ document.getElementById(
 "coupon-value"
 ).value = "";
 
+document.getElementById(
+    "coupon-product"
+).value = "";
 
 document.getElementById(
 "minimum-purchase"
@@ -2499,3 +3498,11 @@ document.getElementById(
 
 });
 
+
+const wheelButton = document.getElementById("wheel-button");
+
+if (wheelButton) {
+    wheelButton.onclick = function () {
+        location.href = "wheel.html";
+    };
+}

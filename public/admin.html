@@ -123,28 +123,47 @@ placeholder="اسم كود الخصم">
 
 <select id="coupon-type">
 
-<option value="percentage">
+    <option value="percentage">
+        خصم بالنسبة المئوية
+    </option>
 
-خصم بالنسبة المئوية
+    <option value="fixed">
+        خصم ثابت بالجنيه
+    </option>
 
-</option>
-
-
-<option value="fixed">
-
-خصم ثابت بالجنيه
-
-</option>
+    <option value="product">
+        🎁 منتج مجاني
+    </option>
 
 </select>
 
 
 
-<input
-type="number"
-id="coupon-value"
-placeholder="قيمة الخصم">
+<div id="coupon-value-field">
 
+    <input
+        type="number"
+        id="coupon-value"
+        placeholder="قيمة الخصم">
+
+</div>
+
+
+<div id="coupon-product-field" style="display:none;">
+
+    <label for="coupon-product">
+        اختر المنتج المجاني
+    </label>
+
+    <select id="coupon-product">
+
+        <option value="">
+            اختر منتج
+        </option>
+
+    </select>
+
+</div>
 
 <input
 type="number"
@@ -190,6 +209,32 @@ id="coupon-expiration">
 
 <p id="coupon-message"></p>
 
+
+</section>
+
+
+
+<!-- WHEEL MANAGEMENT -->
+
+<section id="wheel-management">
+
+    <h2>🎡 إدارة عجلة Nature Secrets</h2>
+
+    <p>
+        قم بإدارة جميع جوائز عجلة الحظ من هنا.
+    </p>
+
+    <button id="add-wheel-reward">
+        ➕ إضافة جائزة جديدة
+    </button>
+
+    <br><br>
+
+    <div id="wheel-rewards-list">
+
+    </div>
+
+    <p id="wheel-message"></p>
 
 </section>
 
@@ -258,9 +303,84 @@ id="coupon-expiration">
 
     </div>
 
+<div id="wheel-popup" class="popup-overlay" style="display:none;">
+
+    <div class="popup-box">
+
+        <h2>➕ إضافة جائزة جديدة</h2>
+
+        <input type="text" id="reward-name" placeholder="اسم الجائزة">
+
+       <select id="reward-type">
+
+    <option value="coupon">
+        🎟 Coupon
+    </option>
+
+    <option value="voucher">
+        💰 Voucher
+    </option>
+
+    <option value="product">
+        📦 Free Product
+    </option>
+
+</select>
+
+       <div id="coupon-fields">
+
+    <label id="reward-value-label">Discount %</label>
+
+    <input
+        type="number"
+        id="reward-value"
+        placeholder="مثال: 15">
+
+</div>
+
+<div
+    id="product-fields"
+    style="display:none;">
+
+    <label>Choose Product</label>
+
+    <select id="reward-product">
+
+        <option value="">
+
+            اختر منتج
+
+        </option>
+
+    </select>
+
+</div>
+
+        <input type="number" id="reward-probability" placeholder="احتمالية الفوز %">
+
+        <label>
+            <input type="checkbox" id="reward-enabled" checked>
+            مفعل
+        </label>
+
+        <br><br>
+
+        <button id="save-wheel-reward">
+            💾 حفظ
+        </button>
+
+        <button id="close-wheel-popup">
+            ❌ إلغاء
+        </button>
+
+    </div>
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module" src="/supabase.js"></script>
 <script src="/script.js"></script>
+<script src="/wheel-admin.js"></script>
 
 </body>
 </html>

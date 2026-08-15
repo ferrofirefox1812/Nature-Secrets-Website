@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Wheel Of Fortune</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <img src="images/logo.jpg" alt="Nature Secrets">
+
+    <h1>🎡 عجلة الحظ</h1>
+
+    <p>لف العجلة واربح خصومات أو منتجات مجانية!</p>
+
+<button id="home-button">
+    العودة إلى الصفحة الرئيسية
+</button>
+
+<br><br>
+
+    <div class="wheel-wrapper">
+
+    <div id="wheel-loading">
+        <img src="images/loading-wheel.png" class="loading-logo">
+        <p>جارٍ تحضير عجلة الطبيعة...</p>
+    </div>
+
+    <div class="wheel-pointer">
+    <img src="images/pointer-leaf.png" alt="Pointer">
+</div>
+
+    <div class="leaf-ring"></div>
+
+    <canvas
+        id="wheel"
+        width="500"
+        height="500"
+        style="display:none;">
+    </canvas>
+
+</div>
+
+    <br><br>
+
+<button id="spin-wheel">
+    لف العجلة
+</button>
+
+<p id="wheel-cooldown"></p>
+
+    <br><br>
+
+</div>
+
+<div id="reward-popup" class="popup-overlay">
+    
+    <div class="popup-box">
+
+        <h1>🎉</h1>
+
+        <h2>مبروك!</h2>
+
+        <h3 id="reward-popup-title"></h3>
+
+        <p>🎁 تم إضافة الجائزة إلى حسابك.</p>
+
+        <p id="reward-expiry">
+            ⏳ صالحة لمدة 24 ساعة
+        </p>
+
+        <button id="claim-reward">
+            استلام الجائزة
+        </button>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script type="module" src="supabase.js"></script>
+
+<script src="wheel.js"></script>
+
+</body>

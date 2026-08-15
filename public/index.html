@@ -4,17 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Nature Secrets</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap"
+    rel="stylesheet">
 </head>
 
-<body>
+<body class="homepage">
 
     <div class="container">
 
     <img src="images/logo.jpg" alt="Nature Secrets Logo">
 
-<h1>Nature Secrets</h1>
+<img
+    src="images/title.png"
+    alt="Nature Secrets"
+    class="website-title"
+>
 
 <h3 id="welcome-message"></h3>
 
@@ -24,9 +37,9 @@
 
 <p>الخامات التي تثقي بها, العنايه التي تحتاجيها.</p>
 
-        <button id="offers-button">
-            Offers & Bundles
-        </button>
+     <button id="offers-button">
+    Offers & Bundles
+</button>
 
         <button id="products-button">
             Products
@@ -42,6 +55,10 @@
 
         <button id="product-info-button">
              معلومات المنتجات
+        </button>
+
+        <button id="wheel-button">
+            🎡 عجلة الحظ
         </button>
 
         <section>
@@ -152,82 +169,37 @@ stroke-linecap="round"
 
         </button>
 
-<div id="otp-container" style="display:none;">
-
-    <h3>أدخل رمز التحقق</h3>
-
-<p>
-لقد أرسلنا رمز التحقق إلى:
-</p>
-
-<p id="otp-email"></p>
-
-<div class="otp-inputs">
-
-<input type="text" maxlength="1" class="otp-input">
-<input type="text" maxlength="1" class="otp-input">
-<input type="text" maxlength="1" class="otp-input">
-<input type="text" maxlength="1" class="otp-input">
-<input type="text" maxlength="1" class="otp-input">
-<input type="text" maxlength="1" class="otp-input">
-
-</div>
-
-<p id="otp-timer">
-10:00
-</p>
-
-<p id="otp-message"></p>
-
-<button id="verify-otp-button">
-
-تحقق
-
-</button>
-
-<button id="resend-otp-button">
-
-إعادة إرسال الرمز
-
-</button>
-
-</div>
-
     </div>
 
 </div>
 
+<div id="missing-name-popup" class="auth-popup" style="display:none;">
 
-<div id="missing-name-popup" class="auth-popup"
-style="display:none;">
+    <div class="auth-box">
 
-<div class="auth-box">
+        <h2>من فضلك أدخل اسمك</h2>
 
-<h2>من فضلك أدخل اسمك</h2>
+        <input
+        type="text"
+        id="missing-name-input"
+        placeholder="الاسم">
 
-<input
-type="text"
-id="missing-name-input"
-placeholder="الاسم">
+        <button id="save-missing-name">
+            حفظ
+        </button>
 
-<button
-id="save-missing-name">
-
-حفظ
-
-</button>
+    </div>
 
 </div>
-
-</div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="script.js"></script>
 <script type="module" src="supabase.js"></script>
 <script src="auth.js"></script>
 
-<p id="website-version">v1.0</p>
+<p id="website-version">v1.1.2</p>
+
+<img src="images/botanical.png" alt="" class="botanical-decoration">
 
 </body>
 </html>
