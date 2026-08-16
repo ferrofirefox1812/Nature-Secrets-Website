@@ -32,8 +32,8 @@ type="password"
 placeholder="كلمة المرور">
 
 
-<button id="login-button">
-دخول
+<button type="button" id="login-button">
+    دخول
 </button>
 
 
@@ -47,51 +47,41 @@ placeholder="كلمة المرور">
 
 const button = document.getElementById("login-button");
 
-
 button.addEventListener("click", async function(){
 
+    const password =
+        document.getElementById("admin-password").value;
 
-const password =
-document.getElementById("admin-password").value;
+    const response = await fetch("/admin-login", {
 
+        method: "POST",
 
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-const response = await fetch("/admin-login", {
+        body: JSON.stringify({
+            password: password
+        })
 
-method:"POST",
+    });
 
-headers:{
-"Content-Type":"application/json"
-},
+    const result = await response.json();
 
-body: JSON.stringify({
-password: password
-})
+    if(result.success){
 
-});
+        window.location.href = "admin.html";
 
+    }
 
-const result = await response.json();
+    else{
 
+        document.getElementById("login-message").textContent =
+            "كلمة المرور خاطئة";
 
-
-if(result.success){
-
-window.location.href="admin.html";
-
-}
-
-else{
-
-document.getElementById("login-message").textContent =
-"كلمة المرور خاطئة";
-
-}
-
-
+    }
 
 });
-
 
 </script>
 
