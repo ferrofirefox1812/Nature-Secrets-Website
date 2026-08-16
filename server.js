@@ -37,25 +37,19 @@ app.use(session({
 
 app.get("/admin.html", function(req, res){
 
-
     if(req.session.admin){
-
 
         res.sendFile(
             __dirname + "/public/admin.html"
         );
 
-
     }
 
     else{
 
-
         res.redirect("/admin-login.html");
 
-
     }
-
 
 });
 
