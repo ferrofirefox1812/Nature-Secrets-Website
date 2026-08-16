@@ -377,8 +377,53 @@ id="coupon-expiration">
 
 </div>
 
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script type="module" src="/supabase.js"></script>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+    "https://pvxknkpkpwbgnjnrmskm.supabase.co",
+    "sb_publishable_kBADQWwnsVvkanTYrILiUw_83k1vR3Z"
+);
+
+const {
+    data: { session }
+} = await supabase.auth.getSession();
+
+if (!session) {
+
+    window.location.replace("/admin-login.html");
+
+} else {
+
+    const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", session.user.id)
+        .single();
+
+    if (error || !profile || profile.is_admin !== true) {
+
+        await supabase.auth.signOut();
+
+        window.location.replace("/admin-login.html");
+
+    } else {
+
+        window.supabaseClient = supabase;
+
+        window.dispatchEvent(
+            new Event("supabaseReady")
+        );
+
+    }
+
+}
+</script>
+
 <script src="/script.js"></script>
 <script src="/wheel-admin.js"></script>
 
