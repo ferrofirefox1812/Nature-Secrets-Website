@@ -1,3 +1,5 @@
+
+
 const itemType = document.getElementById("item-type");
 const categorySelect = document.getElementById("category-select");
 
@@ -20,6 +22,18 @@ itemType.addEventListener("change", () => {
     const oldPriceInput =
         document.getElementById("item-old-price");
 
+    const description =
+    document
+        .getElementById("item-description")
+        .value
+        .trim();
+
+const oldPrice =
+    Number(
+        document
+            .getElementById("item-old-price")
+            .value
+    );
 
     if (itemType.value === "offer") {
 
@@ -45,77 +59,77 @@ itemType.addEventListener("change", () => {
     categorySelect.innerHTML = "";
 
 
-    // PRODUCT CATEGORIES
+   // PRODUCT CATEGORIES
 
-    if (itemType.value === "product") {
+if (itemType.value === "product") {
 
-        categorySelect.innerHTML = `
+    categorySelect.innerHTML = `
 
-        <option value="">اختر الفئة</option>
+    <option value="">اختر الفئة</option>
 
-        <option value="shampoo">
-            الشامبو
-        </option>
+    <option value="الشامبو">
+        الشامبو
+    </option>
 
-        <option value="conditioner">
-            البلسم
-        </option>
+    <option value="البلسم">
+        البلسم
+    </option>
 
-        <option value="styling-cream">
-            كريم التصفيف
-        </option>
+    <option value="كريم التصفيف">
+        كريم التصفيف
+    </option>
 
-        <option value="hair-mask">
-            حمام الكريم
-        </option>
+    <option value="حمام الكريم">
+        حمام الكريم
+    </option>
 
-        <option value="hair-lotion">
-            لوشن التساقط والإنبات
-        </option>
+    <option value="لوشن التساقط والإنبات">
+        لوشن التساقط والإنبات
+    </option>
 
-        <option value="serum">
-            السيروم
-        </option>
+    <option value="السيروم">
+        السيروم
+    </option>
 
-        <option value="skin-care">
-            العناية بالبشرة
-        </option>
+    <option value="العناية بالبشرة">
+        العناية بالبشرة
+    </option>
 
-        <option value="brightening">
-            منتجات التفتيح
-        </option>
+    <option value="منتجات التفتيح">
+        منتجات التفتيح
+    </option>
 
-        <option value="lip-care">
-            مرطبات الشفاه
-        </option>
+    <option value="مرطبات الشفاه">
+        مرطبات الشفاه
+    </option>
 
-        <option value="face-serums">
-            سيرومات البشرة والعين
-        </option>
+    <option value="سيرومات البشرة والعين">
+        سيرومات البشرة والعين
+    </option>
 
-        <option value="hand-foot-care">
-            العناية باليد والقدم
-        </option>
+    <option value="العناية باليد والقدم">
+        العناية باليد والقدم
+    </option>
 
-        <option value="personal-care">
-            العناية الشخصية
-        </option>
+    <option value="العناية الشخصية">
+        العناية الشخصية
+    </option>
 
-        <option value="soap">
-            الصابون
-        </option>
+    <option value="الصابون">
+        الصابون
+    </option>
 
-        <option value="baby-products">
-            منتجات الأطفال حديثي الولادة
-        </option>
+    <option value="منتجات الأطفال حديثي الولادة">
+        منتجات الأطفال حديثي الولادة
+    </option>
 
-        <option value="other">
-            منتجات أخرى
-        </option>
+    <option value="منتجات أخرى">
+        منتجات أخرى
+    </option>
 
-        `;
+    `;
 
-    }
+}
 
 
     // OFFER CATEGORIES
@@ -181,6 +195,7 @@ document
             const supabase =
                 window.supabaseClient;
 
+              
 
             const type =
                 itemType.value;
@@ -197,6 +212,13 @@ document
                         .getElementById("item-price")
                         .value
                 );
+
+                const oldPrice =
+    Number(
+        document
+            .getElementById("item-old-price")
+            .value
+    );
 
             const image =
                 document
@@ -280,21 +302,31 @@ document
                         .single();
 
 
-                if (error) {
+               if (error) {
 
-                    console.error(
-                        "PRODUCT CREATE ERROR:",
-                        error
-                    );
+    console.error(
+        "PRODUCT CREATE ERROR:",
+        error
+    );
 
-                    alert(
-                        "حدث خطأ أثناء إنشاء المنتج:\n" +
-                        error.message
-                    );
+    if (error.code === "23505") {
 
-                    return;
+        alert(
+            "هذا المنتج موجود بالفعل بنفس الاسم والفئة والسعر."
+        );
 
-                }
+    } else {
+
+        alert(
+            "حدث خطأ أثناء إنشاء المنتج:\n" +
+            error.message
+        );
+
+    }
+
+    return;
+
+}
 
 
                 console.log(
@@ -321,6 +353,16 @@ document
             // ==========================
 
             if (type === "offer") {
+
+                const category = categorySelect.value;
+
+                 if (!category) {
+
+        alert("اختر فئة العرض.");
+
+        return;
+
+    }
 
                 const selectedProducts =
                     Array.from(
@@ -350,19 +392,24 @@ document
 
                 const { data: bundle, error: bundleError } =
                     await supabase
-                        .from("bundles")
-                        .insert([{
+                      .from("bundles")
+.insert([{
 
-                            name: name,
+    name: name,
 
-                            price: price,
+    price: price,
 
-                            image: image || null,
+    old_price: oldPrice || null,
 
-                            description:
-                                description || null
+    image: image || null,
 
-                        }])
+    description:
+        description || null,
+
+    category:
+        categorySelect.value
+
+}])
                         .select()
                         .single();
 

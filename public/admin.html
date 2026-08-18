@@ -379,49 +379,88 @@ id="coupon-expiration">
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script type="module" src="supabase.js"></script>
 
 <script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const supabase = createClient(
-    "https://pvxknkpkpwbgnjnrmskm.supabase.co",
-    "sb_publishable_kBADQWwnsVvkanTYrILiUw_83k1vR3Z"
-);
+console.log("🔥 ADMIN SCRIPT LOADED");
 
-const {
-    data: { session }
-} = await supabase.auth.getSession();
+async function checkAdmin() {
 
-if (!session) {
+    console.log("🔥 CHECKING ADMIN");
 
-    window.location.replace("/admin-login.html");
+    const supabase = window.supabaseClient;
 
-} else {
+    if (!supabase) {
 
-    const { data: profile, error } = await supabase
-        .from("profiles")
-        .select("is_admin")
-        .eq("id", session.user.id)
-        .single();
+        console.log("❌ SUPABASE CLIENT NOT READY");
 
-    if (error || !profile || profile.is_admin !== true) {
-
-        await supabase.auth.signOut();
-
-        window.location.replace("/admin-login.html");
-
-    } else {
-
-        window.supabaseClient = supabase;
-
-        window.dispatchEvent(
-            new Event("supabaseReady")
-        );
+        return;
 
     }
 
+    console.log("✅ SUPABASE CLIENT FOUND");
+
+    const {
+        data: { session }
+    } = await supabase.auth.getSession();
+
+    console.log("🔥 ADMIN SESSION:", session);
+
+    if (!session) {
+
+        console.log("❌ NO SESSION");
+
+        window.location.replace("admin-login.html");
+
+        return;
+
+    }
+
+    console.log("✅ SESSION EXISTS");
+
+    const { data: profile, error } =
+        await supabase
+            .from("profiles")
+            .select("is_admin")
+            .eq("id", session.user.id)
+            .single();
+
+    console.log("🔥 ADMIN PROFILE:", profile);
+    console.log("🔥 PROFILE ERROR:", error);
+
+    if (error || !profile || profile.is_admin !== true) {
+
+        console.log("❌ NOT ADMIN");
+
+        await supabase.auth.signOut();
+
+        window.location.replace("admin-login.html");
+
+        return;
+
+    }
+
+    console.log("🎉 ADMIN VERIFIED");
+
 }
+
+if (window.supabaseClient) {
+
+    console.log("SUPABASE ALREADY READY");
+
+    checkAdmin();
+
+} else {
+
+    console.log("WAITING FOR SUPABASE");
+
+    window.addEventListener("supabaseReady", checkAdmin);
+
+}
+
 </script>
 
 <script src="/script.js"></script>

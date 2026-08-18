@@ -143,18 +143,18 @@ button.addEventListener("click", async function () {
 
     }
 
+message.textContent =
+    "Success! Opening admin panel...";
 
-    message.textContent =
-        "Success! Opening admin panel...";
+console.log("ABOUT TO REDIRECT");
 
+console.log("ABOUT TO REDIRECT");
 
-    setTimeout(function () {
+const adminUrl = window.location.origin + "/admin.html";
 
-        window.location.replace(
-            "/admin.html"
-        );
+console.log("REDIRECTING TO:", adminUrl);
 
-    }, 500);
+window.location.assign(adminUrl);
 
 
 });

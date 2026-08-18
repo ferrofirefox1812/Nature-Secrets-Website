@@ -1,98 +1,346 @@
-fetch("/items")
+console.log("🔥 DELETE ITEMS JS LOADED");
 
-.then(response => response.json())
+async function loadItems() {
+    if (!window.supabaseClient) {
+        console.log("⏳ Waiting for Supabase...");
 
-.then(items => {
+        window.addEventListener(
+            "supabaseReady",
+            loadItems,
+            { once: true }
+        );
 
+        return;
+    }
 
-const container = document.getElementById("items-container");
+    const supabase = window.supabaseClient;
+    const container = document.getElementById("items-container");
 
+    if (!container) {
+        console.error("❌ ITEMS CONTAINER NOT FOUND");
+        return;
+    }
 
+    container.innerHTML = "جاري تحميل العناصر...";
 
-items.forEach(item => {
+    // =========================
+    // LOAD PRODUCTS
+    // =========================
 
+    const {
+        data: products,
+        error: productsError
+    } = await supabase
+        .from("products")
+        .select("*")
+        .order("id");
 
+    if (productsError) {
+        console.error("❌ PRODUCTS ERROR:", productsError);
+        container.innerHTML = "حدث خطأ أثناء تحميل المنتجات.";
+        return;
+    }
 
-const card = document.createElement("div");
+    // =========================
+    // LOAD OFFERS
+    // =========================
 
+    const {
+        data: bundles,
+        error: bundlesError
+    } = await supabase
+        .from("bundles")
+        .select("*")
+        .order("id");
 
-card.className = "product";
+    if (bundlesError) {
+        console.error("❌ BUNDLES ERROR:", bundlesError);
+        container.innerHTML = "حدث خطأ أثناء تحميل العروض.";
+        return;
+    }
 
+    console.log("✅ PRODUCTS:", products);
+    console.log("✅ BUNDLES:", bundles);
 
+    container.innerHTML = "";
 
-card.innerHTML = `
+    // =========================
+    // PRODUCTS
+    // =========================
 
-<h3>${item.name}</h3>
+    const productsTitle = document.createElement("h2");
+    productsTitle.textContent = "المنتجات";
+    container.appendChild(productsTitle);
 
-<p>
-${item.price} جنيه
-</p>
+    products.forEach(function (product) {
+        const card = document.createElement("div");
 
-<p>
-${item.type}
-</p>
+        card.className = "product";
 
+        card.innerHTML = `
+            <h3>${product.name}</h3>
 
-<button class="delete-button">
+            <p>
+                السعر: ${product.price} جنيه
+            </p>
 
-حذف
+            <p>
+                منتج
+            </p>
 
-</button>
+            <button class="delete-button">
+                حذف
+            </button>
+        `;
 
+        const button = card.querySelector(".delete-button");
 
-`;
+        button.onclick = async function () {
 
+            const confirmDelete = confirm(
+                'هل تريد حذف المنتج "' +
+                product.name +
+                '"؟'
+            );
 
+            if (!confirmDelete) {
+                return;
+            }
 
-card.querySelector(".delete-button")
-.onclick = async function(){
+            console.log(
+                "🗑️ TRYING TO DELETE PRODUCT:",
+                product.id
+            );
 
+            // =========================
+            // DELETE PRODUCT
+            // =========================
 
-const confirmDelete = confirm(
-"هل تريد حذف هذا العنصر؟"
-);
+            const {
+                data: deletedProduct,
+                error: deleteError
+            } = await supabase
+                .from("products")
+                .delete()
+                .eq("id", product.id)
+                .select();
 
+            console.log(
+                "🆔 PRODUCT ID:",
+                product.id
+            );
 
+            console.log(
+                "🗑️ DELETED PRODUCT:",
+                deletedProduct
+            );
 
-if(confirmDelete){
+            console.log(
+                "❌ DELETE ERROR:",
+                deleteError
+            );
 
+            if (deleteError) {
+                console.error(
+                    "❌ PRODUCT DELETE ERROR:",
+                    deleteError
+                );
 
-await fetch("/delete-item", {
+                alert(
+                    "حدث خطأ أثناء حذف المنتج:\n" +
+                    deleteError.message
+                );
 
-method:"DELETE",
+                return;
+            }
 
-headers:{
-"Content-Type":"application/json"
-},
+            if (
+                !deletedProduct ||
+                deletedProduct.length === 0
+            ) {
+                console.error(
+                    "❌ NO PRODUCT WAS DELETED"
+                );
 
-body: JSON.stringify({
+                alert(
+                    "لم يتم حذف المنتج من Supabase."
+                );
 
-name:item.name
+                return;
+            }
 
-})
+            console.log(
+                "✅ PRODUCT DELETED SUCCESSFULLY"
+            );
 
-});
+            alert(
+                "تم حذف المنتج بنجاح!"
+            );
 
+            location.reload();
+        };
 
+        container.appendChild(card);
+    });
 
-alert("تم الحذف");
+    // =========================
+    // OFFERS
+    // =========================
 
+    const bundlesTitle = document.createElement("h2");
 
-location.reload();
+    bundlesTitle.textContent =
+        "العروض والباقات";
 
+    bundlesTitle.style.marginTop =
+        "40px";
 
+    container.appendChild(bundlesTitle);
+
+    bundles.forEach(function (bundle) {
+
+        const card = document.createElement("div");
+
+        card.className = "product";
+
+        card.innerHTML = `
+            <h3>${bundle.name}</h3>
+
+            <p>
+                السعر: ${bundle.price} جنيه
+            </p>
+
+            <p>
+                عرض
+            </p>
+
+            <button class="delete-button">
+                حذف
+            </button>
+        `;
+
+        const button =
+            card.querySelector(".delete-button");
+
+        button.onclick = async function () {
+
+            const confirmDelete = confirm(
+                'هل تريد حذف العرض "' +
+                bundle.name +
+                '"؟'
+            );
+
+            if (!confirmDelete) {
+                return;
+            }
+
+            console.log(
+                "🗑️ TRYING TO DELETE BUNDLE:",
+                bundle.id
+            );
+
+            // =========================
+            // DELETE BUNDLE ITEMS
+            // =========================
+
+            const {
+                error: itemsDeleteError
+            } = await supabase
+                .from("bundle_items")
+                .delete()
+                .eq("bundle_id", bundle.id);
+
+            console.log(
+                "🗑️ BUNDLE ITEMS DELETE ERROR:",
+                itemsDeleteError
+            );
+
+            if (itemsDeleteError) {
+
+                console.error(
+                    "❌ BUNDLE ITEMS DELETE ERROR:",
+                    itemsDeleteError
+                );
+
+                alert(
+                    "لم يتم حذف منتجات العرض:\n" +
+                    itemsDeleteError.message
+                );
+
+                return;
+            }
+
+            // =========================
+            // DELETE BUNDLE
+            // =========================
+
+            const {
+                data: deletedBundle,
+                error: bundleDeleteError
+            } = await supabase
+                .from("bundles")
+                .delete()
+                .eq("id", bundle.id)
+                .select();
+
+            console.log(
+                "🗑️ DELETED BUNDLE:",
+                deletedBundle
+            );
+
+            console.log(
+                "❌ BUNDLE DELETE ERROR:",
+                bundleDeleteError
+            );
+
+            if (bundleDeleteError) {
+
+                console.error(
+                    "❌ BUNDLE DELETE ERROR:",
+                    bundleDeleteError
+                );
+
+                alert(
+                    "حدث خطأ أثناء حذف العرض:\n" +
+                    bundleDeleteError.message
+                );
+
+                return;
+            }
+
+            if (
+                !deletedBundle ||
+                deletedBundle.length === 0
+            ) {
+
+                console.error(
+                    "❌ NO BUNDLE WAS DELETED"
+                );
+
+                alert(
+                    "لم يتم حذف العرض من Supabase."
+                );
+
+                return;
+            }
+
+            console.log(
+                "✅ BUNDLE DELETED SUCCESSFULLY"
+            );
+
+            alert(
+                "تم حذف العرض بنجاح!"
+            );
+
+            location.reload();
+        };
+
+        container.appendChild(card);
+    });
+
+    console.log(
+        "🎉 ALL ITEMS LOADED FOR DELETION"
+    );
 }
 
-
-};
-
-
-
-container.appendChild(card);
-
-
-
-});
-
-
-});
+loadItems();

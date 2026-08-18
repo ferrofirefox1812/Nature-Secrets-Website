@@ -23,7 +23,8 @@ async function loadProducts() {
 
     data.forEach(product => {
 
-        const categoryMap = {
+    const categoryMap = {
+    // Arabic categories — existing products
     "الشامبو": "shampoo-products-container",
     "البلسم": "conditioner-products-container",
     "كريم التصفيف": "styling-cream-products-container",
@@ -38,7 +39,24 @@ async function loadProducts() {
     "العناية الشخصية": "personal-care-products-container",
     "الصابون": "soap-products-container",
     "منتجات الأطفال حديثي الولادة": "baby-products-container",
-    "منتجات أخرى": "other-products-container"
+    "منتجات أخرى": "other-products-container",
+
+    // English categories — newly created products
+    "shampoo": "shampoo-products-container",
+    "conditioner": "conditioner-products-container",
+    "styling-cream": "styling-cream-products-container",
+    "hair-mask": "hair-mask-products-container",
+    "hair-lotion": "hair-loss-products-container",
+    "serum": "serum-products-container",
+    "skin-care": "skin-care-products-container",
+    "brightening": "brightening-products-container",
+    "lip-care": "lip-balm-products-container",
+    "face-serums": "skin-serums-products-container",
+    "hand-foot-care": "hand-foot-care-products-container",
+    "personal-care": "personal-care-products-container",
+    "soap": "soap-products-container",
+    "baby-products": "baby-products-container",
+    "other": "other-products-container"
 };
 
 const container = document.getElementById(categoryMap[product.category]);
