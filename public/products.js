@@ -1,5 +1,3 @@
-
-
 window.addEventListener("supabaseReady", loadProducts);
 
 async function loadProducts() {
@@ -23,56 +21,77 @@ async function loadProducts() {
 
     data.forEach(product => {
 
-    const categoryMap = {
-    // Arabic categories — existing products
-    "الشامبو": "shampoo-products-container",
-    "البلسم": "conditioner-products-container",
-    "كريم التصفيف": "styling-cream-products-container",
-    "حمام الكريم": "hair-mask-products-container",
-    "لوشن التساقط والإنبات": "hair-loss-products-container",
-    "السيروم": "serum-products-container",
-    "العناية بالبشرة": "skin-care-products-container",
-    "منتجات التفتيح": "brightening-products-container",
-    "مرطبات الشفاه": "lip-balm-products-container",
-    "سيرومات البشرة والعين": "skin-serums-products-container",
-    "العناية باليد والقدم": "hand-foot-care-products-container",
-    "العناية الشخصية": "personal-care-products-container",
-    "الصابون": "soap-products-container",
-    "منتجات الأطفال حديثي الولادة": "baby-products-container",
-    "منتجات أخرى": "other-products-container",
+        const categoryMap = {
+            "الشامبو": "shampoo-products-container",
+            "البلسم": "conditioner-products-container",
+            "كريم التصفيف": "styling-cream-products-container",
+            "حمام الكريم": "hair-mask-products-container",
+            "لوشن التساقط والإنبات": "hair-loss-products-container",
+            "السيروم": "serum-products-container",
+            "العناية بالبشرة": "skin-care-products-container",
+            "منتجات التفتيح": "brightening-products-container",
+            "مرطبات الشفاه": "lip-balm-products-container",
+            "سيرومات البشرة والعين": "skin-serums-products-container",
+            "العناية باليد والقدم": "hand-foot-care-products-container",
+            "العناية الشخصية": "personal-care-products-container",
+            "الصابون": "soap-products-container",
+            "منتجات الأطفال حديثي الولادة": "baby-products-container",
+            "منتجات أخرى": "other-products-container",
 
-    // English categories — newly created products
-    "shampoo": "shampoo-products-container",
-    "conditioner": "conditioner-products-container",
-    "styling-cream": "styling-cream-products-container",
-    "hair-mask": "hair-mask-products-container",
-    "hair-lotion": "hair-loss-products-container",
-    "serum": "serum-products-container",
-    "skin-care": "skin-care-products-container",
-    "brightening": "brightening-products-container",
-    "lip-care": "lip-balm-products-container",
-    "face-serums": "skin-serums-products-container",
-    "hand-foot-care": "hand-foot-care-products-container",
-    "personal-care": "personal-care-products-container",
-    "soap": "soap-products-container",
-    "baby-products": "baby-products-container",
-    "other": "other-products-container"
-};
+            "shampoo": "shampoo-products-container",
+            "conditioner": "conditioner-products-container",
+            "styling-cream": "styling-cream-products-container",
+            "hair-mask": "hair-mask-products-container",
+            "hair-lotion": "hair-loss-products-container",
+            "serum": "serum-products-container",
+            "skin-care": "skin-care-products-container",
+            "brightening": "brightening-products-container",
+            "lip-care": "lip-balm-products-container",
+            "face-serums": "skin-serums-products-container",
+            "hand-foot-care": "hand-foot-care-products-container",
+            "personal-care": "personal-care-products-container",
+            "soap": "soap-products-container",
+            "baby-products": "baby-products-container",
+            "other": "other-products-container"
+        };
 
-const container = document.getElementById(categoryMap[product.category]);
+        const container = document.getElementById(
+            categoryMap[product.category]
+        );
 
-if (!container) {
-    console.log("Missing category:", product.category);
-    return;
-}
+        if (!container) {
+            console.log("Missing category:", product.category);
+            return;
+        }
 
         const card = document.createElement("div");
 
         card.className = "product";
 
+        let imageHTML = "";
+
+        if (
+            product.image &&
+            typeof product.image === "string" &&
+            product.image.trim() !== ""
+        ) {
+            imageHTML = `
+                <img
+                    src="${product.image}"
+                    alt="${product.name}"
+                    class="product-image"
+                >
+            `;
+        }
+
         card.innerHTML = `
+            ${imageHTML}
+
             <h3>${product.name}</h3>
-            <p>السعر: ${product.price} جنيه</p>
+
+            <p>
+                السعر: ${product.price} جنيه
+            </p>
 
             <button
                 class="add-to-cart"
@@ -90,45 +109,47 @@ if (!container) {
     setupCartButtons();
 }
 
+
 function setupCartButtons() {
 
     document.querySelectorAll(".add-to-cart").forEach(button => {
 
         button.onclick = function () {
 
-           const name = this.dataset.name;
-const price = Number(this.dataset.price);
+            const name = this.dataset.name;
 
-updateCartKey().then(() => {
+            const price = Number(this.dataset.price);
 
-    let cart =
-    JSON.parse(localStorage.getItem(cartKey)) || [];
+            updateCartKey().then(() => {
 
-    const existingProduct = cart.find(item => item.name === name);
+                let cart =
+                    JSON.parse(localStorage.getItem(cartKey)) || [];
 
-    if(existingProduct){
+                const existingProduct =
+                    cart.find(item => item.name === name);
 
-        existingProduct.quantity++;
+                if (existingProduct) {
 
-    }else{
+                    existingProduct.quantity++;
 
-        cart.push({
+                } else {
 
-            name,
-            price,
-            quantity: 1
+                    cart.push({
+                        name: name,
+                        price: price,
+                        quantity: 1
+                    });
+                }
 
-        });
+                localStorage.setItem(
+                    cartKey,
+                    JSON.stringify(cart)
+                );
 
-    }
-
-    localStorage.setItem(cartKey, JSON.stringify(cart));
-
-    alert(`${name} تمت إضافته إلى السلة`);
-
-});
+                alert(
+                    `${name} تمت إضافته إلى السلة`
+                );
+            });
         };
-
     });
-
 }

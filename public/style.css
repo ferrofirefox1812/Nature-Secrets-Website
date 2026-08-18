@@ -1188,3 +1188,13 @@ margin: 0;
     pointer-events: none;
     z-index: 0;
 }
+
+.product-image {
+    width: 100%;
+    max-width: 220px;
+    height: 220px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 15px;
+    border-radius: 12px;
+}

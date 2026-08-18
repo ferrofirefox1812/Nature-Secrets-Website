@@ -2994,27 +2994,17 @@ window.addEventListener("supabaseReady", async () => {
 
 
 const phrases = [
-
-"محتاجة مساعدة؟",
-
-"نحن هنا لمساعدتك",
-
-"يسعدنا خدمتك",
-
-"هل تحتاجي إلى استشارة؟",
-
-"تواصل معنا الآن"
-
+    "محتاجة مساعدة؟",
+    "نحن هنا لمساعدتك",
+    "يسعدنا خدمتك",
+    "هل تحتاجي إلى استشارة؟",
+    "تواصل معنا الآن"
 ];
-
 
 let currentPhrase = 0;
 
 const whatsappMessage =
-document.getElementById("whatsapp-message");
-
-
-
+    document.getElementById("whatsapp-message");
 
 function showNextPhrase() {
 
@@ -3022,69 +3012,44 @@ function showNextPhrase() {
         return;
     }
 
+    // Fade out current phrase
     whatsappMessage.style.opacity = "0";
 
-
     setTimeout(function () {
 
-        whatsappMessage.textContent =
-        phrases[currentPhrase];
-
-        whatsappMessage.style.opacity = "1";
-
-    },1000);
-
-}
-
-    setTimeout(function () {
-
-    if (whatsappMessage) {
-
-        whatsappMessage.style.opacity = "0";
-
-    }
-
-},16000);
-
-
-    setTimeout(function () {
-
+        // Move to next phrase
         currentPhrase++;
 
         if (currentPhrase >= phrases.length) {
-
             currentPhrase = 0;
-
         }
 
-        showNextPhrase();
+        // Change text
+        whatsappMessage.textContent =
+            phrases[currentPhrase];
 
-    },17000);
+        // Fade in next phrase
+        whatsappMessage.style.opacity = "1";
 
-
-
-if(whatsappMessage){
-
-whatsappMessage.textContent =
-
-phrases[currentPhrase];
-
-
-whatsappMessage.style.opacity = "1";
-
+    }, 1000);
 }
 
 
-setTimeout(function () {
+// Show first phrase
+if (whatsappMessage) {
 
-    if(whatsappMessage){
+    whatsappMessage.textContent =
+        phrases[currentPhrase];
 
-    whatsappMessage.style.opacity = "0";
+    whatsappMessage.style.opacity = "1";
 
-    }
+    // Change phrase every 17 seconds
+    setInterval(function () {
 
-},15000);
+        showNextPhrase();
 
+    }, 17000);
+}
 const couponType =
     document.getElementById("coupon-type");
 
