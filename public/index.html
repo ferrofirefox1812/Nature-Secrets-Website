@@ -7,6 +7,8 @@
 
     <title>Nature Secrets</title>
 
+    <link rel="icon" type="image/png" href="images/faviconnature.png">
+
     <link rel="stylesheet" href="style.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +20,10 @@
 </head>
 
 <body class="homepage">
+
+    <button id="theme-toggle" type="button" aria-label="تغيير الوضع">
+    🌙
+</button>
 
     <div class="container">
 
@@ -52,6 +58,10 @@
         <button id="cart-button">
             Shopping Cart (<span id="cart-count">0</span>)
         </button>
+
+        <button id="my-orders-button">
+    📦 طلباتي
+</button>
 
         <button id="tracking-button">
              تتبع الطلب
@@ -201,7 +211,7 @@ stroke-linecap="round"
 <script type="module" src="supabase.js"></script>
 <script src="auth.js"></script>
 
-<p id="website-version">v1.1.2</p>
+<p id="website-version">v1.8</p>
 
 <img src="images/botanical.png" alt="" class="botanical-decoration">
 

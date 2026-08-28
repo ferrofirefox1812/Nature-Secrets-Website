@@ -8,9 +8,15 @@
     <title>لوحة التحكم - Nature Secrets</title>
     <link rel="stylesheet" href="style.css">
 
+        <link rel="icon" type="image/png" href="images/faviconnature.png">
+
 </head>
 
 <body>
+
+  <button id="theme-toggle" type="button" aria-label="تغيير الوضع">
+    🌙
+</button>
 
     <div class="container">
 
@@ -25,29 +31,75 @@
 
         <h1>لوحة التحكم</h1>
 
-<button id="logout-button">
-    تسجيل الخروج
-</button>
+<div style="width: 100%; text-align: center;">
+    <button
+        id="logout-button"
+        style="
+            display: inline-block !important;
+            margin: 15px auto !important;
+        "
+    >
+        تسجيل الخروج
+    </button>
+</div>
 
         <!-- ORDER STATISTICS -->
 
-        <section id="statistics">
+       <section id="statistics">
 
-        <h2>إحصائيات الطلبات</h2>
+    <h2>📊 إحصائيات المبيعات</h2>
 
-        <p>عدد الطلبات الجديدة: <span id="new-orders-count">0</span></p>
+    <p>
+        📦 إجمالي عدد الطلبات:
+        <span id="total-orders-count">0</span>
+    </p>
 
-        <p>عدد الطلبات قيد التجهيز: <span id="preparing-orders-count">0</span></p>
+    <p>
+        🆕 الطلبات الجديدة:
+        <span id="new-orders-count">0</span>
+    </p>
 
-        <p>عدد الطلبات المشحونة: <span id="shipped-orders-count">0</span></p>
+    <p>
+        🟡 قيد التجهيز:
+        <span id="preparing-orders-count">0</span>
+    </p>
 
-        <p>عدد الطلبات المكتملة: <span id="delivered-orders-count">0</span></p>
+    <p>
+        🔵 تم الشحن:
+        <span id="shipped-orders-count">0</span>
+    </p>
 
-        <p>إجمالي عدد الطلبات: <span id="total-orders-count">0</span></p>
+    <p>
+        🟢 تم التوصيل:
+        <span id="delivered-orders-count">0</span>
+    </p>
 
-        <p>إجمالي الأرباح: <span id="total-profit">0</span> جنيه</p>
+    <p>
+        💰 إجمالي المبيعات:
+        <strong>
+            <span id="total-profit">0</span> جنيه
+        </strong>
+    </p>
 
-        </section>
+    <hr>
+
+    <h3>📅 مبيعات اليوم</h3>
+
+    <p>
+        عدد الطلبات اليوم:
+        <span id="today-orders-count">0</span>
+    </p>
+
+    <p>
+        مبيعات اليوم:
+        <strong>
+            <span id="today-sales">0</span> جنيه
+        </strong>
+    </p>
+
+</section>
+
+
 
 
         <!-- SEARCH SECTION -->
@@ -105,6 +157,39 @@
 
         </section>
 
+
+        <!-- ===================================== -->
+<!-- 📦 STOCK MANAGEMENT -->
+<!-- ===================================== -->
+
+<section id="stock-management">
+
+    <h2>📦 مخزون المنتجات</h2>
+
+    <p>
+        مخزون المنتجات الحالي
+    </p>
+
+    <div id="stock-list">
+
+        <p>جاري تحميل المخزون...</p>
+
+    </div>
+
+</section>
+
+
+<section id="best-selling-products">
+
+    <h2>🔥 المنتجات الأكثر مبيعاً</h2>
+
+    <div id="best-selling-list">
+
+        <p>جاري تحميل البيانات...</p>
+
+    </div>
+
+</section>
 
         <!-- PRODUCT MANAGEMENT -->
 
@@ -211,6 +296,7 @@ id="coupon-expiration">
 
 
 </section>
+
 
 
 
@@ -403,15 +489,28 @@ async function checkAdmin() {
 
     console.log("✅ SUPABASE CLIENT FOUND");
 
+    // Wait for Supabase to restore the session
     const {
-        data: { session }
+        data: { session },
+        error: sessionError
     } = await supabase.auth.getSession();
 
     console.log("🔥 ADMIN SESSION:", session);
 
+    if (sessionError) {
+
+        console.error(
+            "❌ SESSION ERROR:",
+            sessionError
+        );
+
+        return;
+
+    }
+
     if (!session) {
 
-        console.log("❌ NO SESSION");
+        console.log("❌ NO ADMIN SESSION");
 
         window.location.replace("admin-login.html");
 
@@ -421,17 +520,24 @@ async function checkAdmin() {
 
     console.log("✅ SESSION EXISTS");
 
-    const { data: profile, error } =
-        await supabase
-            .from("profiles")
-            .select("is_admin")
-            .eq("id", session.user.id)
-            .single();
+    // Check admin status
+    const {
+        data: profile,
+        error: profileError
+    } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", session.user.id)
+        .single();
 
     console.log("🔥 ADMIN PROFILE:", profile);
-    console.log("🔥 PROFILE ERROR:", error);
+    console.log("🔥 PROFILE ERROR:", profileError);
 
-    if (error || !profile || profile.is_admin !== true) {
+    if (
+        profileError ||
+        !profile ||
+        profile.is_admin !== true
+    ) {
 
         console.log("❌ NOT ADMIN");
 
@@ -445,21 +551,78 @@ async function checkAdmin() {
 
     console.log("🎉 ADMIN VERIFIED");
 
+const logoutButton =
+    document.getElementById("logout-button");
+
+if (logoutButton) {
+
+    logoutButton.onclick = async function () {
+
+        logoutButton.disabled = true;
+        logoutButton.textContent = "جاري تسجيل الخروج...";
+
+        const { error } =
+            await supabase.auth.signOut();
+
+        if (error) {
+
+            console.error(
+                "❌ LOGOUT ERROR:",
+                error
+            );
+
+            alert(
+                "حدث خطأ أثناء تسجيل الخروج:\n" +
+                error.message
+            );
+
+            logoutButton.disabled = false;
+            logoutButton.textContent =
+                "تسجيل الخروج";
+
+            return;
+        }
+
+        console.log("✅ ADMIN LOGGED OUT");
+
+        window.location.replace(
+            "admin-login.html"
+        );
+
+    };
+
 }
 
-if (window.supabaseClient) {
+}
 
-    console.log("SUPABASE ALREADY READY");
 
-    checkAdmin();
+// ========================================
+// WAIT FOR SUPABASE
+// ========================================
 
-} else {
+function startAdminCheck() {
 
-    console.log("WAITING FOR SUPABASE");
+    if (window.supabaseClient) {
 
-    window.addEventListener("supabaseReady", checkAdmin);
+        console.log("🔥 SUPABASE READY");
+
+        checkAdmin();
+
+    } else {
+
+        console.log("⏳ WAITING FOR SUPABASE");
+
+        window.addEventListener(
+            "supabaseReady",
+            checkAdmin,
+            { once: true }
+        );
+
+    }
 
 }
+
+startAdminCheck();
 
 </script>
 

@@ -196,73 +196,6 @@ if (goToCartButton) {
 }
 
 
-// ADD TO CART SYSTEM
-
-const addToCartButtons = document.querySelectorAll(".add-to-cart");
-
-addToCartButtons.forEach(function (button) {
-
-    button.addEventListener(
-
-"click",
-
-async function () {
-
-await updateCartKey();
-
-console.log(
-"ADDING TO:",
-cartKey
-);
-
-const productName = button.dataset.name;
-
-const productPrice = Number(button.dataset.price);
-
-let cart =
-JSON.parse(localStorage.getItem(cartKey))
-|| [];
-
-
-console.log(
-"BEFORE PUSH =",
-cart
-);
-
-
-        cart.push({
-
-            name: productName,
-            price: productPrice,
-            quantity: 1
-
-        });
-
-
-      localStorage.setItem(
-cartKey,
-JSON.stringify(cart)
-);
-
-
-console.log(
-"CART AFTER ADD =",
-cart
-);
-
-
-console.log(
-"AFTER SAVE =",
-JSON.parse(
-localStorage.getItem(cartKey)
-)
-);
-
-        alert("تمت إضافة المنتج إلى سلة التسوق!");
-
-    })
-
-});
 
 // =====================================
 // OFFERS PAGE
@@ -393,31 +326,59 @@ async function applyCoupon() {
         userData.user.id;
 
 
-    const {
-        data: usedCoupon,
-        error: usedCouponError
-    } =
-        await window.supabaseClient
+   const {
+    data: couponUsages,
+    error: couponUsageError
+} =
+    await window.supabaseClient
 
-            .from("coupon_usage")
+        .from("coupon_usage")
 
-            .select("*")
+        .select("id")
 
-            .eq("user_id", userId)
+        .eq("user_id", userId)
 
-            .eq("coupon_code", coupon.code)
-
-            .maybeSingle();
+        .eq("coupon_code", coupon.code);
 
 
-    if (usedCoupon) {
+if (couponUsageError) {
 
-        couponMessage.textContent =
-            "لقد قمت باستخدام هذا الكود مسبقاً.";
+    console.error(
+        "COUPON USAGE CHECK ERROR:",
+        couponUsageError
+    );
 
-        return;
+    couponMessage.textContent =
+        "حدث خطأ أثناء التحقق من استخدام الكود.";
 
-    }
+    return;
+
+}
+
+
+const userUsageCount =
+    couponUsages?.length || 0;
+
+
+if (
+    userUsageCount >=
+    Number(coupon.maximum_uses)
+) {
+
+    couponMessage.textContent =
+        "لقد وصلت إلى الحد الأقصى لاستخدام هذا الكود.";
+
+    return;
+
+}
+
+
+console.log(
+    "COUPON USAGE:",
+    userUsageCount,
+    "/",
+    coupon.maximum_uses
+);
 
 
     let cart =
@@ -1299,38 +1260,101 @@ if(
 
 }
 
-        // PLUS BUTTONS
+         // PLUS BUTTONS
 
-        const plusButtons = document.querySelectorAll(".plus-button");
-
-
-        plusButtons.forEach(function (button) {
-
-            button.addEventListener("click", function () {
-
-                let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+const plusButtons =
+    document.querySelectorAll(".plus-button");
 
 
-                let product = cart.find(function (item) {
+plusButtons.forEach(function (button) {
 
-                    return item.name === button.dataset.name;
+    button.addEventListener("click", async function () {
 
-                });
-
-
-                product.quantity++;
-
-
-                localStorage.setItem(cartKey, JSON.stringify(cart));
+        let cart =
+            JSON.parse(
+                localStorage.getItem(cartKey)
+            ) || [];
 
 
-                location.reload();
+        let product =
+            cart.find(function (item) {
+
+                return item.name === button.dataset.name;
 
             });
 
-        });
+
+        if (!product) {
+            return;
+        }
 
 
+        // ==============================
+        // GET CURRENT STOCK
+        // ==============================
+
+        const { data: stockProduct, error } =
+            await window.supabaseClient
+                .from("products")
+                .select("stock_quantity")
+                .eq("name", product.name)
+                .single();
+
+
+        if (error) {
+
+            console.error(
+                "❌ STOCK CHECK ERROR:",
+                error
+            );
+
+            alert(
+                "حدث خطأ أثناء التحقق من المخزون."
+            );
+
+            return;
+        }
+
+
+        const stock =
+            Number(
+                stockProduct.stock_quantity
+            ) || 0;
+
+
+        // ==============================
+        // STOCK LIMIT
+        // ==============================
+
+        if (product.quantity >= stock) {
+
+            alert(
+                `لا يمكنك إضافة المزيد من هذا المنتج.\n\n` +
+                `المتاح في المخزون: ${stock}`
+            );
+
+            return;
+        }
+
+
+        // ==============================
+        // INCREASE QUANTITY
+        // ==============================
+
+        product.quantity++;
+
+
+        localStorage.setItem(
+            cartKey,
+            JSON.stringify(cart)
+        );
+
+
+        location.reload();
+
+    });
+
+});
 
         // MINUS BUTTONS
 
@@ -1370,31 +1394,45 @@ if(
     }
 
 
+function updateCartTotal() {
 
+    const cart =
+        JSON.parse(localStorage.getItem(cartKey)) || [];
 
-// REMOVE BUTTONS
+    let total = 0;
 
-const removeButtons = document.querySelectorAll(".remove-button");
+    cart.forEach(function (item) {
 
-removeButtons.forEach(function (button) {
-
-    button.addEventListener("click", function () {
-
-        let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-       cart = cart.filter(function (item) {
-
-    return item.id !== button.dataset.id;
-
-});
-
-        localStorage.setItem(cartKey, JSON.stringify(cart));
-
-        location.reload();
+        total +=
+            Number(item.price) *
+            Number(item.quantity);
 
     });
 
-});
+    // Apply discount if one exists
+    let finalTotal = total;
+
+    if (
+        typeof appliedDiscount !== "undefined" &&
+        appliedDiscount > 0
+    ) {
+
+        finalTotal =
+            Math.max(0, total - appliedDiscount);
+
+    }
+
+    const totalPrice =
+        document.getElementById("total-price");
+
+    if (totalPrice) {
+
+        totalPrice.textContent =
+            finalTotal + " جنيه";
+
+    }
+
+}
 
 
 
@@ -1444,6 +1482,62 @@ if(appliedDiscount > 0){
 }
 
 }
+
+// REMOVE BUTTONS
+
+const removeButtons = document.querySelectorAll(".remove-button");
+
+removeButtons.forEach(function (button) {
+
+    button.addEventListener("click", function () {
+
+        let cart =
+            JSON.parse(localStorage.getItem(cartKey)) || [];
+
+        // Remove the selected product
+        cart = cart.filter(function (item) {
+
+            return item.name !== button.dataset.name;
+
+        });
+
+        // Save updated cart
+        localStorage.setItem(
+            cartKey,
+            JSON.stringify(cart)
+        );
+
+        // Remove the product card from the page
+        const cartItem = button.closest(".cart-item");
+
+        if (cartItem) {
+            cartItem.remove();
+        }
+
+        // Update the total without refreshing
+        updateCartTotal();
+
+        // Check if cart is now empty
+        if (cart.length === 0) {
+
+            const cartItems =
+                document.getElementById("cart-items");
+
+            if (cartItems) {
+                cartItems.innerHTML = "";
+            }
+
+            const emptyMessage =
+                document.getElementById("empty-cart-message");
+
+            if (emptyMessage) {
+                emptyMessage.style.display = "block";
+            }
+        }
+
+    });
+
+});
 
 document.addEventListener("click", async function(e){
 
@@ -1756,6 +1850,51 @@ orders.forEach(function (order) {
 
             totalProfit.textContent = profit;
 
+    // ==============================
+// TODAY'S SALES
+// ==============================
+
+const todayOrdersCount =
+    document.getElementById("today-orders-count");
+
+const todaySales =
+    document.getElementById("today-sales");
+
+const egyptDate =
+    new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Africa/Cairo"
+    }).format(new Date());
+
+const todayOrders = orders.filter(order => {
+
+    const orderEgyptDate =
+        new Intl.DateTimeFormat("en-CA", {
+            timeZone: "Africa/Cairo"
+        }).format(
+            new Date(order.created_at)
+        );
+
+    return orderEgyptDate === egyptDate;
+
+});
+
+todayOrdersCount.textContent =
+    todayOrders.length;
+
+let todayProfit = 0;
+
+todayOrders.forEach(order => {
+
+    todayProfit += Number(
+        order.final_total ??
+        order.total_price ??
+        0
+    );
+
+});
+
+todaySales.textContent =
+    todayProfit;
 
             orders.forEach(function (order) {
 
@@ -2830,6 +2969,72 @@ const userEmail = user.email;
 
         }
 
+        // ========================================
+// 📦 CHECK + RESERVE STOCK
+// ========================================
+
+for (const item of cart) {
+
+    // Skip free reward products for now
+    if (item.freeReward === true) {
+        continue;
+    }
+
+    if (!item.id || !item.quantity) {
+        alert("حدث خطأ في بيانات المنتج.");
+        return;
+    }
+
+    const { data: stockResult, error: stockError } =
+        await window.supabaseClient.rpc(
+            "reduce_product_stock",
+            {
+                p_product_id: item.id,
+                p_quantity: Number(item.quantity)
+            }
+        );
+
+    console.log(
+        "📦 STOCK RESULT:",
+        item.name,
+        stockResult
+    );
+
+    if (stockError) {
+
+        console.error(
+            "❌ STOCK RPC ERROR:",
+            stockError
+        );
+
+        alert(
+            "حدث خطأ أثناء تحديث المخزون."
+        );
+
+        return;
+    }
+
+    if (!stockResult || stockResult.success !== true) {
+
+        const available =
+            stockResult?.available ?? 0;
+
+        alert(
+            `❌ لا يوجد مخزون كافٍ من ${item.name}.\n\n` +
+            `المتاح: ${available}\n` +
+            `المطلوب: ${item.quantity}`
+        );
+
+        return;
+    }
+
+    console.log(
+        `✅ ${item.name}: ` +
+        `${stockResult.old_stock} → ` +
+        `${stockResult.new_stock}`
+    );
+}
+
         const orderNumber = Math.floor(Math.random() * 90000) + 10000;
 
 
@@ -2884,6 +3089,9 @@ const userEmail = user.email;
         else {
 
             console.log("Order sent:", data);
+
+
+     
 
                 console.log("ORDER CODE:", orderNumber);
 
@@ -3362,3 +3570,877 @@ if (wheelButton) {
         location.href = "wheel.html";
     };
 }
+
+const backToTopButton =
+    document.getElementById("back-to-top");
+
+if (backToTopButton) {
+
+    window.addEventListener("scroll", function () {
+
+        if (window.scrollY > 400) {
+
+            backToTopButton.style.display = "flex";
+
+        } else {
+
+            backToTopButton.style.display = "none";
+
+        }
+
+    });
+
+
+    backToTopButton.addEventListener(
+        "click",
+        function () {
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+    );
+
+}
+
+const myOrdersButton =
+    document.getElementById("my-orders-button");
+
+if (myOrdersButton) {
+
+    myOrdersButton.addEventListener(
+        "click",
+        function () {
+
+            window.location.href = "my-orders.html";
+
+        }
+    );
+
+}
+
+// ==========================================
+// 🔥 V1.8 — BEST-SELLING PRODUCTS
+// ==========================================
+
+async function loadBestSellingProducts() {
+
+    const container =
+        document.getElementById("best-selling-list");
+
+    if (!container) {
+
+        console.log(
+            "❌ BEST SELLING CONTAINER NOT FOUND"
+        );
+
+        return;
+    }
+
+
+    // ==========================================
+    // WAIT FOR SUPABASE
+    // ==========================================
+
+    if (!window.supabaseClient) {
+
+        console.log(
+            "⏳ BEST SELLING: Waiting for Supabase..."
+        );
+
+        window.addEventListener(
+            "supabaseReady",
+            loadBestSellingProducts,
+            { once: true }
+        );
+
+        return;
+    }
+
+
+    const supabase =
+        window.supabaseClient;
+
+
+    try {
+
+        console.log(
+            "🔥 BEST SELLING: Supabase ready"
+        );
+
+
+        // ==========================================
+        // GET CURRENT SESSION
+        // ==========================================
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } =
+            await supabase.auth.getSession();
+
+
+        if (sessionError) {
+
+            console.error(
+                "❌ BEST SELLING SESSION ERROR:",
+                sessionError
+            );
+
+            container.innerHTML =
+                "<p>حدث خطأ أثناء تحميل المنتجات.</p>";
+
+            return;
+        }
+
+
+        let session =
+            sessionData?.session;
+
+
+        if (!session) {
+
+            console.log(
+                "⏳ BEST SELLING: No session yet"
+            );
+
+            container.innerHTML =
+                "<p>جاري التحقق من الحساب...</p>";
+
+            return;
+        }
+
+
+        // ==========================================
+        // REFRESH SESSION
+        // FIXES:
+        // PGRST303 JWT ISSUED AT FUTURE
+        // ==========================================
+
+        const {
+            data: refreshData,
+            error: refreshError
+        } =
+            await supabase.auth.refreshSession();
+
+
+        if (refreshError) {
+
+            console.error(
+                "❌ BEST SELLING SESSION REFRESH ERROR:",
+                refreshError
+            );
+
+        }
+
+        else if (refreshData?.session) {
+
+            session =
+                refreshData.session;
+
+            console.log(
+                "✅ BEST SELLING SESSION REFRESHED"
+            );
+
+        }
+
+
+        // ==========================================
+        // LOAD ORDERS
+        // ==========================================
+
+        const {
+            data: orders,
+            error
+        } =
+            await supabase
+                .from("orders")
+                .select("items");
+
+
+        if (error) {
+
+            console.error(
+                "❌ BEST SELLING ERROR:",
+                error
+            );
+
+            container.innerHTML = `
+                <p>
+                    حدث خطأ أثناء تحميل المنتجات.
+                </p>
+            `;
+
+            return;
+        }
+
+
+        // ==========================================
+        // COUNT PRODUCTS
+        // ==========================================
+
+        const productSales = {};
+
+
+        if (!orders || orders.length === 0) {
+
+            container.innerHTML = `
+                <p>
+                    لا توجد مبيعات حتى الآن.
+                </p>
+            `;
+
+            return;
+        }
+
+
+        orders.forEach(order => {
+
+            let items =
+                order.items;
+
+
+            // ======================================
+            // PARSE JSON IF NECESSARY
+            // ======================================
+
+            try {
+
+                if (typeof items === "string") {
+
+                    items =
+                        JSON.parse(items);
+
+                }
+
+            }
+
+            catch (parseError) {
+
+                console.error(
+                    "❌ ITEMS PARSE ERROR:",
+                    parseError
+                );
+
+                return;
+            }
+
+
+            if (!Array.isArray(items)) {
+                return;
+            }
+
+
+            // ======================================
+            // COUNT EACH PRODUCT
+            // ======================================
+
+            items.forEach(item => {
+
+                const name =
+                    item?.name;
+
+
+                const quantity =
+                    Number(item?.quantity) || 0;
+
+
+                if (!name) {
+                    return;
+                }
+
+
+                if (!productSales[name]) {
+
+                    productSales[name] = 0;
+
+                }
+
+
+                productSales[name] +=
+                    quantity;
+
+            });
+
+        });
+
+
+        // ==========================================
+        // SORT PRODUCTS
+        // ==========================================
+
+        const bestSelling =
+            Object.entries(productSales)
+                .sort(
+                    (a, b) =>
+                        b[1] - a[1]
+                )
+                .slice(0, 4);
+
+
+        // ==========================================
+        // NO SALES
+        // ==========================================
+
+        if (bestSelling.length === 0) {
+
+            container.innerHTML = `
+                <p>
+                    لا توجد مبيعات حتى الآن.
+                </p>
+            `;
+
+            return;
+        }
+
+
+        // ==========================================
+        // DISPLAY PRODUCTS
+        // ==========================================
+
+        container.innerHTML = "";
+
+
+        bestSelling.forEach(
+            ([productName, quantity], index) => {
+
+                const item =
+                    document.createElement("div");
+
+
+                item.className =
+                    "best-selling-item";
+
+
+                item.innerHTML = `
+
+                    <h3>
+                        ${index + 1}.
+                        ${productName}
+                    </h3>
+
+                    <p>
+                        🛒 تم بيع:
+                        <strong>
+                            ${quantity}
+                        </strong>
+                        قطعة
+                    </p>
+
+                `;
+
+
+                container.appendChild(
+                    item
+                );
+
+            }
+        );
+
+
+        console.log(
+            "🔥 BEST SELLING PRODUCTS:",
+            bestSelling
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ BEST SELLING SYSTEM ERROR:",
+            error
+        );
+
+        container.innerHTML = `
+            <p>
+                حدث خطأ أثناء تحميل المنتجات.
+            </p>
+        `;
+
+    }
+
+}
+
+
+// ==========================================
+// START
+// ==========================================
+
+loadBestSellingProducts();
+
+
+document.addEventListener("click", function (event) {
+
+    const button = event.target.closest(".remove-button");
+
+    if (!button) {
+        return;
+    }
+
+    console.log("🔥 REMOVE BUTTON CLICKED");
+
+    updateCartKey().then(() => {
+
+        let cart =
+            JSON.parse(localStorage.getItem(cartKey)) || [];
+
+        const productName = button.dataset.name;
+
+        console.log("REMOVING:", productName);
+        console.log("CART BEFORE:", cart);
+
+        cart = cart.filter(function (item) {
+
+            return item.name !== productName;
+
+        });
+
+        localStorage.setItem(
+            cartKey,
+            JSON.stringify(cart)
+        );
+
+        console.log("CART AFTER:", cart);
+
+        loadCart();
+
+    });
+
+});
+
+// ==========================================
+// 📦 V1.9 — STOCK MANAGEMENT
+// ==========================================
+
+async function loadAdminStock() {
+
+    console.log("📦 LOADING ADMIN STOCK...");
+
+    try {
+
+        const stockList =
+            document.getElementById("stock-list");
+
+        if (!stockList) {
+
+            console.error(
+                "❌ stock-list element not found"
+            );
+
+            return;
+
+        }
+
+        const {
+            data: products,
+            error
+        } = await window.supabaseClient
+            .from("products")
+            .select("*");
+
+        if (error) {
+
+            console.error(
+                "❌ STOCK DATABASE ERROR:",
+                error
+            );
+
+            stockList.innerHTML = `
+                <p>
+                    حدث خطأ أثناء تحميل المخزون.
+                </p>
+            `;
+
+            return;
+
+        }
+
+        if (!products || products.length === 0) {
+
+            stockList.innerHTML = `
+                <p>
+                    لا توجد منتجات.
+                </p>
+            `;
+
+            return;
+
+        }
+
+
+        // ==========================================
+        // SORT PRODUCTS
+        //
+        // Same basic ordering as the Products page:
+        // use the database order instead of sorting
+        // alphabetically here.
+        // ==========================================
+
+        const sortedProducts = [...products];
+
+
+        // ==========================================
+        // GROUP BY STOCK STATUS
+        // ==========================================
+
+        const availableProducts =
+            sortedProducts.filter(product => {
+
+                const stock =
+                    Number(product.stock_quantity) || 0;
+
+                return stock > 5;
+
+            });
+
+
+        const lowStockProducts =
+            sortedProducts.filter(product => {
+
+                const stock =
+                    Number(product.stock_quantity) || 0;
+
+                return stock > 0 && stock <= 5;
+
+            });
+
+
+        const outOfStockProducts =
+            sortedProducts.filter(product => {
+
+                const stock =
+                    Number(product.stock_quantity) || 0;
+
+                return stock === 0;
+
+            });
+
+
+        // ==========================================
+        // COMBINE IN DESIRED ORDER
+        //
+        // 🟢 Available
+        // ⚠️ Low stock
+        // 🔴 Out of stock
+        // ==========================================
+
+        const orderedProducts = [
+
+            ...availableProducts,
+
+            ...lowStockProducts,
+
+            ...outOfStockProducts
+
+        ];
+
+
+        // ==========================================
+        // CLEAR OLD CONTENT
+        // ==========================================
+
+        stockList.innerHTML = "";
+
+
+        // ==========================================
+        // CREATE STOCK CARDS
+        // ==========================================
+
+        orderedProducts.forEach(product => {
+
+            const stock =
+                Number(product.stock_quantity) || 0;
+
+
+            const stockItem =
+                document.createElement("div");
+
+            stockItem.className =
+                "stock-item";
+
+
+            // ======================================
+            // AVAILABLE
+            // ======================================
+
+            if (stock > 5) {
+
+                stockItem.innerHTML = `
+
+                    <h3>
+                        🟢 ${product.name}
+                    </h3>
+
+                    <p>
+                        📦 المخزون:
+                        <strong>
+                            ${stock}
+                        </strong>
+                        قطعة
+                    </p>
+
+                    <p>
+                        متوفر
+                    </p>
+
+                `;
+
+            }
+
+
+            // ======================================
+            // LOW STOCK
+            // ======================================
+
+            else if (stock > 0) {
+
+                stockItem.innerHTML = `
+
+                    <h3>
+                        ⚠️ ${product.name}
+                    </h3>
+
+                    <p>
+                        📦 المخزون:
+                        <strong>
+                            ${stock}
+                        </strong>
+                        قطعة
+                    </p>
+
+                    <p>
+                        مخزون منخفض
+                    </p>
+
+                `;
+
+            }
+
+
+            // ======================================
+            // OUT OF STOCK
+            // ======================================
+
+            else {
+
+                stockItem.innerHTML = `
+
+                    <h3>
+                        🔴 ${product.name}
+                    </h3>
+
+                    <p>
+                        📦 المخزون:
+                        <strong>
+                            0
+                        </strong>
+                        قطعة
+                    </p>
+
+                    <p>
+                        غير متوفر
+                    </p>
+
+                `;
+
+            }
+
+
+            stockList.appendChild(
+                stockItem
+            );
+
+        });
+
+
+        // ==========================================
+        // REMOVE OLD LOW-STOCK SECTION
+        // ==========================================
+
+        const lowStockSection =
+            document.getElementById(
+                "low-stock-section"
+            );
+
+        if (lowStockSection) {
+
+            lowStockSection.remove();
+
+        }
+
+
+        console.log(
+            "🟢 AVAILABLE PRODUCTS:",
+            availableProducts
+        );
+
+        console.log(
+            "⚠️ LOW STOCK PRODUCTS:",
+            lowStockProducts
+        );
+
+        console.log(
+            "🔴 OUT OF STOCK PRODUCTS:",
+            outOfStockProducts
+        );
+
+        console.log(
+            "✅ STOCK LOADED:",
+            orderedProducts
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "❌ STOCK SYSTEM ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// START STOCK SYSTEM
+// ==========================================
+
+if (window.supabaseClient) {
+
+    loadAdminStock();
+
+} else {
+
+    console.log("⏳ STOCK: Waiting for Supabase...");
+
+    window.addEventListener(
+        "supabaseReady",
+        () => {
+            console.log("🔥 STOCK: Supabase ready, loading stock...");
+            loadAdminStock();
+        },
+        { once: true }
+    );
+
+}
+
+
+
+// ==========================================
+// 🌗 V1.9 — DARK / LIGHT MODE
+// ==========================================
+
+(function () {
+
+    const savedTheme =
+        localStorage.getItem("natureSecretsTheme");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+    }
+
+    function updateThemeButton() {
+
+        const button =
+            document.getElementById("theme-toggle");
+
+        if (!button) return;
+
+        if (document.body.classList.contains("dark-mode")) {
+
+            button.textContent = "☀️";
+            button.setAttribute(
+                "aria-label",
+                "تفعيل الوضع الفاتح"
+            );
+
+        } else {
+
+            button.textContent = "🌙";
+            button.setAttribute(
+                "aria-label",
+                "تفعيل الوضع الداكن"
+            );
+
+        }
+
+    }
+
+    function setupThemeToggle() {
+
+        const button =
+            document.getElementById("theme-toggle");
+
+        if (!button) return;
+
+        updateThemeButton();
+
+       button.addEventListener("click", function () {
+
+    /* Create ripple */
+
+    const ripple = document.createElement("div");
+
+    ripple.className = "theme-ripple";
+
+    const rect = button.getBoundingClientRect();
+
+    ripple.style.left =
+        `${rect.left + rect.width / 2}px`;
+
+    ripple.style.top =
+        `${rect.top + rect.height / 2}px`;
+
+    document.body.appendChild(ripple);
+
+
+    /* Change theme */
+
+    document.body.classList.toggle("dark-mode");
+
+    const isDark =
+        document.body.classList.contains("dark-mode");
+
+
+    /* Save theme */
+
+    localStorage.setItem(
+        "natureSecretsTheme",
+        isDark ? "dark" : "light"
+    );
+
+
+    /* Update icon */
+
+    updateThemeButton();
+
+
+    /* Remove ripple */
+
+    setTimeout(() => {
+        ripple.remove();
+    }, 700);
+
+});
+
+    }
+
+    if (document.readyState === "loading") {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            setupThemeToggle
+        );
+
+    } else {
+
+        setupThemeToggle();
+
+    }
+
+})();

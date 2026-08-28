@@ -408,9 +408,13 @@ async function loadSupabaseOffers() {
                 );
 
 
-                alert(
-                    "تمت إضافة المنتج إلى سلة التسوق!"
-                );
+                button.textContent = "✓ تمت الإضافة";
+button.disabled = true;
+
+setTimeout(() => {
+    button.textContent = "أضف إلى سلة التسوق";
+    button.disabled = false;
+}, 1500);
 
             }
         );

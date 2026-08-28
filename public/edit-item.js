@@ -291,6 +291,21 @@ function showProductEditor(
         <br><br>
 
         <label>
+            كمية المخزون
+        </label>
+
+        <br>
+
+        <input
+            id="edit-stock"
+            type="number"
+            min="0"
+            value="${product.stock_quantity || 0}"
+        >
+
+        <br><br>
+
+        <label>
             رابط الصورة
         </label>
 
@@ -344,6 +359,16 @@ function showProductEditor(
                     document
                         .getElementById("edit-price")
                         .value
+                ),
+
+            stock_quantity:
+                Math.max(
+                    0,
+                    Number(
+                        document
+                            .getElementById("edit-stock")
+                            .value
+                    ) || 0
                 ),
 
             image:

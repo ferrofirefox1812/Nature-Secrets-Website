@@ -16,23 +16,7 @@ body {
 }
 
 body {
-    background:
-        radial-gradient(
-            circle at 8% 12%,
-            rgba(140, 196, 164, 0.16),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 92% 82%,
-            rgba(140, 196, 164, 0.12),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #FAF9F6 0%,
-            #F4FFF7 50%,
-            #FAF9F6 100%
-        );
+   background: var(--page-background) !important;
 
     font-family: Arial, sans-serif;
 
@@ -45,7 +29,18 @@ body {
     margin: 0;
 
     overflow-x: hidden;
+
+    transition:
+        background 0.5s ease,
+        color 0.5s ease;
 }
+
+
+/* ==========================================
+   🌙 DARK MODE BACKGROUND
+   ========================================== */
+
+
 
 body::before {
     content: "";
@@ -58,7 +53,8 @@ body::before {
     width: 230px;
     height: 100vh;
 
-    background: #d8f2e2;
+    background: var(--decoration-right);
+transition: background 0.5s ease;
 
     clip-path: polygon(
         45% 0%,
@@ -124,53 +120,7 @@ body::after {
     padding: 30px;
 }
 
-.container::before {
-    content: "";
 
-    position: fixed;
-
-    width: 260px;
-    height: 260px;
-
-    top: 120px;
-    left: 40px;
-
-    background: #bfe8cf;
-
-    border-radius: 50%;
-
-    filter: blur(65px);
-
-    opacity: 0.7;
-
-    z-index: 0;
-
-    pointer-events: none;
-}
-
-.container::after {
-    content: "";
-
-    position: fixed;
-
-    width: 300px;
-    height: 300px;
-
-    bottom: 60px;
-    right: 80px;
-
-    background: #c9ecd8;
-
-    border-radius: 50%;
-
-    filter: blur(75px);
-
-    opacity: 0.65;
-
-    z-index: 0;
-
-    pointer-events: none;
-}
 
 img {
     width: 90%;
@@ -1182,7 +1132,7 @@ margin: 0;
     right: 0;
     bottom: 0;
 
-    width: 750px;
+    width: 450px;
     height: auto;
 
     pointer-events: none;
@@ -1191,10 +1141,795 @@ margin: 0;
 
 .product-image {
     width: 100%;
-    max-width: 220px;
-    height: 220px;
+    max-width: 100%;
+    height: 300px;
     object-fit: contain;
     display: block;
-    margin: 0 auto 15px;
+    margin: 0 auto 18px;
+    border-radius: 16px;
+    background: #faf9f6;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .product-image {
+        width: 100%;
+        height: 260px;
+        max-width: 100%;
+    }
+}
+
+.add-to-cart:disabled {
+    opacity: 0.8;
+    cursor: default;
+}
+
+.add-to-cart:disabled:hover {
+    transform: none;
+}
+
+#back-to-top {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+
+    width: 52px;
+    height: 52px;
+
+    padding: 0;
+    margin: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    background-color: #6EC6A7;
+    color: white;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    z-index: 1000;
+
+    transition: 0.3s;
+}
+
+#back-to-top:hover {
+    background-color: #4DAA89;
+    transform: translateY(-3px);
+}
+
+/* ==============================
+   MY ORDERS
+============================== */
+
+#orders-container {
+    margin-top: 30px;
+}
+
+.order-card {
+    background: white;
+
+    margin: 25px 0;
+    padding: 25px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+
+    text-align: right;
+
+    border: 1px solid #e5f2eb;
+}
+
+.order-card h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+
+    color: #356b56;
+}
+
+.order-card h3 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+
+    color: #356b56;
+}
+
+.order-card p {
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+.order-card ul {
+    background: #f7fbf8;
+
+    padding: 15px 25px;
+
+    border-radius: 15px;
+
+    margin-bottom: 20px;
+}
+
+.order-card li {
+    margin-bottom: 8px;
+}
+
+.order-card strong {
+    color: #356b56;
+}
+
+.empty-orders {
+    background: white;
+
+    padding: 40px 25px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+
+    margin-top: 30px;
+}
+
+.empty-orders h2 {
+    color: #356b56;
+}
+
+/* ORDER STATUS */
+
+/* ORDER STATUS BADGES */
+
+.order-status {
+    display: inline-block;
+
+    padding: 8px 16px;
+
+    border-radius: 30px;
+
+    font-weight: bold;
+
+    font-size: 16px !important;
+}
+
+
+/* PREPARING */
+
+.status-preparing {
+    background-color: #fff4cc;
+    color: #8a6d00;
+}
+
+
+/* SHIPPED */
+
+.status-shipped {
+    background-color: #dcecff;
+    color: #2864a8;
+}
+
+
+/* DELIVERED */
+
+.status-delivered {
+    background-color: #dff5e7;
+    color: #28734b;
+}
+
+
+/* CANCELLED */
+
+.status-cancelled {
+    background-color: #ffe0e0;
+    color: #b33a3a;
+}
+
+/* ORDER SUMMARY */
+
+.order-summary {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+
+/* DETAILS BUTTON */
+
+.order-details-button {
+    width: auto;
+
+    margin: 0;
+
+    padding: 10px 18px;
+
+    background-color: #6EC6A7;
+
+    font-size: 16px;
+
     border-radius: 12px;
+
+    white-space: nowrap;
+}
+
+.order-details-button:hover {
+    background-color: #4DAA89;
+
+    transform: translateY(-2px);
+}
+
+
+/* ORDER DETAILS */
+
+.order-details {
+    display: none;
+
+    margin-top: 20px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e5f2eb;
+}
+
+.order-details.show {
+    display: block;
+}
+
+/* ==========================================
+   🌗 V1.9 — DARK / LIGHT MODE
+   ========================================== */
+
+:root {
+    --page-background:
+        radial-gradient(
+            circle at 8% 12%,
+            rgba(140, 196, 164, 0.16),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 92% 82%,
+            rgba(140, 196, 164, 0.12),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #FAF9F6 0%,
+            #F4FFF7 50%,
+            #FAF9F6 100%
+        );
+
+    --section-color: #FFFFFF;
+    --card-color: #FFFFFF;
+
+    --text-color: #1F4D3D;
+    --secondary-text: #66736B;
+
+    --border-color: #DCE5DF;
+    --input-color: #FFFFFF;
+
+    --green-color: #3D805D;
+    --green-light: #7BCB9A;
+
+    --shadow-color: rgba(0, 0, 0, 0.08);
+
+    --decoration-right: #D8F2E2;
+    --decoration-left: #E3F7EB;
+}
+
+
+/* ==========================================
+   🌙 DARK THEME
+   ========================================== */
+
+body.dark-mode {
+
+    --page-background:
+        radial-gradient(
+            circle at 8% 12%,
+            rgba(76, 140, 105, 0.18),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 92% 82%,
+            rgba(76, 140, 105, 0.14),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #101815 0%,
+            #16231C 50%,
+            #101815 100%
+        );
+
+    --section-color: #141E19;
+    --card-color: #18231E;
+
+    --text-color: #F1F5F2;
+    --secondary-text: #B8C5BE;
+
+    --border-color: #304039;
+    --input-color: #202D27;
+
+    --green-color: #4F9B70;
+    --green-light: #7BCB9A;
+
+    --shadow-color: rgba(0, 0, 0, 0.35);
+
+    --decoration-right: #182D22;
+    --decoration-left: #1D3428;
+}
+
+
+/* ==========================================
+   🌗 SMOOTH THEME TRANSITION
+   ========================================== */
+
+html {
+    background: var(--page-background);
+    transition:
+        background 0.5s ease,
+        background-color 0.5s ease;
+}
+
+body {
+    background: var(--page-background) !important;
+    color: var(--text-color) !important;
+
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+
+    transition:
+        background 0.5s ease,
+        background-color 0.5s ease,
+        color 0.5s ease;
+}
+
+
+/* ==========================================
+   🌿 SIDE DECORATIONS
+   ========================================== */
+
+body::before {
+    background: var(--decoration-right);
+
+    transition:
+        background 0.5s ease,
+        background-color 0.5s ease;
+}
+
+body::after {
+    background: var(--decoration-left);
+
+    transition:
+        background 0.5s ease,
+        background-color 0.5s ease;
+}
+
+
+/* ==========================================
+   📦 SECTIONS & CARDS
+   ========================================== */
+
+section,
+.card,
+.product-card,
+.best-selling-item,
+.stock-item,
+.low-stock-item,
+.bundle-card,
+.order-card,
+.empty-orders,
+.wheel-card,
+.popup-box,
+.auth-box {
+
+    background-color: var(--card-color);
+
+    color: var(--text-color);
+
+    border-color: var(--border-color);
+
+    box-shadow:
+        0 4px 15px var(--shadow-color);
+
+    transition:
+        background-color 0.5s ease,
+        color 0.5s ease,
+        border-color 0.5s ease,
+        box-shadow 0.5s ease;
+}
+
+
+/* ==========================================
+   📝 TEXT
+   ========================================== */
+
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6,
+body p,
+body label,
+body li,
+body span {
+
+    color: var(--text-color);
+
+    transition:
+        color 0.5s ease;
+}
+
+
+/* ==========================================
+   📝 SECONDARY TEXT
+   ========================================== */
+
+.old-price {
+    color: var(--secondary-text);
+}
+
+
+/* ==========================================
+   🔗 LINKS
+   ========================================== */
+
+body a {
+    color: var(--green-color);
+
+    transition:
+        color 0.5s ease;
+}
+
+body.dark-mode a {
+    color: var(--green-light);
+}
+
+
+/* ==========================================
+   ⌨️ INPUTS
+   ========================================== */
+
+input,
+textarea,
+select {
+
+    background-color: var(--input-color);
+
+    color: var(--text-color);
+
+    border-color: var(--border-color);
+
+    transition:
+        background-color 0.5s ease,
+        color 0.5s ease,
+        border-color 0.5s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+
+    color: var(--secondary-text);
+
+    transition:
+        color 0.5s ease;
+}
+
+
+/* ==========================================
+   📦 ORDER LIST
+   ========================================== */
+
+.order-card ul {
+
+    background-color: var(--section-color);
+
+    transition:
+        background-color 0.5s ease;
+}
+
+
+/* ==========================================
+   🖼️ PRODUCT IMAGES
+   ========================================== */
+
+.product-image {
+
+    background-color: var(--input-color);
+
+    transition:
+        background-color 0.5s ease;
+}
+
+
+/* ==========================================
+   🎡 WHEEL
+   ========================================== */
+
+#wheel {
+
+    background-color: var(--card-color);
+
+    box-shadow:
+        0 15px 40px var(--shadow-color),
+        0 5px 10px var(--shadow-color);
+
+    transition:
+        background-color 0.5s ease,
+        box-shadow 0.5s ease;
+}
+
+
+/* ==========================================
+   🌗 THEME BUTTON
+   ========================================== */
+
+#theme-toggle {
+
+    position: fixed;
+
+    top: 20px;
+    right: 20px;
+
+    width: 45px;
+    height: 45px;
+
+    padding: 0;
+    margin: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background-color: var(--card-color);
+
+    color: var(--text-color);
+
+    font-size: 20px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 12px var(--shadow-color);
+
+    z-index: 9999;
+
+    transition:
+        background-color 0.5s ease,
+        color 0.5s ease,
+        box-shadow 0.5s ease,
+        transform 0.2s ease;
+}
+
+
+/* ==========================================
+   ☀️🌙 THEME BUTTON HOVER
+   ========================================== */
+
+#theme-toggle:hover {
+
+    transform: scale(1.08);
+}
+
+#theme-toggle:active {
+
+    transform: scale(0.95);
+}
+
+
+/* ==========================================
+   ☀️🌙 THEME ICON
+   ========================================== */
+
+#theme-toggle span {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    line-height: 1;
+
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   📱 MOBILE
+   ========================================== */
+
+@media (max-width: 600px) {
+
+    #theme-toggle {
+
+        top: 15px;
+        right: 15px;
+
+        width: 42px;
+        height: 42px;
+
+        font-size: 18px;
+    }
+}
+
+/* ==========================================
+   🛒 CART COUNTER
+   ========================================== */
+
+#cart-button,
+#cart-button #cart-count {
+    color: white !important;
+}
+
+/* ==========================================
+   📜 V1.9 — NATURE SECRETS SCROLLBAR
+   ========================================== */
+
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #6EC6A7 #F4FFF7;
+}
+
+
+/* Chrome / Edge / Safari */
+
+::-webkit-scrollbar {
+    width: 11px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F4FFF7;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        180deg,
+        #7BCB9A,
+        #4DAA89
+    );
+
+    border-radius: 20px;
+
+    border: 3px solid #F4FFF7;
+
+    box-shadow:
+        0 0 6px rgba(77, 170, 137, 0.25);
+
+    transition:
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+        180deg,
+        #8DDBAA,
+        #3E9877
+    );
+
+    box-shadow:
+        0 0 10px rgba(77, 170, 137, 0.45);
+}
+
+
+/* ==========================================
+   🌙 DARK MODE
+   ========================================== */
+
+html:has(body.dark-mode) {
+    scrollbar-color: #4F9B70 #101815;
+}
+
+html:has(body.dark-mode) ::-webkit-scrollbar-track {
+    background: #101815;
+}
+
+html:has(body.dark-mode) ::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        180deg,
+        #7BCB9A,
+        #3D805D
+    );
+
+    border-color: #101815;
+
+    box-shadow:
+        0 0 8px rgba(123, 203, 154, 0.20);
+}
+
+html:has(body.dark-mode) ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+        180deg,
+        #91E0AE,
+        #4F9B70
+    );
+
+    box-shadow:
+        0 0 12px rgba(123, 203, 154, 0.40);
+}
+
+/* ==========================================
+   🌗 V1.9 — THEME SWITCH RIPPLE
+   ========================================== */
+
+.theme-ripple {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+
+    background: var(--card-color);
+
+    pointer-events: none;
+    z-index: 9998;
+
+    transform: translate(-50%, -50%) scale(0);
+
+    animation: themeRipple 0.65s ease-out forwards;
+}
+
+@keyframes themeRipple {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0.85;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(180);
+        opacity: 0;
+    }
+}
+
+
+.shipping-message {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 20px auto;
+    opacity: 0;
+    animation: shippingFade 6s ease-in-out infinite;
+}
+
+@keyframes shippingFade {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    70% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
 }

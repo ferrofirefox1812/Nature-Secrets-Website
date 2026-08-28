@@ -94,11 +94,13 @@ async function loadProducts() {
             </p>
 
             <button
-                class="add-to-cart"
-                data-name="${product.name}"
-                data-price="${product.price}">
-                أضف إلى سلة التسوق
-            </button>
+    class="add-to-cart"
+    data-id="${product.id}"
+    data-name="${product.name}"
+    data-price="${product.price}"
+    data-stock="${product.stock_quantity || 0}">
+    أضف إلى سلة التسوق
+</button>
 
             <hr>
         `;
@@ -116,17 +118,68 @@ function setupCartButtons() {
 
         button.onclick = function () {
 
+            const id = Number(this.dataset.id);
+
             const name = this.dataset.name;
 
             const price = Number(this.dataset.price);
+
+            const stock = Number(this.dataset.stock);
+
+            // ==============================
+            // OUT OF STOCK
+            // ==============================
+
+            if (stock <= 0) {
+
+                alert("هذا المنتج غير متوفر حالياً.");
+
+                return;
+            }
+
 
             updateCartKey().then(() => {
 
                 let cart =
                     JSON.parse(localStorage.getItem(cartKey)) || [];
 
+
+                // ==============================
+                // FIND EXISTING PRODUCT
+                // ==============================
+
                 const existingProduct =
-                    cart.find(item => item.name === name);
+                    cart.find(item => item.id === id);
+
+
+                // ==============================
+                // CHECK CURRENT QUANTITY
+                // ==============================
+
+                const currentQuantity =
+                    existingProduct
+                        ? existingProduct.quantity
+                        : 0;
+
+
+                // ==============================
+                // STOCK LIMIT
+                // ==============================
+
+                if (currentQuantity >= stock) {
+
+                    alert(
+                        `لا يمكنك إضافة المزيد من هذا المنتج.\n\n` +
+                        `المتاح في المخزون: ${stock}`
+                    );
+
+                    return;
+                }
+
+
+                // ==============================
+                // ADD PRODUCT
+                // ==============================
 
                 if (existingProduct) {
 
@@ -135,21 +188,53 @@ function setupCartButtons() {
                 } else {
 
                     cart.push({
+
+                        id: id,
+
                         name: name,
+
                         price: price,
+
                         quantity: 1
+
                     });
+
                 }
+
+
+                // ==============================
+                // SAVE CART
+                // ==============================
 
                 localStorage.setItem(
                     cartKey,
                     JSON.stringify(cart)
                 );
 
-                alert(
-                    `${name} تمت إضافته إلى السلة`
-                );
+
+                // ==============================
+                // BUTTON FEEDBACK
+                // ==============================
+
+                button.textContent =
+                    "✓ تمت الإضافة";
+
+                button.disabled = true;
+
+
+                setTimeout(() => {
+
+                    button.textContent =
+                        "أضف إلى سلة التسوق";
+
+                    button.disabled = false;
+
+                }, 1500);
+
             });
+
         };
+
     });
+
 }
