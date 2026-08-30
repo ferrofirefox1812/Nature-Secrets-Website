@@ -1,7 +1,7 @@
-const homeButton = document.getElementById("home-button");
+const wheelHomeButton = document.getElementById("home-button");
 
-if (homeButton) {
-    homeButton.onclick = () => {
+if (wheelHomeButton) {
+    wheelHomeButton.onclick = () => {
         location.href = "index.html";
     };
 }
