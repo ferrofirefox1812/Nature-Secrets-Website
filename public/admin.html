@@ -5,101 +5,109 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>لوحة التحكم - Nature Secrets</title>
+
     <link rel="stylesheet" href="style.css">
 
-        <link rel="icon" type="image/png" href="images/faviconnature.png">
+    <link rel="icon" type="image/png" href="images/faviconnature.png">
 
 </head>
 
 <body>
 
-  <button id="theme-toggle" type="button" aria-label="تغيير الوضع">
-    🌙
-</button>
+    <button id="theme-toggle" type="button" aria-label="تغيير الوضع">
+        🌙
+    </button>
+
 
     <div class="container">
 
-
         <!-- LOGO -->
 
-        <img src="images/logo.jpg"
-             alt="Nature Secrets Logo">
+        <img
+            src="images/logo.jpg"
+            alt="Nature Secrets Logo"
+        >
 
 
         <!-- PAGE TITLE -->
 
         <h1>لوحة التحكم</h1>
 
-<div style="width: 100%; text-align: center;">
-    <button
-        id="logout-button"
-        style="
-            display: inline-block !important;
-            margin: 15px auto !important;
-        "
-    >
-        تسجيل الخروج
-    </button>
-</div>
+
+        <!-- LOGOUT -->
+
+        <div style="width: 100%; text-align: center;">
+
+            <button
+                id="logout-button"
+                style="
+                    display: inline-block !important;
+                    margin: 15px auto !important;
+                "
+            >
+                تسجيل الخروج
+            </button>
+
+        </div>
+
 
         <!-- ORDER STATISTICS -->
 
-       <section id="statistics">
+        <section id="statistics">
 
-    <h2>📊 إحصائيات المبيعات</h2>
+            <h2>📊 إحصائيات المبيعات</h2>
 
-    <p>
-        📦 إجمالي عدد الطلبات:
-        <span id="total-orders-count">0</span>
-    </p>
+            <p>
+                📦 إجمالي عدد الطلبات:
+                <span id="total-orders-count">0</span>
+            </p>
 
-    <p>
-        🆕 الطلبات الجديدة:
-        <span id="new-orders-count">0</span>
-    </p>
+            <p>
+                🆕 الطلبات الجديدة:
+                <span id="new-orders-count">0</span>
+            </p>
 
-    <p>
-        🟡 قيد التجهيز:
-        <span id="preparing-orders-count">0</span>
-    </p>
+            <p>
+                🟡 قيد التجهيز:
+                <span id="preparing-orders-count">0</span>
+            </p>
 
-    <p>
-        🔵 تم الشحن:
-        <span id="shipped-orders-count">0</span>
-    </p>
+            <p>
+                🔵 تم الشحن:
+                <span id="shipped-orders-count">0</span>
+            </p>
 
-    <p>
-        🟢 تم التوصيل:
-        <span id="delivered-orders-count">0</span>
-    </p>
+            <p>
+                🟢 تم التوصيل:
+                <span id="delivered-orders-count">0</span>
+            </p>
 
-    <p>
-        💰 إجمالي المبيعات:
-        <strong>
-            <span id="total-profit">0</span> جنيه
-        </strong>
-    </p>
+            <p>
+                💰 إجمالي المبيعات:
+                <strong>
+                    <span id="total-profit">0</span> جنيه
+                </strong>
+            </p>
 
-    <hr>
+            <hr>
 
-    <h3>📅 مبيعات اليوم</h3>
+            <h3>📅 مبيعات اليوم</h3>
 
-    <p>
-        عدد الطلبات اليوم:
-        <span id="today-orders-count">0</span>
-    </p>
+            <p>
+                عدد الطلبات اليوم:
+                <span id="today-orders-count">0</span>
+            </p>
 
-    <p>
-        مبيعات اليوم:
-        <strong>
-            <span id="today-sales">0</span> جنيه
-        </strong>
-    </p>
+            <p>
+                مبيعات اليوم:
+                <strong>
+                    <span id="today-sales">0</span> جنيه
+                </strong>
+            </p>
 
-</section>
-
-
+        </section>
 
 
         <!-- SEARCH SECTION -->
@@ -108,8 +116,10 @@
 
             <h2>البحث عن الطلبات</h2>
 
-            <input type="text"
-                   placeholder="ابحث برقم الطلب أو الاسم أو رقم الهاتف">
+            <input
+                type="text"
+                placeholder="ابحث برقم الطلب أو الاسم أو رقم الهاتف"
+            >
 
         </section>
 
@@ -120,8 +130,6 @@
 
             <h2>الطلبات الجديدة</h2>
 
-            <!-- Orders will appear here automatically -->
-
         </section>
 
 
@@ -130,8 +138,6 @@
         <section id="preparing-orders">
 
             <h2>الطلبات قيد التجهيز</h2>
-
-            <!-- Orders will appear here automatically -->
 
         </section>
 
@@ -142,8 +148,6 @@
 
             <h2>الطلبات المشحونة</h2>
 
-            <!-- Orders will appear here automatically -->
-
         </section>
 
 
@@ -153,481 +157,420 @@
 
             <h2>الطلبات المكتملة</h2>
 
-            <!-- Orders will appear here automatically -->
-
         </section>
 
 
         <!-- ===================================== -->
-<!-- 📦 STOCK MANAGEMENT -->
-<!-- ===================================== -->
+        <!-- 📦 STOCK MANAGEMENT -->
+        <!-- ===================================== -->
 
-<section id="stock-management">
+        <section id="stock-management">
 
-    <h2>📦 مخزون المنتجات</h2>
+            <h2>📦 مخزون المنتجات</h2>
 
-    <p>
-        مخزون المنتجات الحالي
-    </p>
+            <p>
+                مخزون المنتجات الحالي
+            </p>
 
-    <div id="stock-list">
+            <div id="stock-list">
 
-        <p>جاري تحميل المخزون...</p>
+                <p>جاري تحميل المخزون...</p>
 
-    </div>
+            </div>
 
-</section>
+        </section>
 
 
-<section id="best-selling-products">
+        <!-- BEST SELLING PRODUCTS -->
 
-    <h2>🔥 المنتجات الأكثر مبيعاً</h2>
+        <section id="best-selling-products">
 
-    <div id="best-selling-list">
+            <h2>🔥 المنتجات الأكثر مبيعاً</h2>
 
-        <p>جاري تحميل البيانات...</p>
+            <div id="best-selling-list">
 
-    </div>
+                <p>جاري تحميل البيانات...</p>
 
-</section>
+            </div>
+
+        </section>
+
+
+        <!-- COUPON MANAGEMENT -->
+
+        <section id="coupon-management">
+
+            <h2>إدارة أكواد الخصم</h2>
+
+            <input
+                type="text"
+                id="coupon-name"
+                placeholder="اسم كود الخصم"
+            >
+
+            <select id="coupon-type">
+
+                <option value="percentage">
+                    خصم بالنسبة المئوية
+                </option>
+
+                <option value="fixed">
+                    خصم ثابت بالجنيه
+                </option>
+
+                <option value="product">
+                    🎁 منتج مجاني
+                </option>
+
+            </select>
+
+
+            <div id="coupon-value-field">
+
+                <input
+                    type="number"
+                    id="coupon-value"
+                    placeholder="قيمة الخصم"
+                >
+
+            </div>
+
+
+            <div
+                id="coupon-product-field"
+                style="display:none;"
+            >
+
+                <label for="coupon-product">
+                    اختر المنتج المجاني
+                </label>
+
+                <select id="coupon-product">
+
+                    <option value="">
+                        اختر منتج
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <input
+                type="number"
+                id="minimum-purchase"
+                placeholder="الحد الأدنى للطلب"
+            >
+
+
+            <input
+                type="number"
+                id="maximum-uses"
+                placeholder="الحد الأقصى لعدد مرات الاستخدام"
+            >
+
+
+            <input
+                type="date"
+                id="coupon-expiration"
+            >
+
+
+            <select id="coupon-active">
+
+                <option value="true">
+                    مفعل
+                </option>
+
+                <option value="false">
+                    غير مفعل
+                </option>
+
+            </select>
+
+
+            <button id="create-coupon-button">
+
+                إنشاء كود الخصم
+
+            </button>
+
+
+            <p id="coupon-message"></p>
+
+        </section>
+
+
+        <!-- WHEEL MANAGEMENT -->
+
+        <section id="wheel-management">
+
+            <h2>🎡 إدارة عجلة Nature Secrets</h2>
+
+            <p>
+                قم بإدارة جميع جوائز عجلة الحظ من هنا.
+            </p>
+
+            <button id="add-wheel-reward">
+                ➕ إضافة جائزة جديدة
+            </button>
+
+            <br><br>
+
+            <div id="wheel-rewards-list"></div>
+
+            <p id="wheel-message"></p>
+
+        </section>
+
 
         <!-- PRODUCT MANAGEMENT -->
 
-<!-- COUPON MANAGEMENT -->
+        <section id="product-management">
 
-<section id="coupon-management">
+            <h2>إدارة المنتجات والعروض</h2>
 
-<h2>إدارة أكواد الخصم</h2>
+            <p>
+                قم بإضافة أو تعديل أو حذف المنتجات والعروض الخاصة بالموقع.
+            </p>
 
+            <button onclick="location.href='create-item.html'">
+                إنشاء منتج أو عرض جديد
+            </button>
 
-<input
-type="text"
-id="coupon-name"
-placeholder="اسم كود الخصم">
+            <button onclick="location.href='edit-item.html'">
+                تعديل منتج أو عرض
+            </button>
 
+            <button onclick="location.href='delete-item.html'">
+                حذف منتج أو عرض
+            </button>
 
-<select id="coupon-type">
-
-    <option value="percentage">
-        خصم بالنسبة المئوية
-    </option>
-
-    <option value="fixed">
-        خصم ثابت بالجنيه
-    </option>
-
-    <option value="product">
-        🎁 منتج مجاني
-    </option>
-
-</select>
-
-
-
-<div id="coupon-value-field">
-
-    <input
-        type="number"
-        id="coupon-value"
-        placeholder="قيمة الخصم">
-
-</div>
-
-
-<div id="coupon-product-field" style="display:none;">
-
-    <label for="coupon-product">
-        اختر المنتج المجاني
-    </label>
-
-    <select id="coupon-product">
-
-        <option value="">
-            اختر منتج
-        </option>
-
-    </select>
-
-</div>
-
-<input
-type="number"
-id="minimum-purchase"
-placeholder="الحد الأدنى للطلب">
-
-
-<input
-type="number"
-id="maximum-uses"
-placeholder="الحد الأقصى لعدد مرات الاستخدام">
-
-
-<input
-type="date"
-id="coupon-expiration">
-
-<select id="coupon-active">
-
-<option value="true">
-
-مفعل
-
-</option>
-
-
-<option value="false">
-
-غير مفعل
-
-</option>
-
-</select>
-
-
-
-<button id="create-coupon-button">
-
-إنشاء كود الخصم
-
-</button>
-
-
-<p id="coupon-message"></p>
-
-
-</section>
-
-
-
-
-<!-- WHEEL MANAGEMENT -->
-
-<section id="wheel-management">
-
-    <h2>🎡 إدارة عجلة Nature Secrets</h2>
-
-    <p>
-        قم بإدارة جميع جوائز عجلة الحظ من هنا.
-    </p>
-
-    <button id="add-wheel-reward">
-        ➕ إضافة جائزة جديدة
-    </button>
-
-    <br><br>
-
-    <div id="wheel-rewards-list">
+        </section>
 
     </div>
 
-    <p id="wheel-message"></p>
 
-</section>
+    <!-- ===================================== -->
+    <!-- 🎡 WHEEL POPUP -->
+    <!-- ===================================== -->
 
+    <div
+        id="wheel-popup"
+        class="popup-overlay"
+        style="display:none;"
+    >
 
-<section id="product-management">
+        <div class="popup-box">
 
-    <h2>إدارة المنتجات والعروض</h2>
-
-    <p>
-        قم بإضافة أو تعديل أو حذف المنتجات والعروض الخاصة بالموقع.
-    </p>
-
-    <button onclick="location.href='create-item.html'">
-        إنشاء منتج أو عرض جديد
-    </button>
-
-    <button onclick="location.href='edit-item.html'">
-        تعديل منتج أو عرض
-    </button>
-
-    <button onclick="location.href='delete-item.html'">
-        حذف منتج أو عرض
-    </button>
-
-</section>
+            <h2>➕ إضافة جائزة جديدة</h2>
 
 
-        
-
-        <!-- EXAMPLE ORDER FORMAT -->
-
-        <!--
-
-        رقم الطلب
-
-        اسم العميل
-
-        رقم الهاتف
-
-        العنوان
-
-        المنتجات
-
-        الكميات
-
-        إجمالي السعر
-
-        التاريخ والوقت
-
-        حالة الطلب
-
-        الأزرار:
-
-        قيد التجهيز
-
-        تم الشحن
-
-        تم التسليم
-
-        حذف الطلب
-
-        نسخ رقم الهاتف
-
-        -->
+            <input
+                type="text"
+                id="reward-name"
+                placeholder="اسم الجائزة"
+            >
 
 
-    </div>
+            <select id="reward-type">
 
-<div id="wheel-popup" class="popup-overlay" style="display:none;">
+                <option value="coupon">
+                    🎟 Coupon
+                </option>
 
-    <div class="popup-box">
+                <option value="voucher">
+                    💰 Voucher
+                </option>
 
-        <h2>➕ إضافة جائزة جديدة</h2>
+                <option value="product">
+                    📦 Free Product
+                </option>
 
-        <input type="text" id="reward-name" placeholder="اسم الجائزة">
+            </select>
 
-       <select id="reward-type">
 
-    <option value="coupon">
-        🎟 Coupon
-    </option>
+            <div id="coupon-fields">
 
-    <option value="voucher">
-        💰 Voucher
-    </option>
+                <label id="reward-value-label">
+                    Discount %
+                </label>
 
-    <option value="product">
-        📦 Free Product
-    </option>
+                <input
+                    type="number"
+                    id="reward-value"
+                    placeholder="مثال: 15"
+                >
 
-</select>
+            </div>
 
-       <div id="coupon-fields">
 
-    <label id="reward-value-label">Discount %</label>
+            <div
+                id="product-fields"
+                style="display:none;"
+            >
 
-    <input
-        type="number"
-        id="reward-value"
-        placeholder="مثال: 15">
+                <label>
+                    Choose Product
+                </label>
 
-</div>
+                <select id="reward-product">
 
-<div
-    id="product-fields"
-    style="display:none;">
+                    <option value="">
+                        اختر منتج
+                    </option>
 
-    <label>Choose Product</label>
+                </select>
 
-    <select id="reward-product">
+            </div>
 
-        <option value="">
 
-            اختر منتج
+            <input
+                type="number"
+                id="reward-probability"
+                placeholder="احتمالية الفوز %"
+            >
 
-        </option>
 
-    </select>
+            <label>
 
-</div>
+                <input
+                    type="checkbox"
+                    id="reward-enabled"
+                    checked
+                >
 
-        <input type="number" id="reward-probability" placeholder="احتمالية الفوز %">
+                مفعل
 
-        <label>
-            <input type="checkbox" id="reward-enabled" checked>
-            مفعل
-        </label>
+            </label>
 
-        <br><br>
 
-        <button id="save-wheel-reward">
-            💾 حفظ
-        </button>
+            <br><br>
 
-        <button id="close-wheel-popup">
-            ❌ إلغاء
-        </button>
+
+            <button id="save-wheel-reward">
+                💾 حفظ
+            </button>
+
+
+            <button id="close-wheel-popup">
+                ❌ إلغاء
+            </button>
+
+        </div>
 
     </div>
 
-</div>
+
+    <!-- ===================================== -->
+    <!-- 🔐 SUPABASE CLIENT -->
+    <!-- ===================================== -->
+
+    <script type="module" src="supabase.js"></script>
 
 
+    <!-- ===================================== -->
+    <!-- 🔐 PASSWORD-BASED ADMIN ACCESS -->
+    <!-- ===================================== -->
+
+    <script>
+
+        /*
+         * The old Supabase admin-account authentication
+         * has been completely removed from this page.
+         *
+         * Admin access will now be handled by the
+         * Cloudflare Worker password system.
+         *
+         * We will add the actual verification endpoint
+         * after this file is installed.
+         */
 
 
+        function checkAdminAccess() {
 
-<script type="module" src="supabase.js"></script>
+            const adminToken =
+                sessionStorage.getItem("natureSecretsAdminToken");
 
-<script type="module">
 
-console.log("🔥 ADMIN SCRIPT LOADED");
+            if (!adminToken) {
 
-async function checkAdmin() {
+                console.log(
+                    "❌ NO ADMIN ACCESS TOKEN"
+                );
 
-    console.log("🔥 CHECKING ADMIN");
+                window.location.replace(
+                    "admin-login.html"
+                );
 
-    const supabase = window.supabaseClient;
+                return false;
 
-    if (!supabase) {
+            }
 
-        console.log("❌ SUPABASE CLIENT NOT READY");
 
-        return;
-
-    }
-
-    console.log("✅ SUPABASE CLIENT FOUND");
-
-    // Wait for Supabase to restore the session
-    const {
-        data: { session },
-        error: sessionError
-    } = await supabase.auth.getSession();
-
-    console.log("🔥 ADMIN SESSION:", session);
-
-    if (sessionError) {
-
-        console.error(
-            "❌ SESSION ERROR:",
-            sessionError
-        );
-
-        return;
-
-    }
-
-    if (!session) {
-
-        console.log("❌ NO ADMIN SESSION");
-
-        window.location.replace("admin-login.html");
-
-        return;
-
-    }
-
-    console.log("✅ SESSION EXISTS");
-
-    // Check admin status
-    const {
-        data: profile,
-        error: profileError
-    } = await supabase
-        .from("profiles")
-        .select("is_admin")
-        .eq("id", session.user.id)
-        .single();
-
-    console.log("🔥 ADMIN PROFILE:", profile);
-    console.log("🔥 PROFILE ERROR:", profileError);
-
-    if (
-        profileError ||
-        !profile ||
-        profile.is_admin !== true
-    ) {
-
-        console.log("❌ NOT ADMIN");
-
-        await supabase.auth.signOut();
-
-        window.location.replace("admin-login.html");
-
-        return;
-
-    }
-
-    console.log("🎉 ADMIN VERIFIED");
-
-const logoutButton =
-    document.getElementById("logout-button");
-
-if (logoutButton) {
-
-    logoutButton.onclick = async function () {
-
-        logoutButton.disabled = true;
-        logoutButton.textContent = "جاري تسجيل الخروج...";
-
-        const { error } =
-            await supabase.auth.signOut();
-
-        if (error) {
-
-            console.error(
-                "❌ LOGOUT ERROR:",
-                error
+            console.log(
+                "✅ ADMIN ACCESS TOKEN FOUND"
             );
 
-            alert(
-                "حدث خطأ أثناء تسجيل الخروج:\n" +
-                error.message
-            );
+            return true;
 
-            logoutButton.disabled = false;
-            logoutButton.textContent =
-                "تسجيل الخروج";
-
-            return;
         }
 
-        console.log("✅ ADMIN LOGGED OUT");
 
-        window.location.replace(
-            "admin-login.html"
-        );
+        /*
+         * Logout
+         */
 
-    };
+        function setupAdminLogout() {
 
-}
-
-}
+            const logoutButton =
+                document.getElementById("logout-button");
 
 
-// ========================================
-// WAIT FOR SUPABASE
-// ========================================
+            if (!logoutButton) {
+                return;
+            }
 
-function startAdminCheck() {
 
-    if (window.supabaseClient) {
+            logoutButton.onclick = function () {
 
-        console.log("🔥 SUPABASE READY");
+                sessionStorage.removeItem(
+                    "natureSecretsAdminToken"
+                );
 
-        checkAdmin();
 
-    } else {
+                window.location.replace(
+                    "admin-login.html"
+                );
 
-        console.log("⏳ WAITING FOR SUPABASE");
+            };
 
-        window.addEventListener(
-            "supabaseReady",
-            checkAdmin,
-            { once: true }
-        );
+        }
 
-    }
 
-}
+        /*
+         * Start admin page
+         */
 
-startAdminCheck();
+        if (checkAdminAccess()) {
 
-</script>
+            setupAdminLogout();
 
-<script src="/script.js"></script>
-<script src="/wheel-admin.js"></script>
+        }
+
+    </script>
+
+
+    <!-- MAIN WEBSITE SCRIPT -->
+
+    <script src="/script.js"></script>
+
+
+    <!-- WHEEL ADMIN -->
+
+    <script src="/wheel-admin.js"></script>
+
 
 </body>
+
 </html>
