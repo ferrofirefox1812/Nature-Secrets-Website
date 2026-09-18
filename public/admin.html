@@ -470,33 +470,31 @@
 
 
     <!-- ===================================== -->
-    <!-- 🔐 PASSWORD-BASED ADMIN ACCESS -->
-    <!-- ===================================== -->
+<!-- 🔐 PASSWORD-BASED ADMIN ACCESS -->
+<!-- ===================================== -->
 
-    <script>
+<script>
 
-        /*
-         * The old Supabase admin-account authentication
-         * has been completely removed from this page.
-         *
-         * Admin access will now be handled by the
-         * Cloudflare Worker password system.
-         *
-         * We will add the actual verification endpoint
-         * after this file is installed.
-         */
+    /*
+     * Verify the admin session with the
+     * Cloudflare Worker.
+     */
 
+    async function checkAdminAccess() {
 
-        function checkAdminAccess() {
+        try {
 
-            const adminToken =
-                sessionStorage.getItem("natureSecretsAdminToken");
+            const response =
+                await fetch("/api/admin-check", {
+                    method: "GET",
+                    credentials: "include"
+                });
 
 
-            if (!adminToken) {
+            if (!response.ok) {
 
                 console.log(
-                    "❌ NO ADMIN ACCESS TOKEN"
+                    "❌ ADMIN SESSION INVALID"
                 );
 
                 window.location.replace(
@@ -504,61 +502,120 @@
                 );
 
                 return false;
+            }
 
+
+            const result =
+                await response.json();
+
+
+            if (!result.success) {
+
+                console.log(
+                    "❌ ADMIN ACCESS DENIED"
+                );
+
+                window.location.replace(
+                    "admin-login.html"
+                );
+
+                return false;
             }
 
 
             console.log(
-                "✅ ADMIN ACCESS TOKEN FOUND"
+                "✅ ADMIN SESSION VERIFIED"
             );
 
             return true;
 
         }
 
+        catch (error) {
 
-        /*
-         * Logout
-         */
+            console.error(
+                "❌ ADMIN CHECK ERROR:",
+                error
+            );
 
-        function setupAdminLogout() {
+            window.location.replace(
+                "admin-login.html"
+            );
 
-            const logoutButton =
-                document.getElementById("logout-button");
-
-
-            if (!logoutButton) {
-                return;
-            }
-
-
-            logoutButton.onclick = function () {
-
-                sessionStorage.removeItem(
-                    "natureSecretsAdminToken"
-                );
-
-
-                window.location.replace(
-                    "admin-login.html"
-                );
-
-            };
+            return false;
 
         }
 
+    }
 
-        /*
-         * Start admin page
-         */
 
-        if (checkAdminAccess()) {
+    /*
+     * Logout
+     */
+
+    function setupAdminLogout() {
+
+        const logoutButton =
+            document.getElementById("logout-button");
+
+
+        if (!logoutButton) {
+            return;
+        }
+
+
+        logoutButton.onclick = async function () {
+
+            try {
+
+                await fetch(
+                    "/api/admin-logout",
+                    {
+                        method: "POST",
+                        credentials: "include"
+                    }
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "❌ ADMIN LOGOUT ERROR:",
+                    error
+                );
+
+            }
+
+
+            window.location.replace(
+                "admin-login.html"
+            );
+
+        };
+
+    }
+
+
+    /*
+     * Start admin page
+     */
+
+    (async function () {
+
+        const authorized =
+            await checkAdminAccess();
+
+
+        if (authorized) {
 
             setupAdminLogout();
 
         }
 
-    </script>
+    })();
+
+</script>
 
 
     <!-- MAIN WEBSITE SCRIPT -->

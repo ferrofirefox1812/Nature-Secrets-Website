@@ -2,3 +2,5 @@ node_modules/
 orders.json
 order.json
 .env
+.dev.vars
+.wrangler/

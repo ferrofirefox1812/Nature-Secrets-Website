@@ -87,11 +87,15 @@ async function loadProducts() {
         card.innerHTML = `
             ${imageHTML}
 
-            <h3>${product.name}</h3>
+           <h3>${product.name}</h3>
 
-            <p>
-                السعر: ${product.price} جنيه
-            </p>
+<p>
+    السعر: ${product.price} جنيه
+</p>
+
+<p class="product-description">
+    ${product.description || ""}
+</p>
 
             <button
     class="add-to-cart"
