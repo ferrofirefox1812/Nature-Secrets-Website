@@ -1933,3 +1933,136 @@ html:has(body.dark-mode) ::-webkit-scrollbar-thumb:hover {
         transform: translateY(-10px);
     }
 }
+
+
+/* =========================================================
+   🎒 BACK TO SCHOOL THEME
+   Temporary seasonal styling — remove this entire block
+   when the Back-to-School season is over.
+   ========================================================= */
+
+body {
+    background-color: #f8f5ed !important;
+    background-image: url("images/backtoschoolbackground.jpg") !important;
+    background-size: 100% 100%;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.homepage section {
+    background-image: url("images/goodpaper.jpg");
+    background-size: cover;
+    background-position: center;
+    border-radius: 18px;
+}
+
+.back-to-school-pencil {
+    position: absolute;
+    width: 400px;
+    right: -5%;
+    top: 300px;
+    transform: rotate(-18deg);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.back-to-school-ruler {
+    position: absolute;
+    width: 420px;
+    left: -120px;
+    top: -120px;
+    transform: rotate(-30deg);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.back-to-school-notebook {
+    position: absolute;
+    width: 400px;
+    right: 100px;
+    bottom: 350px;
+    transform: rotate(-12deg);
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* Back-to-School — Mobile adjustments */
+@media (max-width: 768px) {
+
+    .back-to-school-pencil {
+        width: 210px;
+        right: -55px;
+        top: 300px;
+        transform: rotate(-18deg);
+    }
+
+    .back-to-school-ruler {
+        width: 260px;
+        left: -75px;
+        top: -70px;
+        transform: rotate(-35deg);
+    }
+
+    .back-to-school-notebook {
+        width: 230px;
+        right: 5px;
+        bottom: 320px;
+        transform: rotate(-12deg);
+    }
+
+    .container {
+        overflow-x: hidden;
+    }
+
+}
+
+.back-to-school-phrase {
+    margin: 10px 0 20px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #315f4b;
+    text-align: center;
+    direction: rtl;
+}
+
+body {
+
+    background-color: #f8f5ed !important;
+
+    background-image: url("images/backtoschoolbackground.jpg") !important;
+
+    background-size: 100% 100%;
+
+    background-position: center top;
+
+    background-repeat: no-repeat;
+
+    background-attachment: fixed;
+
+}
+
+body.dark-mode {
+
+    background-image: url("images/backtoschoolblackbackground.jpg") !important;
+
+}
+
+body.homepage section {
+
+    background-image: url("images/goodpaper.jpg");
+
+    background-size: cover;
+
+    background-position: center;
+
+    border-radius: 18px;
+
+}
+
+body.dark-mode.homepage section {
+
+    background-image: url("images/goodblackpaper.jpg");
+
+}
