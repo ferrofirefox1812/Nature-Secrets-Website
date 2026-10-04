@@ -221,15 +221,34 @@ async function loadMyOrders() {
 
                 itemsHTML = items.map(item => {
 
-                    return `
-                        <li>
-                            ${item.name}
-                            × ${item.quantity}
-                            — ${item.price} جنيه
-                        </li>
-                    `;
+    const hasOffer =
+        item.offerPrice &&
+        item.originalPrice &&
+        Number(item.offerPrice) < Number(item.originalPrice);
 
-                }).join("");
+    return `
+        <li>
+            ${item.name}
+            × ${item.quantity}
+            —
+            ${
+                hasOffer
+                    ? `
+                        <span style="text-decoration: line-through;">
+                            ${item.originalPrice} جنيه
+                        </span>
+                        <strong>
+                            ${item.price} جنيه
+                        </strong>
+                    `
+                    : `
+                        ${item.price} جنيه
+                    `
+            }
+        </li>
+    `;
+
+}).join("");
 
             }
 
