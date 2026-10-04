@@ -291,6 +291,45 @@ function showProductEditor(
         <br><br>
 
         <label>
+            سعر العرض
+        </label>
+
+        <br>
+
+        <input
+            id="edit-offer-price"
+            type="number"
+            min="0"
+            value="${product.offer_price ?? ""}"
+            placeholder="اتركه فارغاً بدون عرض"
+        >
+
+        <br><br>
+
+        <label>
+            اسم العرض
+        </label>
+
+        <br>
+
+        <input
+            id="edit-offer-label"
+            value="${escapeHTML(product.offer_label || "")}"
+            placeholder="مثال: لفترة محدودة"
+        >
+
+        <br><br>
+
+        <button
+            type="button"
+            id="remove-offer"
+        >
+            إزالة العرض
+        </button>
+
+        <br><br>
+
+        <label>
             كمية المخزون
         </label>
 
@@ -341,6 +380,19 @@ function showProductEditor(
 
     `;
 
+    document.getElementById(
+        "remove-offer"
+    ).onclick = function () {
+
+        document.getElementById(
+            "edit-offer-price"
+        ).value = "";
+
+        document.getElementById(
+            "edit-offer-label"
+        ).value = "";
+
+    };
 
     document.getElementById(
         "save-product"
@@ -360,6 +412,23 @@ function showProductEditor(
                         .getElementById("edit-price")
                         .value
                 ),
+
+            offer_price:
+                document
+                    .getElementById("edit-offer-price")
+                    .value === ""
+                    ? null
+                    : Number(
+                        document
+                            .getElementById("edit-offer-price")
+                            .value
+                    ),
+
+            offer_label:
+                document
+                    .getElementById("edit-offer-label")
+                    .value
+                    .trim(),
 
             stock_quantity:
                 Math.max(

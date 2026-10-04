@@ -889,9 +889,103 @@ if (browseOffersButton) {
 }
 
 
+async function syncCartPrices() {
+
+    let cart =
+        JSON.parse(
+            localStorage.getItem(cartKey)
+        ) || [];
+
+    if (cart.length === 0) {
+        return;
+    }
+
+    const normalItems =
+        cart.filter(item => !item.freeReward);
+
+    if (normalItems.length === 0) {
+        return;
+    }
+
+    const productIds =
+        normalItems.map(item => Number(item.id));
+
+    const {
+        data: products,
+        error
+    } = await window.supabaseClient
+        .from("products")
+        .select("id, price, offer_price, offer_label")
+        .in("id", productIds);
+
+    if (error) {
+
+        console.error(
+            "❌ CART PRICE SYNC ERROR:",
+            error
+        );
+
+        return;
+    }
+
+    if (!products) {
+        return;
+    }
+
+    cart.forEach(item => {
+
+        if (item.freeReward) {
+            return;
+        }
+
+        const product =
+            products.find(
+                p => Number(p.id) === Number(item.id)
+            );
+
+        if (!product) {
+            return;
+        }
+
+        const hasOffer =
+            product.offer_price !== null &&
+            product.offer_price !== undefined &&
+            Number(product.offer_price) < Number(product.price);
+
+       item.originalPrice = Number(product.price);
+
+item.offerPrice = hasOffer
+    ? Number(product.offer_price)
+    : null;
+
+item.offerLabel = hasOffer
+    ? product.offer_label
+    : null;
+
+item.price = hasOffer
+    ? Number(product.offer_price)
+    : Number(product.price);
+
+    });
+
+    localStorage.setItem(
+        cartKey,
+        JSON.stringify(cart)
+    );
+
+    console.log(
+        "✅ CART PRICES SYNCED:",
+        cart
+    );
+
+}
+
+
 async function loadCart(){
 
     await updateCartKey();
+
+    await syncCartPrices();
 
 console.log(
 "CURRENT PAGE =",
@@ -1134,7 +1228,24 @@ cartKey
 
             <h3>${product.name}</h3>
 
-            <p>السعر: ${product.price} جنيه</p>
+            <p>
+    السعر:
+    ${
+        product.offerPrice &&
+        Number(product.offerPrice) < Number(product.originalPrice)
+            ? `
+                <span style="text-decoration: line-through;">
+                    ${product.originalPrice} جنيه
+                </span>
+                <strong>
+                    ${product.offerPrice} جنيه
+                </strong>
+            `
+            : `
+                ${product.price} جنيه
+            `
+    }
+</p>
 
             <button class="minus-button" data-name="${product.name}">
                 -
@@ -1908,12 +2019,28 @@ todaySales.textContent =
 
                     order.items.forEach(function (item) {
 
-                        itemsHTML += `
+            itemsHTML += `
     <li>
-        ${item.name} - ${item.quantity} × ${item.price} جنيه
+        ${item.name} -
+        ${item.quantity} ×
+        ${
+            item.offerPrice &&
+            item.originalPrice &&
+            Number(item.offerPrice) < Number(item.originalPrice)
+                ? `
+                    <span style="text-decoration: line-through;">
+                        ${item.originalPrice} جنيه
+                    </span>
+                    <strong>
+                        ${item.price} جنيه
+                    </strong>
+                `
+                : `
+                    ${item.price} جنيه
+                `
+        }
     </li>
-    `;
-
+`;
                     });
 
 

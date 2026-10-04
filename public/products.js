@@ -68,6 +68,15 @@ async function loadProducts() {
 
         card.className = "product";
 
+       const hasOffer =
+    product.offer_price !== null &&
+    product.offer_price !== undefined &&
+    Number(product.offer_price) < Number(product.price);
+
+const currentPrice = hasOffer
+    ? Number(product.offer_price)
+    : Number(product.price);
+       
         let imageHTML = "";
 
         if (
@@ -90,8 +99,32 @@ async function loadProducts() {
            <h3>${product.name}</h3>
 
 <p>
-    السعر: ${product.price} جنيه
+    السعر:
+    ${
+        hasOffer
+            ? `
+                <span style="text-decoration: line-through;">
+                    ${product.price} جنيه
+                </span>
+                <strong>
+                    ${currentPrice} جنيه
+                </strong>
+            `
+            : `
+                ${product.price} جنيه
+            `
+    }
 </p>
+
+${
+    hasOffer && product.offer_label
+        ? `
+            <p>
+                ${product.offer_label}
+            </p>
+        `
+        : ""
+}
 
 <p class="product-description">
     ${product.description || ""}
@@ -101,7 +134,7 @@ async function loadProducts() {
     class="add-to-cart"
     data-id="${product.id}"
     data-name="${product.name}"
-    data-price="${product.price}"
+    data-price="${currentPrice}"
     data-stock="${product.stock_quantity || 0}">
     أضف إلى سلة التسوق
 </button>
