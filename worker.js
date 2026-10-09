@@ -111,6 +111,417 @@ export default {
         }
 
 
+
+        // ==========================================
+        // 🖼️ ADMIN IMAGE UPLOAD
+        // ==========================================
+
+        if (
+            url.pathname === "/api/admin-upload-image" &&
+            request.method === "POST"
+        ) {
+
+            try {
+
+                // Check admin cookie
+
+                const cookies =
+                    parseCookies(
+                        request.headers.get("Cookie")
+                    );
+
+                const token =
+                    cookies.natureSecretsAdmin;
+
+
+                if (!token) {
+
+                    return new Response(
+                        JSON.stringify({
+                            success: false,
+                            message: "Unauthorized."
+                        }),
+                        {
+                            status: 401,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+
+                }
+
+
+                // Verify admin session
+
+                const valid =
+                    await verifyAdminToken(
+                        token,
+                        env.ADMIN_SECRET
+                    );
+
+
+                if (!valid) {
+
+                    return new Response(
+                        JSON.stringify({
+                            success: false,
+                            message: "Unauthorized."
+                        }),
+                        {
+                            status: 401,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+
+                }
+
+
+                // Read uploaded file
+
+                const formData =
+                    await request.formData();
+
+                const file =
+                    formData.get("file");
+
+
+                if (!file || typeof file === "string") {
+
+                    return new Response(
+                        JSON.stringify({
+                            success: false,
+                            message: "No image was uploaded."
+                        }),
+                        {
+                            status: 400,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+
+                }
+
+
+                // Only allow images
+
+                if (!file.type.startsWith("image/")) {
+
+                    return new Response(
+                        JSON.stringify({
+                            success: false,
+                            message: "Only image files are allowed."
+                        }),
+                        {
+                            status: 400,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+
+                }
+
+
+                // Create a unique filename
+
+                const extension =
+                    file.name.includes(".")
+                        ? file.name
+                            .split(".")
+                            .pop()
+                            .toLowerCase()
+                        : "jpg";
+
+
+                const filename =
+                    `${crypto.randomUUID()}.${extension}`;
+
+
+                // Upload to Supabase Storage
+
+                const uploadResponse =
+                    await fetch(
+                        `${env.SUPABASE_URL}/storage/v1/object/product-images/${filename}`,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+
+                                "apikey":
+                                    env.SUPABASE_SERVICE_ROLE_KEY,
+
+                                "Content-Type":
+                                    file.type
+                            },
+
+                            body: file
+                        }
+                    );
+
+
+                if (!uploadResponse.ok) {
+
+                    const errorText =
+                        await uploadResponse.text();
+
+                    console.error(
+                        "SUPABASE IMAGE UPLOAD ERROR:",
+                        errorText
+                    );
+
+
+                    return new Response(
+                        JSON.stringify({
+                            success: false,
+                            message: "Image upload failed."
+                        }),
+                        {
+                            status: 500,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+
+                }
+
+
+                // Public image URL
+
+                const imageUrl =
+                    `${env.SUPABASE_URL}/storage/v1/object/public/product-images/${filename}`;
+
+
+                return new Response(
+                    JSON.stringify({
+                        success: true,
+                        url: imageUrl
+                    }),
+                    {
+                        status: 200,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "ADMIN IMAGE UPLOAD ERROR:",
+                    error
+                );
+
+
+                return new Response(
+                    JSON.stringify({
+                        success: false,
+                        message: "Server error."
+                    }),
+                    {
+                        status: 500,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+
+            }
+
+        }
+
+
+
+
+        // ==========================================
+        // 🗑️ ADMIN IMAGE DELETE
+        // ==========================================
+
+        if (
+            url.pathname === "/api/admin-delete-image" &&
+            request.method === "POST"
+        ) {
+
+            try {
+
+                const cookies =
+                    parseCookies(
+                        request.headers.get("Cookie")
+                    );
+
+                const token =
+                    cookies.natureSecretsAdmin;
+
+                if (
+                    !token ||
+                    !await verifyAdminToken(
+                        token,
+                        env.ADMIN_SECRET
+                    )
+                ) {
+
+                    return new Response(
+                        JSON.stringify({
+                            success: false,
+                            message: "Unauthorized."
+                        }),
+                        {
+                            status: 401,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+
+                }
+
+
+                const body =
+                    await request.json();
+
+                const imageUrl =
+                    body.url;
+
+                const expectedPrefix =
+                    `${env.SUPABASE_URL}/storage/v1/object/public/product-images/`;
+
+                if (
+                    typeof imageUrl !== "string" ||
+                    !imageUrl.startsWith(expectedPrefix)
+                ) {
+
+                    return new Response(
+                        JSON.stringify({
+                            success: false,
+                            message: "Invalid image URL."
+                        }),
+                        {
+                            status: 400,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+
+                }
+
+
+                const filename =
+                    imageUrl.slice(
+                        expectedPrefix.length
+                    );
+
+                if (
+                    !filename ||
+                    filename.includes("/") ||
+                    filename.includes("\\") ||
+                    filename.includes("..") ||
+                    filename.includes("?") ||
+                    filename.includes("#")
+                ) {
+
+                    return new Response(
+                        JSON.stringify({
+                            success: false,
+                            message: "Invalid image filename."
+                        }),
+                        {
+                            status: 400,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+
+                }
+
+
+                const deleteResponse =
+                    await fetch(
+                        `${env.SUPABASE_URL}/storage/v1/object/product-images/${filename}`,
+                        {
+                            method: "DELETE",
+                            headers: {
+                                "Authorization":
+                                    `Bearer ${env.SUPABASE_SERVICE_ROLE_KEY}`,
+                                "apikey":
+                                    env.SUPABASE_SERVICE_ROLE_KEY
+                            }
+                        }
+                    );
+
+
+                if (!deleteResponse.ok) {
+
+                    const errorText =
+                        await deleteResponse.text();
+
+                    console.error(
+                        "SUPABASE IMAGE DELETE ERROR:",
+                        errorText
+                    );
+
+                    return new Response(
+                        JSON.stringify({
+                            success: false,
+                            message: "Image deletion failed."
+                        }),
+                        {
+                            status: 500,
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        }
+                    );
+
+                }
+
+
+                return new Response(
+                    JSON.stringify({
+                        success: true
+                    }),
+                    {
+                        status: 200,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "ADMIN IMAGE DELETE ERROR:",
+                    error
+                );
+
+                return new Response(
+                    JSON.stringify({
+                        success: false,
+                        message: "Server error."
+                    }),
+                    {
+                        status: 500,
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+
+            }
+
+        }
+
+
         // ==========================================
         // 🔐 ADMIN SESSION CHECK
         // ==========================================

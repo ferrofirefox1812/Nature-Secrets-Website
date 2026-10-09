@@ -1,5 +1,59 @@
 console.log("🔥 EDIT ITEMS JS LOADED");
 
+// ==============================
+// IMAGE UPLOAD
+// ==============================
+
+async function uploadProductImage(file) {
+
+    const message =
+        document.getElementById(
+            "image-upload-message"
+        );
+
+    if (!file) {
+        return null;
+    }
+
+    message.textContent =
+        "جاري رفع الصورة...";
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        file
+    );
+
+    const response =
+        await fetch(
+            "/api/admin-upload-image",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+    const result =
+        await response.json();
+
+    if (!response.ok || !result.success) {
+
+        throw new Error(
+            result.message ||
+            "فشل رفع الصورة."
+        );
+
+    }
+
+    message.textContent =
+        "تم رفع الصورة بنجاح ✓";
+
+    return result.url;
+
+}
+
 async function loadItems() {
 
     // ==============================
@@ -345,18 +399,40 @@ function showProductEditor(
         <br><br>
 
         <label>
-            رابط الصورة
-        </label>
+    رابط الصورة
+</label>
 
-        <br>
+<br>
 
-        <input
-            id="edit-image"
-            value="${escapeHTML(product.image || "")}"
-            placeholder="رابط الصورة"
-        >
+<input
+    id="edit-image"
+    value="${escapeHTML(product.image || "")}"
+    placeholder="رابط الصورة"
+>
 
-        <br><br>
+<br>
+
+<p style="margin: 10px 0;">
+    أو ارفع صورة جديدة من جهازك
+</p>
+
+<input
+    type="file"
+    id="edit-image-file"
+    accept="image/*"
+>
+
+<p id="image-upload-message"></p>
+
+<button
+    type="button"
+    id="remove-product-image"
+    style="background-color: #dc3545; color: white; margin: 10px 0;"
+>
+    إزالة الصورة
+</button>
+
+<br>
 
         <label>
             الوصف
@@ -380,6 +456,7 @@ function showProductEditor(
 
     `;
 
+
     document.getElementById(
         "remove-offer"
     ).onclick = function () {
@@ -394,11 +471,183 @@ function showProductEditor(
 
     };
 
+
+    // ==============================
+    // REMOVE PRODUCT IMAGE
+    // ==============================
+
     document.getElementById(
-        "save-product"
+        "remove-product-image"
     ).onclick = async function () {
 
-        const updatedProduct = {
+        const imageInput =
+            document.getElementById(
+                "edit-image"
+            );
+
+        const imageFileInput =
+            document.getElementById(
+                "edit-image-file"
+            );
+
+        const currentImage =
+            imageInput.value.trim();
+
+        if (!currentImage) {
+
+            alert("لا توجد صورة لإزالتها.");
+
+            return;
+        }
+
+        if (
+            !confirm(
+                "هل أنت متأكد أنك تريد حذف الصورة نهائياً؟"
+            )
+        ) {
+            return;
+        }
+
+        const button =
+            document.getElementById(
+                "remove-product-image"
+            );
+
+        button.disabled = true;
+        button.textContent = "جاري حذف الصورة...";
+
+        try {
+
+            // Delete from Supabase Storage only
+            // if this is a Nature Secrets uploaded image.
+
+            const supabaseImagePrefix =
+                "https://pvxknkpkpwbgnjnrmskm.supabase.co/storage/v1/object/public/product-images/";
+
+            if (
+                currentImage.startsWith(
+                    supabaseImagePrefix
+                )
+            ) {
+
+                const response =
+                    await fetch(
+                        "/api/admin-delete-image",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                url: currentImage
+                            })
+                        }
+                    );
+
+                const result =
+                    await response.json();
+
+                if (
+                    !response.ok ||
+                    !result.success
+                ) {
+                    throw new Error(
+                        result.message ||
+                        "فشل حذف الصورة."
+                    );
+                }
+
+            }
+
+            // Clear the image fields only after deletion succeeds.
+
+            imageInput.value = "";
+
+            if (imageFileInput) {
+                imageFileInput.value = "";
+            }
+
+            document.getElementById(
+                "image-upload-message"
+            ).textContent =
+                "تمت إزالة الصورة ✓";
+
+            alert("تمت إزالة الصورة بنجاح.");
+
+        } catch (error) {
+
+            console.error(
+                "❌ IMAGE DELETE ERROR:",
+                error
+            );
+
+            alert(
+                "حدث خطأ أثناء حذف الصورة:\n" +
+                error.message
+            );
+
+        } finally {
+
+            button.disabled = false;
+            button.textContent = "إزالة الصورة";
+
+        }
+
+    };
+
+   document.getElementById(
+    "save-product"
+).onclick = async function () {
+
+    const imageInput =
+        document.getElementById(
+            "edit-image"
+        );
+
+    const imageFileInput =
+        document.getElementById(
+            "edit-image-file"
+        );
+
+    let image =
+        imageInput.value.trim();
+
+
+    // ==========================
+    // UPLOAD NEW IMAGE IF SELECTED
+    // ==========================
+
+    if (
+        imageFileInput &&
+        imageFileInput.files.length > 0
+    ) {
+
+        try {
+
+            image =
+                await uploadProductImage(
+                    imageFileInput.files[0]
+                );
+
+        } catch (error) {
+
+            console.error(
+                "❌ IMAGE UPLOAD ERROR:",
+                error
+            );
+
+            alert(
+                "حدث خطأ أثناء رفع الصورة:\n" +
+                error.message
+            );
+
+            return;
+        }
+
+    }
+
+
+    const updatedProduct = {
 
             name:
                 document
@@ -440,11 +689,8 @@ function showProductEditor(
                     ) || 0
                 ),
 
-            image:
-                document
-                    .getElementById("edit-image")
-                    .value
-                    .trim(),
+           image:
+    image,
 
             description:
                 document

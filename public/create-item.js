@@ -1,4 +1,66 @@
 
+// ==============================
+// IMAGE UPLOAD
+// ==============================
+
+async function uploadProductImage(file) {
+
+    const message =
+        document.getElementById(
+            "image-upload-message"
+        );
+
+
+    if (!file) {
+        return null;
+    }
+
+
+    message.textContent =
+        "جاري رفع الصورة...";
+
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        file
+    );
+
+
+    const response =
+        await fetch(
+            "/api/admin-upload-image",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+
+    const result =
+        await response.json();
+
+
+    if (!response.ok || !result.success) {
+
+        throw new Error(
+            result.message ||
+            "فشل رفع الصورة."
+        );
+
+    }
+
+
+    message.textContent =
+        "تم رفع الصورة بنجاح ✓";
+
+
+    return result.url;
+
+}
+
 
 const itemType = document.getElementById("item-type");
 const categorySelect = document.getElementById("category-select");
@@ -220,17 +282,43 @@ document
             .value
     );
 
-            const image =
-                document
-                    .getElementById("item-image")
-                    .value
-                    .trim();
+          const imageInput =
+    document.getElementById(
+        "item-image"
+    );
 
-            const description =
-                document
-                    .getElementById("item-description")
-                    .value
-                    .trim();
+const imageFileInput =
+    document.getElementById(
+        "item-image-file"
+    );
+
+
+let image =
+    imageInput.value.trim();
+
+
+// ==========================
+// UPLOAD IMAGE IF SELECTED
+// ==========================
+
+if (
+    imageFileInput &&
+    imageFileInput.files.length > 0
+) {
+
+    image =
+        await uploadProductImage(
+            imageFileInput.files[0]
+        );
+
+}
+
+
+const description =
+    document
+        .getElementById("item-description")
+        .value
+        .trim();
 
 
             // ==========================
